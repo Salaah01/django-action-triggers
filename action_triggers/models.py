@@ -13,12 +13,7 @@ UserModel = get_user_model()
 class Config(models.Model):
     """Model to represent the action triggers configuration."""
 
-    models = models.ManyToManyField(
-        ContentType,
-        related_name="configs",
-        verbose_name=_("Models"),
-        help_text=_("Models to trigger actions on."),
-    )
+    
     payload = models.JSONField(_("Payload"), blank=True, null=True)
     created_on = models.DateTimeField(_("Created on"), default=timezone.now)
     created_by = models.ForeignKey(
@@ -28,6 +23,12 @@ class Config(models.Model):
         verbose_name=_("Created by"),
         null=True,
         blank=True,
+    )
+    models = models.ManyToManyField(
+        ContentType,
+        related_name="configs",
+        verbose_name=_("Models"),
+        help_text=_("Models to trigger actions on."),
     )
 
     class Meta:

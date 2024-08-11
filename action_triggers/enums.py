@@ -1,7 +1,7 @@
-from django.db.model import StringChoices
+from django.db.models import TextChoices
 
 
-class HTTPMethodChoices(StringChoices):
+class HTTPMethodChoices(TextChoices):
     """Represents the supported HTTP methods for webhooks."""
 
     GET = "GET", "GET"
@@ -11,7 +11,7 @@ class HTTPMethodChoices(StringChoices):
     DELETE = "DELETE", "DELETE"
 
 
-class SignalChoices(StringChoices):
+class SignalChoices(TextChoices):
     """Represents the supported signals for action triggers."""
 
     PRE_SAVE = "pre_save", "Pre-save"

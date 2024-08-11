@@ -27,7 +27,7 @@ class BaseModel(models.Model):
     manage the schema and records.
     """
 
-    ct_app_label = "action_triggers"
+    ct_app_label = "action_triggers_test_app"
     ct_model: str
 
     class Meta:
@@ -47,6 +47,7 @@ class BaseModel(models.Model):
     @classmethod
     def drop_table(cls) -> None:
         """Drops the table from the database."""
+        breakpoint()
         if cls._meta.db_table in connection.introspection.table_names():
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -57,9 +58,16 @@ class BaseModel(models.Model):
                 model=cls.ct_model,
             ).delete()
 
+    @classmethod
+    def delete_all(cls) -> None:
+        """Deletes all the records from the table."""
+        cls.objects.all().delete()
+
 
 class CustomerModel(BaseModel):
     """A model used to testing purposes. It will imitate a customer model."""
+
+    ct_model = "customermodel"
 
     name = models.CharField(max_length=200, default=generate_random_string)
     email = models.EmailField(default=generate_random_email)
@@ -76,6 +84,8 @@ class CustomerOrderModel(BaseModel):
     """A model used to testing purposes. It will imitate a customer order
     model.
     """
+
+    ct_model = "customerordermodel"
 
     customer = models.ForeignKey(CustomerModel, on_delete=models.CASCADE)
     order_number = models.CharField(
@@ -115,7 +125,7 @@ class M2MModel(BaseModel):
         return rec
 
 
-class One2OneModel(models.Model):
+class One2OneModel(BaseModel):
     """A model used to testing purposes. It will imitate a one-to-one
     relation.
     """
