@@ -32,7 +32,7 @@ from django.urls import path, include
 
 urlpatterns = [
     ...
-    path('api/action-triggers/', include('django_action_triggers.urls')),
+    path('api/action-triggers/', include('action_triggers.urls')),
     ...
 ]
 ```
@@ -63,7 +63,7 @@ The API specifications are below illustrate how to interact with the API and how
       [key: string]: string
     },
   }[],
-  "queues"?: {
+  "msg_broker_queues"?: {
     "name": string,
     "parameters"?: {
       [key: string]: string
@@ -85,21 +85,21 @@ The API specifications are below illustrate how to interact with the API and how
 
 ##### Field Descriptions
 
-| Field                       | Type                  | Description                                                                                                                                                                                                                                |
-| --------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `trigger.signal`            | `string[]`            | The list of signals that will trigger the action.                                                                                                                                                                                          |
-| `trigger.models`            | `object[]`            | The list of models that will trigger the action.                                                                                                                                                                                           |
-| `trigger.models.app_label`  | `string`              | The app label of the model that will trigger the action.                                                                                                                                                                                   |
-| `trigger.models.model_name` | `string`              | The model name that will trigger the action.                                                                                                                                                                                               |
-| `webhooks`                  | `object[]` (optional) | The list of webhooks that will be triggered.                                                                                                                                                                                               |
-| `webhooks.url`              | `string`              | The URL of the webhook.                                                                                                                                                                                                                    |
-| `webhooks.method`           | `string`              | The HTTP method of the webhook.                                                                                                                                                                                                            |
-| `webhooks.headers`          | `object[]` (optional) | A key-value pair of headers that will be sent with the webhook. The value can receive the path to a callable that will be evaluated at runtime.                                                                                            |
-| `queues`                    | `object[]` (optional) | The list of queues that will be receive the message.                                                                                                                                                                                       |
-| `queues.name`               | `string`              | The name of the queue.                                                                                                                                                                                                                     |
-| `queues.parameters`         | `object[]` (optional) | A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime.                                                                                         |
-| `enabled`                   | `boolean`             | Whether the trigger is enabled or not.                                                                                                                                                                                                     |
-| `payload`                   | `object[]` (optional) | A key-value pair of parameters that will be sent with the webhook or message. If this is not provided, then the entire object will be serialized and sent over. This object can be provided a mapping which can traverse a model relation. |
+| Field                          | Type                  | Description                                                                                                                                                                                                                                |
+| ------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `trigger.signal`               | `string[]`            | The list of signals that will trigger the action.                                                                                                                                                                                          |
+| `trigger.models`               | `object[]`            | The list of models that will trigger the action.                                                                                                                                                                                           |
+| `trigger.models.app_label`     | `string`              | The app label of the model that will trigger the action.                                                                                                                                                                                   |
+| `trigger.models.model_name`    | `string`              | The model name that will trigger the action.                                                                                                                                                                                               |
+| `webhooks`                     | `object[]` (optional) | The list of webhooks that will be triggered.                                                                                                                                                                                               |
+| `webhooks.url`                 | `string`              | The URL of the webhook.                                                                                                                                                                                                                    |
+| `webhooks.method`              | `string`              | The HTTP method of the webhook.                                                                                                                                                                                                            |
+| `webhooks.headers`             | `object[]` (optional) | A key-value pair of headers that will be sent with the webhook. The value can receive the path to a callable that will be evaluated at runtime.                                                                                            |
+| `msg_broker_queues`            | `object[]` (optional) | The list of queues that will be receive the message.                                                                                                                                                                                       |
+| `msg_broker_queues.name`       | `string`              | The name of the queue.                                                                                                                                                                                                                     |
+| `msg_broker_queues.parameters` | `object[]` (optional) | A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime.                                                                                         |
+| `enabled`                      | `boolean`             | Whether the trigger is enabled or not.                                                                                                                                                                                                     |
+| `payload`                      | `object[]` (optional) | A key-value pair of parameters that will be sent with the webhook or message. If this is not provided, then the entire object will be serialized and sent over. This object can be provided a mapping which can traverse a model relation. |
 
 
 ##### Using a callable in the `headers` and `parameters` fields
@@ -230,7 +230,7 @@ The application will evaluate the string `instance.customer.name` and `instance.
       }
     }
   ],
-  "queues": [
+  "msg_broker_queues": [
     {
       "name": "my-queue",
       "parameters": {

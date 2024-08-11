@@ -5,6 +5,11 @@ description = ""
 authors = ["Salaah Amin <salaah01@users.noreply.github.com>"]
 readme = "README.md"
 
+
+[tool.ruff]
+line-length = 79
+
+
 [tool.poetry.dependencies]
 python = ">=3.8,<3.13"
 django = ">=3.2"
