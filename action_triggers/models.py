@@ -13,7 +13,6 @@ UserModel = get_user_model()
 class Config(models.Model):
     """Model to represent the action triggers configuration."""
 
-    
     payload = models.JSONField(_("Payload"), blank=True, null=True)
     created_on = models.DateTimeField(_("Created on"), default=timezone.now)
     created_by = models.ForeignKey(
