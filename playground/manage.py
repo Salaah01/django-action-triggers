@@ -4,7 +4,6 @@
 import os
 import sys
 
-
 # In the parent directory there exists an app that we want to be able to
 # use. So we need to add the parent directory to the PYTHONPATH.
 sys.path.append(os.path.join(os.path.dirname(__file__), "..",))
