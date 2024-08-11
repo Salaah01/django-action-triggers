@@ -4,8 +4,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from . import conf
-from .enums import HTTPMethodChoices, SignalChoices
+from action_triggers import conf
+from action_triggers.enums import HTTPMethodChoices, SignalChoices
 
 UserModel = get_user_model()
 
