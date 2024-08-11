@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "django-action-trigger"
+name = "django-action-triggers"
 version = "0.1.0"
 description = ""
 authors = ["Salaah Amin <salaah01@users.noreply.github.com>"]
