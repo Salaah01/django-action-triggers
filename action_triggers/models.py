@@ -1,8 +1,8 @@
-from django.db import models
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model
 
 from . import conf
 from .enums import HTTPMethodChoices, SignalChoices

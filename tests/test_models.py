@@ -1,12 +1,9 @@
 """Tests for the `models` module."""
 
-from action_triggers.models import (
-    Config,
-    Webhook,
-    MessageBrokerQueue,
-    ConfigSignal,
-)
 from model_bakery import baker
+
+from action_triggers.models import (Config, ConfigSignal, MessageBrokerQueue,
+                                    Webhook)
 
 
 class TestConfig:

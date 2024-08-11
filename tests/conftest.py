@@ -1,16 +1,11 @@
 import django
-from django.core.management import call_command
-
 import pytest
+from django.core.management import call_command
 
 django.setup()
 
-from tests.models import (  # noqa: E402
-    CustomerModel,
-    CustomerOrderModel,
-    M2MModel,
-    One2OneModel,
-)
+from tests.models import (CustomerModel, CustomerOrderModel,  # noqa: E402
+                          M2MModel, One2OneModel)
 
 
 @pytest.fixture(autouse=True, scope="session")

@@ -2,11 +2,12 @@
 testing.
 """
 
-import typing as _t
 import random
 import string
-from django.db import connection, models
+import typing as _t
+
 from django.contrib.contenttypes.models import ContentType
+from django.db import connection, models
 
 
 def generate_random_string() -> str:
