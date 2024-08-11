@@ -76,6 +76,13 @@ The API specifications are below illustrate how to interact with the API and how
 }
 ```
 
+##### API constraints
+
+| Field             | Constraint                                                           |
+| ----------------- | -------------------------------------------------------------------- |
+| `trigger.signals` | Allowed values: `pre_save`, `post_save`, `pre_delete`, `post_delete` |
+
+
 ##### Field Descriptions
 
 | Field                       | Type                  | Description                                                                                                                                                                                                                                |
@@ -93,6 +100,7 @@ The API specifications are below illustrate how to interact with the API and how
 | `queues.parameters`         | `object[]` (optional) | A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime.                                                                                         |
 | `enabled`                   | `boolean`             | Whether the trigger is enabled or not.                                                                                                                                                                                                     |
 | `payload`                   | `object[]` (optional) | A key-value pair of parameters that will be sent with the webhook or message. If this is not provided, then the entire object will be serialized and sent over. This object can be provided a mapping which can traverse a model relation. |
+
 
 ##### Using a callable in the `headers` and `parameters` fields
 
