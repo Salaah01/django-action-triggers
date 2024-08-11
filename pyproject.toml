@@ -10,6 +10,10 @@ readme = "README.md"
 line-length = 79
 
 
+[tool.coverage.report]
+include = ["action_triggers/*"]
+omit = ["action_triggers/migrations/*"]
+
 [tool.poetry.dependencies]
 python = ">=3.8,<3.13"
 django = ">=3.2"
