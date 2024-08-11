@@ -7,7 +7,7 @@ from django.db.models import Model, QuerySet
 from django.contrib.contenttypes.models import ContentType
 
 
-registered_models: _t.Dict[str, Model] = {}
+registered_models: _t.Dict[str, _t.Type[Model]] = {}
 
 
 def model_str(model: Model) -> str:
@@ -23,7 +23,7 @@ def model_str(model: Model) -> str:
     return f"{model._meta.app_label}.{model._meta.model_name}"
 
 
-def add_to_registry(model: Model) -> None:
+def add_to_registry(model: _t.Type[Model]) -> None:
     """Adds a model to the registry.
 
     Args:

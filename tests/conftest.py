@@ -1,11 +1,17 @@
 import django
 import pytest
 from django.core.management import call_command
+from django.apps import apps
 
 django.setup()
 
-from tests.models import (CustomerModel, CustomerOrderModel,  # noqa: E402
-                          M2MModel, One2OneModel)
+from django.contrib.contenttypes.models import ContentType  # noqa: E402
+from tests.models import (  # noqa: E402
+    CustomerModel,
+    CustomerOrderModel,
+    M2MModel,
+    One2OneModel,
+)
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -23,11 +29,11 @@ def setup():
     One2OneModel.create_table()
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True, scope="function")
 def setup_each():
     """Set up the test."""
+
     yield
-    CustomerModel.delete_all()
-    CustomerOrderModel.delete_all()
-    M2MModel.delete_all()
-    One2OneModel.delete_all()
+    for model in apps.get_models():
+        if model != ContentType:
+            model.objects.all().delete()

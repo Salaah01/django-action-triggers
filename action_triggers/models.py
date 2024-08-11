@@ -1,3 +1,5 @@
+import typing as _t
+
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -8,6 +10,42 @@ from action_triggers import conf
 from action_triggers.enums import HTTPMethodChoices, SignalChoices
 
 UserModel = get_user_model()
+
+
+class ConfigQuerySet(models.QuerySet):
+    """Custom queryset for the Config model."""
+
+    def active(self) -> "ConfigQuerySet":
+        """Return only active configurations."""
+        return self.filter(active=True)
+
+    def for_signal(self, signal: SignalChoices) -> "ConfigQuerySet":
+        """Return only configurations for the given signal.
+
+        Args:
+            signal: The signal to filter by.
+
+        Returns:
+            A queryset of configurations for the given signal
+        """
+        return self.filter(config_signals__signal=signal)
+
+    def for_model(
+        self,
+        model: _t.Union[models.Model, _t.Type[models.Model]],
+    ) -> "ConfigQuerySet":
+        """Return only configurations for the given model.
+
+        Args:
+            model: The model to filter by.
+
+        Returns:
+            A queryset of configurations for the given model
+        """
+
+        return self.filter(
+            content_types=ContentType.objects.get_for_model(model)
+        )
 
 
 class Config(models.Model):
@@ -23,12 +61,15 @@ class Config(models.Model):
         null=True,
         blank=True,
     )
-    models = models.ManyToManyField(
+    active = models.BooleanField(_("Active"), default=True)
+    content_types = models.ManyToManyField(
         ContentType,
         related_name="configs",
         verbose_name=_("Models"),
         help_text=_("Models to trigger actions on."),
     )
+
+    objects = ConfigQuerySet.as_manager()
 
     class Meta:
         verbose_name = _("Configuration")
@@ -103,7 +144,7 @@ class MessageBrokerQueue(models.Model):
 class ConfigSignal(models.Model):
     """Model to represent the type of signals to trigger for."""
 
-    config_id = models.ForeignKey(
+    config = models.ForeignKey(
         Config,
         on_delete=models.CASCADE,
         related_name="config_signals",
