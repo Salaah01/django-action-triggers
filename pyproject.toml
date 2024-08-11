@@ -6,8 +6,23 @@ authors = ["Salaah Amin <salaah01@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.13"
+django = ">=3.2"
 
+
+[tool.poetry.group.dev.dependencies]
+tox = "^4.17.1"
+ruff = "^0.5.7"
+isort = "^5.13.2"
+pytest = "^8.3.2"
+pytest-django = "^4.8.0"
+pytest-cov = "^5.0.0"
+coverage = "^7.6.1"
+django-coverage-plugin = "^3.1.0"
+model-bakery = "^1.19.1"
+responses = "^0.25.3"
+mypy = "^1.11.1"
+django-stubs = "^5.0.4"
 
 [build-system]
 requires = ["poetry-core"]
