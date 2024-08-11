@@ -4,15 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('action_triggers', '0002_rename_models_config_content_types_config_active'),
+        (
+            "action_triggers",
+            "0002_rename_models_config_content_types_config_active",
+        ),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='configsignal',
-            old_name='config_id',
-            new_name='config',
+            model_name="configsignal",
+            old_name="config_id",
+            new_name="config",
         ),
     ]
