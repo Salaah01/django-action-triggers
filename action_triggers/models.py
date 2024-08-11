@@ -69,7 +69,7 @@ class Config(models.Model):
         help_text=_("Models to trigger actions on."),
     )
 
-    objects = ConfigQuerySet.as_manager()
+    objects = ConfigQuerySet.as_manager()  # type: ignore
 
     class Meta:
         verbose_name = _("Configuration")

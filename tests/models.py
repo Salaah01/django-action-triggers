@@ -62,7 +62,9 @@ class BaseModel(models.Model):
     @classmethod
     def delete_all(cls) -> None:
         """Deletes all the records from the table."""
-        cls.objects.all().delete()
+        cls.objects.all().delete()  # type: ignore[attr-defined]
+
+
 
 
 class CustomerModel(BaseModel):

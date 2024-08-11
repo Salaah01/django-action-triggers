@@ -18,6 +18,13 @@ omit = ["action_triggers/migrations/*"]
 python = ">=3.8,<3.13"
 django = ">=3.2"
 
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+exclude = ["action_triggers/migrations"]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings"
+
 
 [tool.poetry.group.dev.dependencies]
 tox = "^4.17.1"

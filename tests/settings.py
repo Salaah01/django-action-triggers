@@ -1,3 +1,5 @@
+import typing as _t
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -13,7 +15,7 @@ INSTALLED_APPS = (
     "tests",
 )
 
-MIDDLEWARE = []
+MIDDLEWARE: _t.List[str] = []
 
 ROOT_URLCONF = "tests.urls"
 

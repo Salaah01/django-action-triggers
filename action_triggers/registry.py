@@ -5,12 +5,16 @@ dispatched for. Also contains helper functions relating to the registry.
 import typing as _t
 from django.db.models import Model, QuerySet
 from django.contrib.contenttypes.models import ContentType
+from django.db.models.base import ModelBase
 
 
+# TODO: Can this be a set?
 registered_models: _t.Dict[str, _t.Type[Model]] = {}
 
+T_ModelOrModelBase = _t.Union[Model, _t.Type[Model]]
 
-def model_str(model: Model) -> str:
+
+def model_str(model: T_ModelOrModelBase) -> str:
     """Returns a string representation of the model which can be used to
     identify both the app label and the model name.
 
@@ -23,16 +27,20 @@ def model_str(model: Model) -> str:
     return f"{model._meta.app_label}.{model._meta.model_name}"
 
 
-def add_to_registry(model: _t.Type[Model]) -> None:
+def add_to_registry(model: T_ModelOrModelBase) -> None:
     """Adds a model to the registry.
 
     Args:
         model: The model to add to the registry.
     """
+
+    if not isinstance(model, ModelBase):
+        model = model.__class__
+
     registered_models[model_str(model)] = model
 
 
-def model_in_registry(model: Model) -> bool:
+def model_in_registry(model: T_ModelOrModelBase) -> bool:
     """Checks if a model is in the registry.
 
     Args:
