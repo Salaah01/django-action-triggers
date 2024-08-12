@@ -1,4 +1,5 @@
 import typing as _t
+
 from action_triggers.models import MessageBrokerQueue
 
 

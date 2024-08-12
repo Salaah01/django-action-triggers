@@ -1,16 +1,17 @@
 """Test for the `payload` module."""
 
-from functools import partial
 import json
 from copy import deepcopy
+from functools import partial
 
 import pytest
 from model_bakery import baker
 
+from action_triggers.models import Config
 from action_triggers.payload import (
+    get_payload_generator,
     parse_payload,
     payload_from_instance,
-    get_payload_generator,
 )
 from tests.models import (
     CustomerModel,
@@ -18,7 +19,6 @@ from tests.models import (
     M2MModel,
     One2OneModel,
 )
-from action_triggers.models import Config
 
 
 class TestParsePayload:

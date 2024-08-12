@@ -1,18 +1,18 @@
 """Tests for the `dispatch` module."""
 
-import pytest
 from unittest.mock import patch
 
+import pytest
 from model_bakery import baker
 
-from action_triggers.models import Config, Webhook, MessageBrokerQueue
+from action_triggers.dispatch import handle_action
+from action_triggers.models import Config, MessageBrokerQueue, Webhook
 from tests.models import (
     CustomerModel,
     CustomerOrderModel,
     M2MModel,
     One2OneModel,
 )
-from action_triggers.dispatch import handle_action
 
 
 class TestHandleAction:

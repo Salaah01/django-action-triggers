@@ -1,8 +1,8 @@
-from django.core import serializers
-from functools import partial
 import json
 import typing as _t
+from functools import partial
 
+from django.core import serializers
 from django.db.models import Model
 from django.template import Context, Template
 
