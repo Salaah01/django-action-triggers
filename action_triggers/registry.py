@@ -8,10 +8,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Model, QuerySet
 from django.db.models.base import ModelBase
 
-# TODO: Can this be a set?
-registered_models: _t.Dict[str, _t.Type[Model]] = {}
-
 T_ModelOrModelBase = _t.Union[Model, _t.Type[Model]]
+
+registered_models: _t.Dict[str, _t.Type[Model]] = {}
 
 
 def model_str(model: T_ModelOrModelBase) -> str:

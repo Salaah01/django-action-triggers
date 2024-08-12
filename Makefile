@@ -11,3 +11,6 @@ test-cov:
 format: **/*.py
 	ruff check . --fix
 	isort .
+
+typecheck: **/*.py
+	mypy .
