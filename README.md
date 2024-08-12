@@ -1,8 +1,8 @@
-# Django Action Trigger (In Development)
+# Django Action Triggers (In Development)
 
 ## Description
 
-Django Action Trigger is a Django application that allows the user to trigger actions based on changes in the database.
+Django Action Triggers is a Django application that allows the user to trigger actions based on changes in the database.
 These actions may be hitting a webhook, adding a message to a queue.
 
 These triggers can be triggered either in the code, or by the UI in the Django admin interface.
@@ -69,7 +69,7 @@ The API specifications are below illustrate how to interact with the API and how
       [key: string]: string
     },
   }[],
-  "enabled": boolean,
+  "active": boolean,
   "payload"?: {
     [key: string]: string
   }
@@ -98,7 +98,7 @@ The API specifications are below illustrate how to interact with the API and how
 | `msg_broker_queues`            | `object[]` (optional) | The list of queues that will be receive the message.                                                                                                                                                                                       |
 | `msg_broker_queues.name`       | `string`              | The name of the queue.                                                                                                                                                                                                                     |
 | `msg_broker_queues.parameters` | `object[]` (optional) | A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime.                                                                                         |
-| `enabled`                      | `boolean`             | Whether the trigger is enabled or not.                                                                                                                                                                                                     |
+| `active`                       | `boolean`             | Whether the trigger is enabled or not.                                                                                                                                                                                                     |
 | `payload`                      | `object[]` (optional) | A key-value pair of parameters that will be sent with the webhook or message. If this is not provided, then the entire object will be serialized and sent over. This object can be provided a mapping which can traverse a model relation. |
 
 
@@ -193,7 +193,7 @@ The application will evaluate the string `instance.customer.name` and `instance.
       }
     }
   ],
-  "enabled": true
+  "active": true
 }
 ```
 
@@ -244,7 +244,7 @@ The application will evaluate the string `instance.customer.name` and `instance.
       }
     }
   ],
-  "enabled": true
+  "active": true
 }
 ```
 
@@ -270,7 +270,7 @@ The application will evaluate the string `instance.customer.name` and `instance.
       }
     }
   ],
-  "enabled": true,
+  "active": true,
   "payload": {
     "action": "new_sale",
     "customer_name": "{{ instance.customer.name }}",
