@@ -51,7 +51,7 @@ def payload_from_instance(instance: Model) -> dict:
     return data["fields"]
 
 
-def payload_generator(
+def get_payload_generator(
     config: Config,
 ) -> _t.Callable[[Model], _t.Union[dict, str]]:
     """Returns a function that generates a payload from a model instance and

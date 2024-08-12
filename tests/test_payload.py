@@ -10,7 +10,7 @@ from model_bakery import baker
 from action_triggers.payload import (
     parse_payload,
     payload_from_instance,
-    payload_generator,
+    get_payload_generator,
 )
 from tests.models import (
     CustomerModel,
@@ -201,7 +201,7 @@ class TestGetPayloadGenerator:
 
     def test_returns_parse_payload_function_when_config_has_payload(self):
         config = baker.make(Config, payload={"key": "value"})
-        result = payload_generator(config)
+        result = get_payload_generator(config)
 
         isinstance(result, partial)
         assert result.func == parse_payload
@@ -210,6 +210,6 @@ class TestGetPayloadGenerator:
         self,
     ):
         config = baker.make(Config)
-        result = payload_generator(config)
+        result = get_payload_generator(config)
 
         assert result is payload_from_instance

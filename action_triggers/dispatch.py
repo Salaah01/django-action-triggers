@@ -14,5 +14,5 @@ def handle_action(config: Config, instance: Model) -> None:
     webhooks = config.webhooks.all()
     for webhook in webhooks:
         process_webhook(webhook, payload)
-    for msg_broker_queue in config.msg_broker_queues.all():
+    for msg_broker_queue in config.message_broker_queues.all():
         process_msg_broker_queue(msg_broker_queue, payload)
