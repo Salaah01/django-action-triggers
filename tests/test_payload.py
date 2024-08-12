@@ -1,4 +1,4 @@
-"""Test for the `payload.parser` module."""
+"""Test for the `payload` module."""
 
 import json
 from copy import deepcopy
@@ -6,7 +6,7 @@ from copy import deepcopy
 import pytest
 from model_bakery import baker
 
-from action_triggers.payload.parser import parse_payload
+from action_triggers.payload import parse_payload
 from tests.models import (
     CustomerModel,
     CustomerOrderModel,
