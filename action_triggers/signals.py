@@ -12,6 +12,7 @@ from django.db.models.signals import (
 from functools import partial
 from django.db.models import Model, signals
 from action_triggers.models import Config
+from action_triggers.enums import SignalChoices
 
 
 def signal_callback(
@@ -31,7 +32,12 @@ def signal_callback(
     Returns:
         None
     """
-    configs = Config.objects.for_signal(signal).for_model(instance).active()
+    configs = (
+        Config.objects.for_signal(SignalChoices.for_signal(signal))
+        .for_model(instance)
+        .active()
+    )
+
     for config in configs:
         print("Signal triggered for config:", config)
 

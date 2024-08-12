@@ -27,6 +27,7 @@ def setup():
     CustomerOrderModel.create_table()
     M2MModel.create_table()
     One2OneModel.create_table()
+    yield
 
 
 @pytest.fixture(autouse=True, scope="function")

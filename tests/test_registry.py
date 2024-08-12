@@ -1,6 +1,7 @@
 """Tests for the registry module."""
 
 import pytest
+from model_bakery import baker
 
 from action_triggers.models import Config
 from action_triggers import registry
@@ -21,8 +22,15 @@ class TestRegistry:
     def test_model_str_returns_correct_string(self):
         assert model_str(Config) == "action_triggers.config"
 
-    def test_add_to_registry_adds_model_to_registry(self):
+    def test_add_to_registry_adds_model_class_to_registry(self):
         add_to_registry(Config)
+        assert registry.registered_models == {"action_triggers.config": Config}
+
+    def test_add_to_registry_on_model_instance_adds_model_class_to_registry(
+        self,
+    ):
+        config = baker.make(Config)
+        add_to_registry(config)
         assert registry.registered_models == {"action_triggers.config": Config}
 
     def test_model_in_registry_returns_true_if_model_in_registry(self):
