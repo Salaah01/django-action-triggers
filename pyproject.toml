@@ -15,7 +15,6 @@ line_length = 79
 [tool.pytest]
 env = ["DJANGO_SETTINGS_MODULE = tests.settings"]
 
-
 [tool.coverage.report]
 include = ["action_triggers/*"]
 omit = ["action_triggers/migrations/*"]
