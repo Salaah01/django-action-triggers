@@ -3,12 +3,12 @@
 import pytest
 from model_bakery import baker
 
-from action_triggers.models import Config
 from action_triggers import registry
+from action_triggers.models import Config
 from action_triggers.registry import (
-    model_str,
     add_to_registry,
     model_in_registry,
+    model_str,
     registered_content_types,
 )
 

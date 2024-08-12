@@ -1,11 +1,12 @@
 import django
 import pytest
-from django.core.management import call_command
 from django.apps import apps
+from django.core.management import call_command
 
 django.setup()
 
 from django.contrib.contenttypes.models import ContentType  # noqa: E402
+
 from tests.models import (  # noqa: E402
     CustomerModel,
     CustomerOrderModel,

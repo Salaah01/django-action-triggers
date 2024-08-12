@@ -1,16 +1,16 @@
 """Tests for the `models` module."""
 
 import pytest
-from model_bakery import baker
 from django.contrib.contenttypes.models import ContentType
+from model_bakery import baker
 
+from action_triggers.enums import SignalChoices
 from action_triggers.models import (
     Config,
     ConfigSignal,
     MessageBrokerQueue,
     Webhook,
 )
-from action_triggers.enums import SignalChoices
 from tests.models import CustomerModel, CustomerOrderModel
 
 

@@ -3,16 +3,18 @@ be triggered.
 """
 
 import typing as _t
+from functools import partial
+
+from django.db.models import Model, signals
 from django.db.models.signals import (
-    post_save,
     post_delete,
+    post_save,
     pre_delete,
     pre_save,
 )
-from functools import partial
-from django.db.models import Model, signals
-from action_triggers.models import Config
+
 from action_triggers.enums import SignalChoices
+from action_triggers.models import Config
 
 
 def signal_callback(

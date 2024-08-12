@@ -1,14 +1,15 @@
 """Tests for the `enums` module."""
 
 import pytest
-from action_triggers.enums import SignalChoices
 from django.db.models.signals import (
-    pre_save,
+    m2m_changed,
+    post_delete,
     post_save,
     pre_delete,
-    post_delete,
-    m2m_changed,
+    pre_save,
 )
+
+from action_triggers.enums import SignalChoices
 
 
 class TestSignalChoices:

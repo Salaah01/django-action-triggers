@@ -1,13 +1,13 @@
 """Tests for the `signals` module."""
 
-from model_bakery import baker
-from tests.models import CustomerModel, CustomerOrderModel
-from action_triggers.registry import add_to_registry
-from action_triggers.models import Config, ConfigSignal
-from action_triggers.enums import SignalChoices
-from django.contrib.contenttypes.models import ContentType
-
 import pytest
+from django.contrib.contenttypes.models import ContentType
+from model_bakery import baker
+
+from action_triggers.enums import SignalChoices
+from action_triggers.models import Config, ConfigSignal
+from action_triggers.registry import add_to_registry
+from tests.models import CustomerModel, CustomerOrderModel
 
 
 class TestSignalIntegration:

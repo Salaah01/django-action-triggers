@@ -3,10 +3,10 @@ dispatched for. Also contains helper functions relating to the registry.
 """
 
 import typing as _t
-from django.db.models import Model, QuerySet
-from django.contrib.contenttypes.models import ContentType
-from django.db.models.base import ModelBase
 
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Model, QuerySet
+from django.db.models.base import ModelBase
 
 # TODO: Can this be a set?
 registered_models: _t.Dict[str, _t.Type[Model]] = {}
