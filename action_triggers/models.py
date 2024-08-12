@@ -83,7 +83,7 @@ class Config(models.Model):
 class Webhook(models.Model):
     """Model to represent the webhook configuration."""
 
-    config_id = models.ForeignKey(
+    config = models.ForeignKey(
         Config,
         on_delete=models.CASCADE,
         related_name="webhooks",
@@ -114,7 +114,7 @@ class Webhook(models.Model):
 class MessageBrokerQueue(models.Model):
     """Model to represent a message broker queue configuration."""
 
-    config_id = models.ForeignKey(
+    config = models.ForeignKey(
         Config,
         on_delete=models.CASCADE,
         related_name="message_broker_queues",
