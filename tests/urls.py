@@ -1,1 +1,2 @@
-urlpattners = []
+
+urlpattners = []  # type: ignore

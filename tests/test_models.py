@@ -1,9 +1,73 @@
 """Tests for the `models` module."""
 
+import pytest
+from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
 
-from action_triggers.models import (Config, ConfigSignal, MessageBrokerQueue,
-                                    Webhook)
+from action_triggers.enums import SignalChoices
+from action_triggers.models import (
+    Config,
+    ConfigSignal,
+    MessageBrokerQueue,
+    Webhook,
+)
+from tests.models import CustomerModel, CustomerOrderModel
+
+
+class TestConfigQuerySet:
+    """Tests for the `ConfigQuerySet` custom queryset."""
+
+    @pytest.mark.parametrize("active,num_results", [(True, 1), (False, 0)])
+    def test_active_returns_only_active_records(self, active, num_results):
+        baker.make(Config, active=active)
+        assert Config.objects.active().count() == num_results
+
+    @pytest.mark.parametrize(
+        "record_signals,num_results",
+        (
+            ((SignalChoices.PRE_SAVE, SignalChoices.POST_SAVE), 1),
+            (
+                (
+                    SignalChoices.PRE_SAVE,
+                    SignalChoices.POST_SAVE,
+                    SignalChoices.POST_SAVE,
+                ),
+                2,
+            ),
+            ((SignalChoices.PRE_DELETE, SignalChoices.POST_DELETE), 0),
+            ((SignalChoices.POST_SAVE,), 1),
+        ),
+    )
+    def test_for_signal_returns_only_records_for_the_given_signal(
+        self,
+        record_signals,
+        num_results,
+    ):
+        config = baker.make(Config)
+        for signal in record_signals:
+            baker.make(ConfigSignal, config=config, signal=signal)
+
+        assert (
+            Config.objects.for_signal(SignalChoices.POST_SAVE).count()
+            == num_results
+        )
+
+    def test_model_returns_records_when_using_model_base(self):
+        ct = ContentType.objects.get_for_model(CustomerModel)
+        baker.make(Config, content_types=[ct])
+
+        assert Config.objects.for_model(CustomerModel).count() == 1
+        assert Config.objects.for_model(CustomerOrderModel).count() == 0
+
+    def test_model_returns_records_when_using_model_instance(self):
+        ct = ContentType.objects.get_for_model(CustomerModel)
+        baker.make(Config, content_types=[ct])
+
+        customer = CustomerModel.create_record()
+        customer_order = CustomerOrderModel.create_record(customer)
+
+        assert Config.objects.for_model(customer).count() == 1
+        assert Config.objects.for_model(customer_order).count() == 0
 
 
 class TestConfig:

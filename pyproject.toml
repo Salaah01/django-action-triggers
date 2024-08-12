@@ -5,10 +5,12 @@ description = ""
 authors = ["Salaah Amin <salaah01@users.noreply.github.com>"]
 readme = "README.md"
 
-
 [tool.ruff]
 line-length = 79
 
+[tool.isort]
+profile = "black"
+line_length = 79
 
 [tool.coverage.report]
 include = ["action_triggers/*"]
@@ -17,6 +19,13 @@ omit = ["action_triggers/migrations/*"]
 [tool.poetry.dependencies]
 python = ">=3.8,<3.13"
 django = ">=3.2"
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+exclude = ["action_triggers/migrations"]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings"
 
 
 [tool.poetry.group.dev.dependencies]
