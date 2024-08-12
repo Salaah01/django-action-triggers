@@ -196,8 +196,8 @@ class TestPayloadFromInstance:
         }
 
 
-class TestPayloadGenerator:
-    """Tests for the `payload_generator` function."""
+class TestGetPayloadGenerator:
+    """Tests for the `get_payload_generator` function."""
 
     def test_returns_parse_payload_function_when_config_has_payload(self):
         config = baker.make(Config, payload={"key": "value"})
