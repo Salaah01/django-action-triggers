@@ -65,8 +65,6 @@ class BaseModel(models.Model):
         cls.objects.all().delete()  # type: ignore[attr-defined]
 
 
-
-
 class CustomerModel(BaseModel):
     """A model used to testing purposes. It will imitate a customer model."""
 

@@ -2,7 +2,6 @@
 test:
 	pytest
 
-
 .PHONY: test-cov
 test-cov:
 	pytest --cov=. || true
