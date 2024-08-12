@@ -1,18 +1,24 @@
 """Test for the `payload` module."""
 
+from functools import partial
 import json
 from copy import deepcopy
 
 import pytest
 from model_bakery import baker
 
-from action_triggers.payload import parse_payload
+from action_triggers.payload import (
+    parse_payload,
+    payload_from_instance,
+    payload_generator,
+)
 from tests.models import (
     CustomerModel,
     CustomerOrderModel,
     M2MModel,
     One2OneModel,
 )
+from action_triggers.models import Config
 
 
 class TestParsePayload:
@@ -153,3 +159,57 @@ class TestParsePayload:
                 {"id": str(customer_2.id), "name": customer_2.name},
             ],
         }
+
+
+class TestPayloadFromInstance:
+    """Tests for the `payload_from_instance` function."""
+
+    def test_from_12m_instance_creates_json_serializable_obj(self):
+        instance = baker.make(CustomerOrderModel)
+        payload = payload_from_instance(instance)
+
+        json.dumps(payload)
+        assert payload == {
+            "customer": instance.customer_id,
+            "order_number": instance.order_number,
+        }
+
+    def test_from_121_creates_json_serializable_obj(self):
+        instance = baker.make(One2OneModel)
+        payload = payload_from_instance(instance)
+
+        json.dumps(payload)
+        assert payload == {
+            "customer": instance.customer.id,
+            "age": instance.age,
+        }
+
+    def test_from_m2m_creates_json_serializable_obj(self):
+        customer_1, customer_2 = baker.make(CustomerModel, _quantity=2)
+        instance = baker.make(M2MModel, customers=[customer_1, customer_2])
+        payload = payload_from_instance(instance)
+
+        json.dumps(payload)
+        assert payload == {
+            "fav_colour": instance.fav_colour,
+            "customers": [customer_1.id, customer_2.id],
+        }
+
+
+class TestPayloadGenerator:
+    """Tests for the `payload_generator` function."""
+
+    def test_returns_parse_payload_function_when_config_has_payload(self):
+        config = baker.make(Config, payload={"key": "value"})
+        result = payload_generator(config)
+
+        isinstance(result, partial)
+        assert result.func == parse_payload
+
+    def test_returns_payload_from_instance_function_when_config_has_no_payload(
+        self,
+    ):
+        config = baker.make(Config)
+        result = payload_generator(config)
+
+        assert result is payload_from_instance
