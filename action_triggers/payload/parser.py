@@ -1,7 +1,8 @@
+import json
 import typing as _t
+
 from django.db.models import Model
 from django.template import Context, Template
-import json
 
 
 def parse_payload(instance: Model, payload: str) -> _t.Union[dict, str]:

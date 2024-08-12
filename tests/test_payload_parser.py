@@ -2,15 +2,17 @@
 
 import json
 from copy import deepcopy
+
 import pytest
 from model_bakery import baker
+
+from action_triggers.payload.parser import parse_payload
 from tests.models import (
     CustomerModel,
     CustomerOrderModel,
     M2MModel,
     One2OneModel,
 )
-from action_triggers.payload.parser import parse_payload
 
 
 class TestParsePayload:
