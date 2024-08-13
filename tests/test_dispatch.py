@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+import responses
 import pytest
 from model_bakery import baker
 
@@ -18,13 +19,14 @@ from tests.models import (
 class TestHandleAction:
     """Tests for the `handle_action` function."""
 
-    @patch("action_triggers.dispatch.process_webhook")
+    @patch("action_triggers.dispatch.WebhookProcessor")
     @patch("action_triggers.dispatch.process_msg_broker_queue")
     @pytest.mark.parametrize(
         "model_class",
         (CustomerModel, CustomerOrderModel, M2MModel, One2OneModel),
     )
     @pytest.mark.parametrize("config_payload", (None, {"foo": "bar"}))
+    @responses.activate
     def test_for_all_webhooks_webhook_handler_called(
         self,
         mock_process_msg_broker_queue,
@@ -32,8 +34,16 @@ class TestHandleAction:
         model_class,
         config_payload,
     ):
+        responses.add(responses.POST, "http://example.com", status=200)
+
         config = baker.make(Config, payload=config_payload)
-        webhooks = baker.make(Webhook, config=config, _quantity=2)
+        webhooks = baker.make(
+            Webhook,
+            http_method="POST",
+            url="http://example.com",
+            config=config,
+            _quantity=2,
+        )
         baker.make(Webhook)
 
         model_instance = baker.make(model_class)
@@ -44,7 +54,7 @@ class TestHandleAction:
         assert mock_process_webhook.call_args_list[1][0][0] in webhooks
         assert mock_process_msg_broker_queue.call_count == 0
 
-    @patch("action_triggers.dispatch.process_webhook")
+    @patch("action_triggers.dispatch.WebhookProcessor")
     @patch("action_triggers.dispatch.process_msg_broker_queue")
     @pytest.mark.parametrize(
         "model_class",
