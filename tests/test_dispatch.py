@@ -2,8 +2,8 @@
 
 from unittest.mock import patch
 
-import responses
 import pytest
+import responses
 from model_bakery import baker
 
 from action_triggers.dispatch import handle_action

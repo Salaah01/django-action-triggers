@@ -9,13 +9,13 @@ django.setup()
 from django.contrib.contenttypes.models import ContentType  # noqa: E402
 from model_bakery import baker  # noqa: E402
 
+from action_triggers.models import Config, Webhook  # noqa: E402
 from tests.models import (  # noqa: E402
     CustomerModel,
     CustomerOrderModel,
     M2MModel,
     One2OneModel,
 )
-from action_triggers.models import Config, Webhook  # noqa: E402
 
 
 @pytest.fixture(autouse=True, scope="session")

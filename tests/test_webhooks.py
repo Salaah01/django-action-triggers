@@ -1,12 +1,14 @@
 """Tests for the `webhooks` module."""
 
 from unittest.mock import patch
-from action_triggers.webhooks import WebhookProcessor
-from model_bakery import baker
+
 import pytest
-from action_triggers.models import Webhook
-import responses
 import requests
+import responses
+from model_bakery import baker
+
+from action_triggers.models import Webhook
+from action_triggers.webhooks import WebhookProcessor
 
 
 class TestWebhookProcessor:
