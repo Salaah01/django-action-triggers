@@ -11,8 +11,8 @@ class WebhookProcessor:
     """Process an action which involves sending a webhook.
 
     Args:
-            webhook: The webhook configuration to process.
-            payload: The payload to send with the webhook.
+        webhook: The webhook configuration to process.
+        payload: The payload to send with the webhook.
     """
 
     def __init__(self, webhook: Webhook, payload: _t.Union[str, dict]):
@@ -50,7 +50,11 @@ class WebhookProcessor:
             The keyword arguments to pass to the request function.
         """
 
-        fn_kwargs = {"url": self.webhook.url, "headers": self.webhook.headers}
+        fn_kwargs: _t.Dict[str, _t.Any] = {"url": self.webhook.url}
+        headers = self.get_headers()
+        if headers:
+            fn_kwargs["headers"] = headers
+
         if isinstance(self.payload, dict):
             fn_kwargs["json"] = self.payload
         else:

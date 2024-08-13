@@ -5,7 +5,9 @@ from django.core.management import call_command
 
 django.setup()
 
+
 from django.contrib.contenttypes.models import ContentType  # noqa: E402
+from model_bakery import baker  # noqa: E402
 
 from tests.models import (  # noqa: E402
     CustomerModel,
@@ -13,6 +15,7 @@ from tests.models import (  # noqa: E402
     M2MModel,
     One2OneModel,
 )
+from action_triggers.models import Config, Webhook  # noqa: E402
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -39,3 +42,27 @@ def setup_each():
     for model in apps.get_models():
         if model != ContentType:
             model.objects.all().delete()
+
+
+@pytest.fixture
+def config():
+    return baker.make(Config)
+
+
+@pytest.fixture
+def webhook(config):
+    return baker.make(
+        Webhook,
+        url="https://example.com/",
+        config=config,
+    )
+
+
+@pytest.fixture
+def webhook_with_headers(config):
+    return baker.make(
+        Webhook,
+        url="https://example-with-headers.com/",
+        config=config,
+        headers={"Authorization": "Bearer 123"},
+    )
