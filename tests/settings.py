@@ -44,7 +44,7 @@ ACTION_TRIGGERS = {
     "brokers": {
         "rabbitmq_1": {
             "broker_type": "rabbitmq",
-            "conn_params": {
+            "conn_details": {
                 "host": "localhost",
                 "port": 5672,
             },
@@ -54,7 +54,7 @@ ACTION_TRIGGERS = {
         },
         "rabbitmq_2": {
             "broker_type": "rabbitmq",
-            "conn_params": {
+            "conn_details": {
                 "host": "localhost",
                 "port": 5672,
                 "connection": pika.PlainCredentials("user", "password"),
@@ -65,7 +65,7 @@ ACTION_TRIGGERS = {
         },
         "kafka_1": {
             "broker_type": "kafka",
-            "conn_params": {
+            "conn_details": {
                 "bootstrap_servers": "localhost:9092",
             },
             "params": {
@@ -74,7 +74,7 @@ ACTION_TRIGGERS = {
         },
         "kafka_2": {
             "broker_type": "kafka",
-            "conn_params": {
+            "conn_details": {
                 "bootstrap_servers": "localhost:9092",
                 "security_protocol": "SASL_SSL",
                 "sasl_mechanism": "PLAIN",
