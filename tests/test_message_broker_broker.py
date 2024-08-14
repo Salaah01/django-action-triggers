@@ -11,6 +11,8 @@ class TestGetBrokerClass:
         (
             ("rabbitmq_1", RabbitMQBroker),
             ("rabbitmq_2", RabbitMQBroker),
+            ("kafka_1", KafkaBroker),
+            ("kafka_2", KafkaBroker),
         ),
     )
     def test_correct_class_returned(self, broker_name, expected):

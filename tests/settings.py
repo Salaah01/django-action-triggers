@@ -1,5 +1,7 @@
 import typing as _t
 
+import pika
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -53,8 +55,27 @@ ACTION_TRIGGERS = {
             "conn_params": {
                 "host": "localhost",
                 "port": 5672,
+                "connection": pika.PlainCredentials("user", "password"),
             },
             "queue": "test_queue_2",
+        },
+        "kafka_1": {
+            "broker_type": "kafka",
+            "conn_params": {
+                "bootstrap_servers": "localhost:9092",
+            },
+            "topic": "test_topic_1",
+        },
+        "kafka_2": {
+            "broker_type": "kafka",
+            "conn_params": {
+                "bootstrap_servers": "localhost:9092",
+                "security_protocol": "SASL_SSL",
+                "sasl_mechanism": "PLAIN",
+                "sasl_plain_username": "user",
+                "sasl_plain_password": "password",
+            },
+            "topic": "test_topic_2",
         },
     }
 }
