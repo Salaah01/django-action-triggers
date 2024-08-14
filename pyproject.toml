@@ -30,7 +30,6 @@ exclude = ["action_triggers/migrations"]
 [tool.django-stubs]
 django_settings_module = "tests.settings"
 
-
 [tool.poetry.group.dev.dependencies]
 tox = "^4.17.1"
 ruff = "^0.5.7"
@@ -45,15 +44,13 @@ mypy = "^1.11.1"
 django-stubs = "^5.0.4"
 types-requests = "^2.32.0.20240712"
 pika = ">=1.0.0"
+psycopg2 = "^2.9.9"
+kafka-python = ">=2.0.0"
 
 [tool.poetry.extras]
 postgres = ["psycopg2"]
 rabbitmq = ["pika"]
-
-
-[tool.poetry.group.dev-postgres.dependencies]
-psycopg2 = "^2.9.9"
-
+kafka = ["kafka-python"]
 
 [build-system]
 requires = ["poetry-core"]
