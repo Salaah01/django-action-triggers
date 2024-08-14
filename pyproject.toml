@@ -44,16 +44,16 @@ responses = "^0.25.3"
 mypy = "^1.11.1"
 django-stubs = "^5.0.4"
 types-requests = "^2.32.0.20240712"
+pika = ">=1.0.0"
+
+[tool.poetry.extras]
+postgres = ["psycopg2"]
+rabbitmq = ["pika"]
 
 
 [tool.poetry.group.dev-postgres.dependencies]
 psycopg2 = "^2.9.9"
 
-[tool.poetry.group.rabbitmq]
-optional = true
-
-[tool.poetry.group.rabbitmq.dependencies]
-pika = ">=1.0.0"
 
 [build-system]
 requires = ["poetry-core"]
