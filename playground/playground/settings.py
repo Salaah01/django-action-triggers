@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "action_triggers",
+    "sample_app",
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,29 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Action triggers configuration
+ACTION_TRIGGERS = {
+    "brokers": {
+        "rabbitmq_1": {
+            "broker_type": "rabbitmq",
+            "conn_details": {
+                "host": "localhost",
+                "port": 5672,
+            },
+            "params": {
+                "queue": "test_queue_1",
+            },
+        },
+        "rabbitmq_2": {
+            "broker_type": "rabbitmq",
+            "conn_details": {
+                "host": "localhost",
+                "port": 5672,
+            },
+            "params": {
+                "queue": "test_queue_2",
+            },
+        },
+    },
+}

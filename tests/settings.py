@@ -48,7 +48,9 @@ ACTION_TRIGGERS = {
                 "host": "localhost",
                 "port": 5672,
             },
-            "queue": "test_queue_1",
+            "params": {
+                "queue": "test_queue_1",
+            },
         },
         "rabbitmq_2": {
             "broker_type": "rabbitmq",
@@ -57,14 +59,18 @@ ACTION_TRIGGERS = {
                 "port": 5672,
                 "connection": pika.PlainCredentials("user", "password"),
             },
-            "queue": "test_queue_2",
+            "params": {
+                "queue": "test_queue_2",
+            },
         },
         "kafka_1": {
             "broker_type": "kafka",
             "conn_params": {
                 "bootstrap_servers": "localhost:9092",
             },
-            "topic": "test_topic_1",
+            "params": {
+                "topic": "test_topic_1",
+            },
         },
         "kafka_2": {
             "broker_type": "kafka",
@@ -75,7 +81,9 @@ ACTION_TRIGGERS = {
                 "sasl_plain_username": "user",
                 "sasl_plain_password": "password",
             },
-            "topic": "test_topic_2",
+            "params": {
+                "topic": "test_topic_2",
+            },
         },
     }
 }

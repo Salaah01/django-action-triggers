@@ -9,3 +9,10 @@ class MissingDependenciesError(ImportError):
             f"Alternatively, you can install the required packages by running "
             f"`pip install {package_name}`."
         )
+
+
+class ConnectionValidationError(RuntimeError):
+    """Exception raised when connection parameters are invalid."""
+
+    def __init__(self, message: str):
+        super().__init__(message)

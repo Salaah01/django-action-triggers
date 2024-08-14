@@ -13,6 +13,14 @@ except ImportError:
 class RabbitMQConnection(ConnectionBase):
     """Connection class for RabbitMQ."""
 
+    def validate(self) -> None:
+        if not self.params.get("queue"):
+            self._errors.add_connection_error(
+                "queue",
+                "Queue name must be provided.",
+            )
+        self._errors.is_valid(raise_exception=True)
+
     def connect(self):
         self.conn = pika.BlockingConnection(
             pika.ConnectionParameters(**self.conn_params)
@@ -25,10 +33,16 @@ class RabbitMQBroker(BrokerBase):
     broker_type = BrokerType.RABBITMQ
     conn_class = RabbitMQConnection
 
-    def __init__(self, conn_params: dict, **kwargs):
-        super().__init__(conn_params, **kwargs)
-        self.queue = kwargs.get("queue")
-        self.exchange = kwargs.get("exchange", "")
+    def __init__(
+        self,
+        broker_key: str,
+        conn_params: _t.Union[dict, None],
+        params: _t.Union[dict, None],
+        **kwargs,
+    ):
+        super().__init__(broker_key, conn_params, params, **kwargs)
+        self.queue = self.params.get("queue")
+        self.exchange = self.params.get("exchange", "")
 
     def validate(self) -> None:
         if not self.queue:

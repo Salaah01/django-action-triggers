@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 import typing as _t
 
+from django.conf import settings
 from action_triggers.message_broker.enums import BrokerType
+from action_triggers.message_broker.error import Error
 
 
 class ConnectionBase(ABC):
@@ -12,13 +14,15 @@ class ConnectionBase(ABC):
             connection.
     """
 
-    def __init__(self, conn_params: dict):
+    def __init__(self, conn_params: dict, params: dict):
         self.conn_params = conn_params
-        self.validate_conn_params()
+        self.params = params
+        self._errors = Error()
+        self.validate()
         self._conn: _t.Any = None
 
     @abstractmethod
-    def validate_conn_params(self) -> None:
+    def validate(self) -> None:
         """Validate the connection parameters. Raise an exception if
         invalid.
         """
@@ -54,9 +58,25 @@ class BrokerBase(ABC):
     broker_type: BrokerType
     conn_class: _t.Type[ConnectionBase]
 
-    def __init__(self, conn_params: dict, **kwargs):
+    def __init__(
+        self,
+        broker_key: str,
+        conn_params: _t.Union[dict, None],
+        params: _t.Union[dict, None],
+        **kwargs,
+    ):
+        self.broker_key = broker_key
+        self.config = settings.ACTION_TRIGGERS["brokers"][broker_key]
+        self.conn_params = {
+            **(self.config["conn_details"] or {}),
+            **(conn_params or {}),
+        }
+        self.params = {
+            **(self.config["params"] or {}),
+            **(params or {}),
+        }
         self.kwargs = kwargs
-        self.conn_params = conn_params
+        self._conn = self.conn_class(self.conn_params, self.params)
 
     def send_message(self, message: str) -> None:
         """Starts a connection with the message broker and sends a message.
@@ -68,7 +88,7 @@ class BrokerBase(ABC):
             None
         """
 
-        with self.conn_class(self.conn_params) as conn:
+        with self._conn as conn:
             self._send_message_impl(conn, message)
 
     @abstractmethod

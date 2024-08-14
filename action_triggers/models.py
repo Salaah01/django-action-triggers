@@ -125,6 +125,12 @@ class MessageBrokerQueue(models.Model):
         max_length=255,
         help_text=_("Corresponds to a queue config in the settings."),
     )
+    conn_details = models.JSONField(
+        _("Connection Details"),
+        blank=True,
+        null=True,
+        help_text=_("Connection details for the queue."),
+    )
     parameters = models.JSONField(
         _("Parameters"),
         blank=True,
