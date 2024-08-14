@@ -1,8 +1,13 @@
+import typing as _t
+
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
+from action_triggers.message_broker.exceptions import MissingDependenciesError
 
-
-from kafka import KafkaProducer
+try:
+    from kafka import KafkaProducer  # type: ignore[import-untyped]
+except ImportError:
+    raise MissingDependenciesError("Kafka", "kafka", "kafka-python")
 
 
 class KafkaConnection(ConnectionBase):
@@ -26,6 +31,12 @@ class KafkaBroker(BrokerBase):
         if not self.topic:
             raise ValueError("Topic name must be provided.")
 
-    def _send_message_impl(self, message: str) -> None:
-        with self.conn_class(self.conn_params) as conn:
-            conn.conn.send(self.topic, message.encode())
+    def _send_message_impl(self, conn: _t.Any, message: str) -> None:
+        """Send a message to the Kafka broker.
+
+        Args:
+            conn: The connection to the broker.
+            message: The message to send.
+        """
+
+        conn.conn.send(self.topic, message.encode())
