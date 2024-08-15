@@ -1,7 +1,8 @@
-from abc import ABC, abstractmethod
 import typing as _t
+from abc import ABC, abstractmethod
 
 from django.conf import settings
+
 from action_triggers.message_broker.error import Error
 
 

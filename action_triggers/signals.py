@@ -14,9 +14,9 @@ from django.db.models.signals import (
 )
 
 from action_triggers.enums import SignalChoices
+from action_triggers.message_broker.broker import get_broker_class
 from action_triggers.models import Config
 from action_triggers.webhooks import WebhookProcessor
-from action_triggers.message_broker.broker import get_broker_class
 
 
 def signal_callback(

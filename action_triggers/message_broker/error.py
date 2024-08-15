@@ -1,5 +1,6 @@
-from collections import defaultdict
 import json
+from collections import defaultdict
+
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 
 

@@ -1,8 +1,8 @@
 import pytest
 
 from action_triggers.message_broker.broker import get_broker_class
-from action_triggers.message_broker.rabbitmq import RabbitMQBroker
 from action_triggers.message_broker.kafka import KafkaBroker
+from action_triggers.message_broker.rabbitmq import RabbitMQBroker
 
 
 class TestGetBrokerClass:

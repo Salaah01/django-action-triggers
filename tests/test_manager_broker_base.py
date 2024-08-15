@@ -1,8 +1,10 @@
 """Tests for `action_triggers.message_broker.base` module."""
 
 from types import SimpleNamespace
+
 import pytest
-from action_triggers.message_broker.base import ConnectionBase, BrokerBase
+
+from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 
 
 class TestConnectionBase:

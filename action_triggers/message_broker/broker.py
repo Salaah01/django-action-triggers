@@ -1,10 +1,11 @@
 import typing as _t
 
 from django.conf import settings
-from action_triggers.message_broker.enums import BrokerType
+
 from action_triggers.message_broker.base import BrokerBase
-from action_triggers.message_broker.rabbitmq import RabbitMQBroker
+from action_triggers.message_broker.enums import BrokerType
 from action_triggers.message_broker.kafka import KafkaBroker
+from action_triggers.message_broker.rabbitmq import RabbitMQBroker
 
 
 def get_broker_class(broker_name: str) -> _t.Type[BrokerBase]:

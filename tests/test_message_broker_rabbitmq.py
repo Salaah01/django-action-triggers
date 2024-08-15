@@ -1,15 +1,17 @@
 """Tests for RabbitMQ message broker."""
 
-import socket
 import json
+import socket
+
+import pika
 import pytest
+from django.conf import settings
+
+from action_triggers.message_broker.exceptions import ConnectionValidationError
 from action_triggers.message_broker.rabbitmq import (
     RabbitMQBroker,
     RabbitMQConnection,
 )
-import pika
-from action_triggers.message_broker.exceptions import ConnectionValidationError
-from django.conf import settings
 
 
 def get_conn() -> pika.BlockingConnection:

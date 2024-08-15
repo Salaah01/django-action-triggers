@@ -2,8 +2,6 @@ import json
 import os
 import typing as _t
 
-import pika
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
