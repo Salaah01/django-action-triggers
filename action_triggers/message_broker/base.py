@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 import typing as _t
 
 from django.conf import settings
-from action_triggers.message_broker.enums import BrokerType
 from action_triggers.message_broker.error import Error
 
 

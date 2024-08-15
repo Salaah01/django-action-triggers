@@ -1,7 +1,6 @@
 """Tests for `action_triggers.message_broker.base` module."""
 
 from types import SimpleNamespace
-from unittest.mock import MagicMock
 import pytest
 from action_triggers.message_broker.base import ConnectionBase, BrokerBase
 

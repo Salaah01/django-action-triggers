@@ -6,7 +6,7 @@ from action_triggers.message_broker.exceptions import MissingDependenciesError
 
 try:
     import pika  # type: ignore[import-untyped]
-except ImportError:
+except ImportError:  # pragma: no cover
     raise MissingDependenciesError("RabbitMQ", "rabbitmq", "pika")
 
 
@@ -23,7 +23,7 @@ class RabbitMQConnection(ConnectionBase):
 
     def connect(self):
         self.conn = pika.BlockingConnection(
-            pika.ConnectionParameters(**self.conn_params)
+            pika.ConnectionParameters(**self.conn_details)
         )
 
 
@@ -43,10 +43,6 @@ class RabbitMQBroker(BrokerBase):
         super().__init__(broker_key, conn_params, params, **kwargs)
         self.queue = self.params.get("queue")
         self.exchange = self.params.get("exchange", "")
-
-    def validate(self) -> None:
-        if not self.queue:
-            raise ValueError("Queue name must be provided.")
 
     def _send_message_impl(self, conn: _t.Any, message: str) -> None:
         """Send a message to the RabbitMQ broker.

@@ -22,7 +22,7 @@ class KafkaConnection(ConnectionBase):
         self._errors.is_valid(raise_exception=True)
 
     def connect(self):
-        self.conn = KafkaProducer(**self.conn_params)
+        self.conn = KafkaProducer(**self.conn_details)
 
 
 class KafkaBroker(BrokerBase):
