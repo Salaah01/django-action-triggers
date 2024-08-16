@@ -1,3 +1,6 @@
+import json
+
+
 class MissingDependenciesError(ImportError):
     """Exception raised when required dependencies are missing."""
 
@@ -16,3 +19,11 @@ class ConnectionValidationError(RuntimeError):
 
     def __init__(self, message: str):
         super().__init__(message)
+
+    def as_dict(self) -> dict:
+        """Return the error message as a dictionary."""
+        return dict(self.args[0])
+
+    def as_json(self) -> str:
+        """Return the error message as a JSON string."""
+        return json.dumps(self.as_dict())

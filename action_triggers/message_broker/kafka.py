@@ -15,7 +15,7 @@ class KafkaConnection(ConnectionBase):
 
     def validate(self) -> None:
         if not self.params.get("topic"):
-            self._errors.add_param_error(
+            self._errors.add_params_error(
                 "topic",
                 "Topic name must be provided.",
             )
