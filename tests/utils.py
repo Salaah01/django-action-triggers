@@ -1,5 +1,5 @@
+import pika  # type: ignore[import-untyped]
 from django.conf import settings
-import pika
 
 
 def get_rabbitmq_conn(key: str = "rabbitmq_1") -> pika.BlockingConnection:

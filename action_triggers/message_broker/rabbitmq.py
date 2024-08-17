@@ -15,7 +15,7 @@ class RabbitMQConnection(ConnectionBase):
 
     def validate(self) -> None:
         if not self.params.get("queue"):
-            self._errors.add_params_error(
+            self._errors.add_params_error(  # type: ignore[attr-defined]
                 "queue",
                 "Queue name must be provided.",
             )

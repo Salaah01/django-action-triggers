@@ -3,7 +3,7 @@
 import json
 import socket
 
-import pika
+import pika  # type: ignore[import-untyped]
 import pytest
 from django.conf import settings
 

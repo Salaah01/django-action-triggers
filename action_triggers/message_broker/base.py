@@ -66,11 +66,11 @@ class BrokerBase(ABC):
         self.broker_key = broker_key
         self.config = settings.ACTION_TRIGGERS["brokers"][broker_key]
         self.conn_details = {
-            **(self.config["conn_details"] or {}),
+            **(_t.cast(dict, self.config["conn_details"]) or {}),
             **(conn_details or {}),
         }
         self.params = {
-            **(self.config["params"] or {}),
+            **(_t.cast(dict, self.config["params"]) or {}),
             **(params or {}),
         }
         self.kwargs = kwargs

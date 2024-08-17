@@ -1,3 +1,4 @@
+import typing as _t
 from collections import defaultdict
 
 from action_triggers.message_broker.exceptions import ConnectionValidationError
@@ -52,6 +53,8 @@ class MetaError(type):
 
 
 class ErrorBase(metaclass=MetaError):
+    _fields: _t.Dict[str, ErrorField]
+
     def as_dict(self) -> dict:
         """Return the error message as a dictionary.
 

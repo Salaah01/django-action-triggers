@@ -12,12 +12,11 @@ from django.contrib.contenttypes.models import ContentType  # noqa: E402
 from model_bakery import baker  # noqa: E402
 
 from action_triggers.enums import SignalChoices  # noqa: E402
-from action_triggers.registry import add_to_registry  # noqa: E402
 from action_triggers.models import (  # noqa: E402
     Config,
-    Webhook,
     ConfigSignal,
     MessageBrokerQueue,
+    Webhook,
 )
 from tests.models import (  # noqa: E402
     CustomerModel,

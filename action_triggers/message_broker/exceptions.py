@@ -17,7 +17,7 @@ class MissingDependenciesError(ImportError):
 class ConnectionValidationError(RuntimeError):
     """Exception raised when connection parameters are invalid."""
 
-    def __init__(self, message: str):
+    def __init__(self, message: dict):
         super().__init__(message)
 
     def as_dict(self) -> dict:

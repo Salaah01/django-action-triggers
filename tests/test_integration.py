@@ -4,7 +4,6 @@ from model_bakery import baker
 
 from action_triggers.registry import add_to_registry
 from tests.models import CustomerModel
-
 from tests.utils import get_rabbitmq_conn
 
 
@@ -27,7 +26,7 @@ class TestSignalIntegrationMessageBroker:
 
             assert body == b'{"message": "Hello, World!"}'
 
-    def test_simple_basic_json_message(
+    def test_simple_basic_plain_message(
         self,
         customer_rabbitmq_post_save_signal,
     ):

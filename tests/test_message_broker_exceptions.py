@@ -1,13 +1,14 @@
 """Tests for the `message_broker.exceptions` module."""
 
 import json
+from collections import defaultdict
+
 import pytest
 
 from action_triggers.message_broker.exceptions import (
     ConnectionValidationError,
     MissingDependenciesError,
 )
-from collections import defaultdict
 
 
 class TestMissingDependenciesError:
