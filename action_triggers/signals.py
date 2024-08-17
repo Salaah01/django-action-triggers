@@ -2,6 +2,7 @@
 be triggered.
 """
 
+import json
 import typing as _t
 from functools import partial
 
@@ -54,7 +55,7 @@ def signal_callback(
                 broker.name,
                 broker.conn_details,
                 broker.parameters,
-            ).send_message(str(config.payload))
+            ).send_message(json.dumps(config.payload))
 
 
 def setup() -> None:

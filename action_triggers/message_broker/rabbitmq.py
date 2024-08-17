@@ -57,5 +57,5 @@ class RabbitMQBroker(BrokerBase):
         channel.basic_publish(
             exchange=self.exchange,
             routing_key=self.queue,
-            body=message,
+            body=message.encode("utf-8"),
         )

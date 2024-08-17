@@ -12,21 +12,13 @@ from action_triggers.message_broker.rabbitmq import (
     RabbitMQBroker,
     RabbitMQConnection,
 )
-
-
-def get_conn() -> pika.BlockingConnection:
-    """Get a connection to RabbitMQ."""
-    return pika.BlockingConnection(
-        pika.ConnectionParameters(
-            **settings.ACTION_TRIGGERS["brokers"]["rabbitmq_1"]["conn_details"]
-        )
-    )
+from tests.utils import get_rabbitmq_conn
 
 
 def conn_test() -> bool:
     """Verify that a connection can be made to RabbitMQ."""
     try:
-        get_conn()
+        get_rabbitmq_conn()
         return True
     except socket.gaierror as e:
         if str(e) in {

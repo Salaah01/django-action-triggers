@@ -10,7 +10,7 @@ from action_triggers.registry import add_to_registry
 from tests.models import CustomerModel, CustomerOrderModel
 
 
-class TestSignalIntegration:
+class TestSignal:
     """Tests that the signals are connected to the callback function."""
 
     def test_signal_callback_prints_message(self, capsys):
