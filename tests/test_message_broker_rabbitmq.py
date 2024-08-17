@@ -72,25 +72,25 @@ class TestRabbitMQBroker:
     @pytest.mark.skipif(not conn_test(), reason="RabbitMQ is not running.")
     def test_message_can_be_sent(self):
         """It should be able to send a message to RabbitMQ."""
-        conn = pika.BlockingConnection(
-            pika.ConnectionParameters(
-                **settings.ACTION_TRIGGERS["brokers"]["rabbitmq_1"][
-                    "conn_details"
-                ]
+
+        conn_param = pika.ConnectionParameters(
+            **settings.ACTION_TRIGGERS["brokers"]["rabbitmq_1"]["conn_details"]
+        )
+
+        with pika.BlockingConnection(conn_param) as conn:
+            broker = RabbitMQBroker(
+                broker_key="rabbitmq_1",
+                conn_params={},
+                params={"queue": "test_queue_1"},
             )
-        )
-        channel = conn.channel()
-        channel.queue_declare(queue="test_queue_1")
+            broker.send_message("new message")
 
-        broker = RabbitMQBroker(
-            broker_key="rabbitmq_1",
-            conn_params={},
-            params={"queue": "test_queue_1"},
-        )
-        broker.send_message("test message")
+        with pika.BlockingConnection(conn_param) as conn:
+            channel = conn.channel()
+            channel.queue_declare(queue="test_queue_1")
+            method_frame, header_frame, body = channel.basic_get(
+                queue="test_queue_1",
+                auto_ack=True,
+            )
 
-        method_frame, header_frame, body = channel.basic_get(
-            queue="test_queue_1"
-        )
-        assert body == b"test message"
-        conn.close()
+            assert body == b"new message"

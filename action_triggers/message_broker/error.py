@@ -51,10 +51,7 @@ class MetaError(type):
         return super().__new__(cls, name, bases, dct)
 
 
-class Error(metaclass=MetaError):
-    connection_params = ErrorField("connection_params")
-    params = ErrorField("params")
-
+class ErrorBase(metaclass=MetaError):
     def as_dict(self) -> dict:
         """Return the error message as a dictionary.
 
@@ -81,3 +78,8 @@ class Error(metaclass=MetaError):
                 raise ConnectionValidationError(self.as_dict())
 
         return not has_error
+
+
+class Error(ErrorBase):
+    connection_params = ErrorField("connection_params")
+    params = ErrorField("params")
