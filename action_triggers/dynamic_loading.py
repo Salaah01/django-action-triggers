@@ -1,5 +1,5 @@
 import typing as _t
-
+import re
 from django.conf import settings
 from django.utils.module_loading import import_string
 
@@ -46,3 +46,24 @@ def get_path_result(path: str) -> _t.Any:
     if callable(obj):
         return obj()
     return obj
+
+
+def replace_string_with_result(
+    string: str,
+    opener: str = "{{",
+    closer: str = "}}",
+) -> str:
+    """Replace all instances of `{{ path }}` in a string with the result of
+    the path.
+
+    :param string: The string to replace the paths in.
+    :param opener: The opener of the path.
+    :param closer: The closer of the path.
+    :return: The string with the paths replaced.
+    """
+
+    return re.sub(
+        rf"{re.escape(opener)}(.*?){re.escape(closer)}",
+        lambda m: str(get_path_result(m.group(1).strip())),
+        string,
+    )

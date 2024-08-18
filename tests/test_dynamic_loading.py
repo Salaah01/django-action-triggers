@@ -4,6 +4,7 @@ import pytest
 from action_triggers.dynamic_loading import (
     restricted_import_string,
     get_path_result,
+    replace_string_with_result,
 )
 from django.test import override_settings
 
@@ -86,4 +87,47 @@ class TestGetPathResult:
     )
     def test_returns_correctly(self, path, expected):
         result = get_path_result(path)
+        assert result == expected
+
+
+class TestReplaceStringWithResult:
+    """Tests for the `replace_string_with_result` function."""
+
+    def test_can_replace_a_with_a_callable_result(self):
+        string = (
+            "The headers are "
+            "{{ tests.test_dynamic_loading.get_webhook_headers }}"
+        )
+        result = replace_string_with_result(string)
+        expected = (
+            "The headers are {'Content-Type': 'application/json', "
+            "'Authorization': 'Bearer test_token'}"
+        )
+
+        assert result == expected
+
+    def test_can_replace_a_with_a_non_callable_result(self):
+        string = (
+            "The API token is "
+            "{{ tests.test_dynamic_loading.WEBHOOK_API_TOKEN }}"
+        )
+        result = replace_string_with_result(string)
+        expected = "The API token is test_token"
+
+        assert result == expected
+
+    def test_can_replace_multiple_paths(self):
+        string = (
+            "The headers are "
+            "{{ tests.test_dynamic_loading.get_webhook_headers }}"
+            " and the API token is "
+            "{{ tests.test_dynamic_loading.WEBHOOK_API_TOKEN }}"
+        )
+        result = replace_string_with_result(string)
+        expected = (
+            "The headers are {'Content-Type': 'application/json', "
+            "'Authorization': 'Bearer test_token'} and the API token is "
+            "test_token"
+        )
+
         assert result == expected
