@@ -6,8 +6,7 @@ from action_triggers.message_broker.exceptions import MissingDependenciesError
 
 try:
     from kafka import KafkaProducer  # type: ignore[import-untyped]
-except ImportError:
-    raise
+except ImportError:  # pragma: no cover
     raise MissingDependenciesError("Kafka", "kafka", "kafka-python")
 
 

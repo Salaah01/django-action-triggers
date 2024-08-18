@@ -39,9 +39,6 @@ def setup():
     CustomerOrderModel.create_table()
     M2MModel.create_table()
     One2OneModel.create_table()
-    # add_to_registry(CustomerModel)
-    # add_to_registry(CustomerOrderModel)
-    # add_to_registry(M2MModel)
     yield
 
 
