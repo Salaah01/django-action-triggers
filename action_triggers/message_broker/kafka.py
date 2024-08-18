@@ -7,6 +7,7 @@ from action_triggers.message_broker.exceptions import MissingDependenciesError
 try:
     from kafka import KafkaProducer  # type: ignore[import-untyped]
 except ImportError:
+    raise
     raise MissingDependenciesError("Kafka", "kafka", "kafka-python")
 
 
@@ -49,4 +50,6 @@ class KafkaBroker(BrokerBase):
             message: The message to send.
         """
 
-        conn.conn.send(self.topic, message.encode())
+        producer = conn.conn
+        producer.send(self.topic, message.encode())
+        producer.flush()

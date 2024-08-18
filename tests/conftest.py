@@ -85,10 +85,19 @@ def config_add_customer_ct(config):
 
 
 @pytest.fixture
-def rabbitmq_message_plain_payload(config):
+def rabbitmq_1_trigger(config):
     return baker.make(
         MessageBrokerQueue,
         name="rabbitmq_1",
+        config=config,
+    )
+
+
+@pytest.fixture
+def kafka_1_trigger(config):
+    return baker.make(
+        MessageBrokerQueue,
+        name="kafka_1",
         config=config,
     )
 
@@ -107,10 +116,24 @@ def customer_rabbitmq_post_save_signal(
     config,
     config_add_customer_ct,
     customer_post_save_signal,
-    rabbitmq_message_plain_payload,
+    rabbitmq_1_trigger,
 ):
-    return namedtuple("ConfigContext", ["config", "signal", "payload"])(
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
         config,
         customer_post_save_signal,
-        rabbitmq_message_plain_payload,
+        rabbitmq_1_trigger,
+    )
+
+
+@pytest.fixture
+def customer_kafka_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    kafka_1_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        kafka_1_trigger,
     )

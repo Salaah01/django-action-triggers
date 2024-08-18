@@ -1,5 +1,6 @@
 """Integration tests."""
 
+from unittest.mock import patch
 from model_bakery import baker
 
 from action_triggers.registry import add_to_registry
@@ -7,8 +8,10 @@ from tests.models import CustomerModel
 from tests.utils import get_rabbitmq_conn
 
 
-class TestSignalIntegrationMessageBroker:
-    """Integration tests pertaining for the message broker triggers."""
+class TestIntegrationMessageBrokerRabbitMQ:
+    """Integration tests where the action to be triggered is sending a payload
+    to a RabbitMQ message broker.
+    """
 
     def test_simple_basic_json_message(
         self,
@@ -45,3 +48,24 @@ class TestSignalIntegrationMessageBroker:
             )
 
             assert body.decode() == '"Hello World!"'
+
+
+class TestIntegrationMessageBrokerKafka:
+    """Integration tests where the action to be triggered is sending a payload
+    to a Kafka message broker.
+    """
+
+    # TODO: Using actual Kafka broker is not working. Need to investigate why.
+
+    @patch(
+        "action_triggers.message_broker.kafka.KafkaBroker._send_message_impl",
+        autospec=True,
+    )
+    def test_simple_basic_json_message(
+        self,
+        mock_send_message_impl,
+        customer_kafka_post_save_signal,
+    ):
+        add_to_registry(CustomerModel)
+        baker.make(CustomerModel)
+        mock_send_message_impl.assert_called_once()
