@@ -2,6 +2,7 @@
 be triggered.
 """
 
+import json
 import typing as _t
 from functools import partial
 
@@ -14,7 +15,9 @@ from django.db.models.signals import (
 )
 
 from action_triggers.enums import SignalChoices
+from action_triggers.message_broker.broker import get_broker_class
 from action_triggers.models import Config
+from action_triggers.webhooks import WebhookProcessor
 
 
 def signal_callback(
@@ -42,6 +45,17 @@ def signal_callback(
 
     for config in configs:
         print("Signal triggered for config:", config)
+
+        for webhook in config.webhooks.all():
+            WebhookProcessor(webhook, instance).process()
+
+        for broker in config.message_broker_queues.all():
+            broker_class = get_broker_class(broker.name)
+            broker_class(
+                broker.name,
+                broker.conn_details,
+                broker.parameters,
+            ).send_message(json.dumps(config.payload))
 
 
 def setup() -> None:

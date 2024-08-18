@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 import django
 import pytest
 from django.apps import apps
@@ -9,7 +11,13 @@ django.setup()
 from django.contrib.contenttypes.models import ContentType  # noqa: E402
 from model_bakery import baker  # noqa: E402
 
-from action_triggers.models import Config, Webhook  # noqa: E402
+from action_triggers.enums import SignalChoices  # noqa: E402
+from action_triggers.models import (  # noqa: E402
+    Config,
+    ConfigSignal,
+    MessageBrokerQueue,
+    Webhook,
+)
 from tests.models import (  # noqa: E402
     CustomerModel,
     CustomerOrderModel,
@@ -46,7 +54,7 @@ def setup_each():
 
 @pytest.fixture
 def config():
-    return baker.make(Config)
+    return baker.make(Config, payload={"message": "Hello, World!"})
 
 
 @pytest.fixture
@@ -65,4 +73,64 @@ def webhook_with_headers(config):
         url="https://example-with-headers.com/",
         config=config,
         headers={"Authorization": "Bearer 123"},
+    )
+
+
+@pytest.fixture
+def config_add_customer_ct(config):
+    config.content_types.add(ContentType.objects.get_for_model(CustomerModel))
+
+
+@pytest.fixture
+def rabbitmq_1_trigger(config):
+    return baker.make(
+        MessageBrokerQueue,
+        name="rabbitmq_1",
+        config=config,
+    )
+
+
+@pytest.fixture
+def kafka_1_trigger(config):
+    return baker.make(
+        MessageBrokerQueue,
+        name="kafka_1",
+        config=config,
+    )
+
+
+@pytest.fixture
+def customer_post_save_signal(config):
+    return baker.make(
+        ConfigSignal,
+        config=config,
+        signal=SignalChoices.POST_SAVE,
+    )
+
+
+@pytest.fixture
+def customer_rabbitmq_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    rabbitmq_1_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        rabbitmq_1_trigger,
+    )
+
+
+@pytest.fixture
+def customer_kafka_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    kafka_1_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        kafka_1_trigger,
     )
