@@ -5,6 +5,8 @@ from django.conf import settings
 
 from action_triggers.message_broker.error import Error
 
+from action_triggers.dynamic_loading import replace_dict_values_with_results
+
 
 class ConnectionBase(ABC):
     """Base class for establishing a connection to a message broker.
@@ -65,14 +67,18 @@ class BrokerBase(ABC):
     ):
         self.broker_key = broker_key
         self.config = settings.ACTION_TRIGGERS["brokers"][broker_key]
-        self.conn_details = {
-            **(_t.cast(dict, self.config["conn_details"]) or {}),
-            **(conn_details or {}),
-        }
-        self.params = {
-            **(_t.cast(dict, self.config["params"]) or {}),
-            **(params or {}),
-        }
+        self.conn_details = replace_dict_values_with_results(
+            {
+                **(_t.cast(dict, self.config["conn_details"]) or {}),
+                **(conn_details or {}),
+            }
+        )
+        self.params = replace_dict_values_with_results(
+            {
+                **(_t.cast(dict, self.config["params"]) or {}),
+                **(params or {}),
+            }
+        )
         self.kwargs = kwargs
         self._conn = self.conn_class(self.conn_details, self.params)
 
