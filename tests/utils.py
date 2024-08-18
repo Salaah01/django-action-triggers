@@ -87,3 +87,31 @@ def get_kafka_producer(key: str = "kafka_1"):
     yield producer
 
     producer.close()
+
+
+def can_connect_to_rabbitmq() -> bool:
+    """Check if the service can connect to RabbitMQ.
+
+    Returns:
+        bool: True if the service can connect to RabbitMQ, False otherwise
+    """
+
+    try:
+        with get_rabbitmq_conn():
+            return True
+    except pika.exceptions.ProbableAuthenticationError:
+        return False
+
+
+def can_connect_to_kafka() -> bool:
+    """Check if the service can connect to Kafka.
+
+    Returns:
+        bool: True if the service can connect to Kafka, False otherwise
+    """
+
+    try:
+        with get_kafka_conn():
+            return True
+    except Exception:
+        return False

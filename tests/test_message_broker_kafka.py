@@ -5,16 +5,7 @@ from django.test import override_settings
 
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 from action_triggers.message_broker.kafka import KafkaBroker, KafkaConnection
-from tests.utils import get_kafka_conn
-
-
-def conn_test() -> bool:
-    """Verify that a connection can be made to Kafka."""
-    try:
-        get_kafka_conn()
-        return True
-    except Exception:
-        return False
+from tests.utils import can_connect_to_kafka
 
 
 class TestKafkaConnection:
@@ -51,7 +42,10 @@ class TestKafkaBroker:
                 params={},
             )
 
-    @pytest.mark.skipif(not conn_test(), reason="Kafka is not running.")
+    @pytest.mark.skipif(
+        not can_connect_to_kafka(),
+        reason="Kafka is not running.",
+    )
     def test_message_can_be_sent(self):
         """It should be able to send a message to Kafka."""
         broker = KafkaBroker(

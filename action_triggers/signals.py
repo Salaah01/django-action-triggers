@@ -3,6 +3,7 @@ be triggered.
 """
 
 import json
+import logging
 import typing as _t
 from functools import partial
 
@@ -18,6 +19,8 @@ from action_triggers.enums import SignalChoices
 from action_triggers.message_broker.broker import get_broker_class
 from action_triggers.models import Config
 from action_triggers.webhooks import WebhookProcessor
+
+logger = logging.getLogger(__name__)
 
 
 def signal_callback(
@@ -44,10 +47,11 @@ def signal_callback(
     )
 
     for config in configs:
-        print("Signal triggered for config:", config)
+        logger.debug(f"Signal triggered for config: {config}")
+        payload = json.dumps(config.payload)
 
         for webhook in config.webhooks.all():
-            WebhookProcessor(webhook, instance).process()
+            WebhookProcessor(webhook, payload).process()
 
         for broker in config.message_broker_queues.all():
             broker_class = get_broker_class(broker.name)
@@ -55,7 +59,7 @@ def signal_callback(
                 broker.name,
                 broker.conn_details,
                 broker.parameters,
-            ).send_message(json.dumps(config.payload))
+            ).send_message(payload)
 
 
 def setup() -> None:
