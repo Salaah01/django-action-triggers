@@ -1,11 +1,11 @@
 """Tests for the Kafka message broker."""
 
-from action_triggers.message_broker.kafka import KafkaBroker, KafkaConnection
-from action_triggers.message_broker.exceptions import ConnectionValidationError
 import pytest
 from django.test import override_settings
+
+from action_triggers.message_broker.exceptions import ConnectionValidationError
+from action_triggers.message_broker.kafka import KafkaBroker, KafkaConnection
 from tests.utils import get_kafka_conn
-from action_triggers.message_broker.kafka import KafkaBroker
 
 
 def conn_test() -> bool:
@@ -21,7 +21,7 @@ class TestKafkaConnection:
     """Tests for the `KafkaConnection` class."""
 
     def test_requires_topic(self):
-        with pytest.raises(ConnectionValidationError) as exc:
+        with pytest.raises(ConnectionValidationError):
             KafkaConnection(
                 conn_details={},
                 params={},
