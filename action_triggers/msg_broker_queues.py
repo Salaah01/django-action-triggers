@@ -9,10 +9,9 @@ def process_msg_broker_queue(
 ) -> None:
     """Process the action for the message broker queue.
 
-    Args:
-        msg_broker_queue: The message broker queue object to process.
-        payload: The payload to send to the message broker queue.
-
-    Returns:
-        None
+    :param msg_broker_queue: The message broker queue object to process.
+    :type msg_broker_queue: MessageBrokerQueue
+    :param payload: The payload to send to the message broker queue.
+    :type payload: Union[str, dict]
+    :return: None
     """

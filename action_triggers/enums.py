@@ -23,11 +23,10 @@ class SignalChoices(TextChoices):
     def for_signal(cls, signal: signals.ModelSignal) -> "SignalChoices":
         """Return the SignalChoices instance for the given signal.
 
-        Args:
-            signal: The signal to map to a SignalChoices instance.
-
-        Returns:
-            The SignalChoices instance for the given signal.
+        :param signal: The signal to map to a SignalChoices instance.
+        :type signal: signals.ModelSignal
+        :return: The SignalChoices instance for the given signal.
+        :rtype: SignalChoices
         """
 
         signal_map = {

@@ -2,7 +2,12 @@ import json
 
 
 class MissingDependenciesError(ImportError):
-    """Exception raised when required dependencies are missing."""
+    """Exception raised when required dependencies are missing.
+
+    :param broker_name: The name of the broker that requires the extra.
+    :param extra_name: The name of the extra installable that is missing.
+    :param package_name: The name of the package that is missing.
+    """
 
     def __init__(self, broker_name: str, extra_name: str, package_name: str):
         super().__init__(

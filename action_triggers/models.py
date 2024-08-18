@@ -16,17 +16,21 @@ class ConfigQuerySet(models.QuerySet):
     """Custom queryset for the Config model."""
 
     def active(self) -> "ConfigQuerySet":
-        """Return only active configurations."""
+        """Return only active configurations.
+
+        :return: A queryset of active configurations
+        :rtype: ConfigQuerySet
+        """
         return self.filter(active=True)
 
     def for_signal(self, signal: SignalChoices) -> "ConfigQuerySet":
         """Return only configurations for the given signal.
 
-        Args:
-            signal: The signal to filter by.
+        :param signal: The signal to filter by.
+        :type signal: SignalChoices
 
-        Returns:
-            A queryset of configurations for the given signal
+        :return: A queryset of configurations for the given signal
+        :rtype: ConfigQuerySet
         """
         return self.filter(config_signals__signal=signal)
 
@@ -36,11 +40,11 @@ class ConfigQuerySet(models.QuerySet):
     ) -> "ConfigQuerySet":
         """Return only configurations for the given model.
 
-        Args:
-            model: The model to filter by.
+        :param model: The model to filter by.
+        :type model: Union[models.Model, Type[models.Model]]
 
-        Returns:
-            A queryset of configurations for the given model
+        :return: A queryset of configurations for the given model
+        :rtype: ConfigQuerySet
         """
 
         return self.filter(

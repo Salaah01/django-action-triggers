@@ -17,6 +17,13 @@ class ErrorField:
         return instance.__dict__[self.field_name]
 
     def add_error(self, instance, key: str, message: str) -> None:
+        """Adds an error for the field.
+
+        :param instance: The instance of the class.
+        :param key: The key for the error.
+        :param message: The error message.
+        """
+
         errors = self.__get__(instance, type(instance))
         errors[key].append(message)
 
@@ -58,8 +65,7 @@ class ErrorBase(metaclass=MetaError):
     def as_dict(self) -> dict:
         """Return the error message as a dictionary.
 
-        Returns:
-            A dictionary containing the errors.
+        :return: A dictionary containing the errors.
         """
 
         return {
@@ -70,8 +76,9 @@ class ErrorBase(metaclass=MetaError):
     def is_valid(self, raise_exception: bool = False) -> bool:
         """Check if the error is valid.
 
-        Returns:
-            True if the error is valid, False otherwise.
+        :param raise_exception: Whether to raise an exception if
+            `raise_exception` is `True` and there are errors.
+        :return: True if the error is valid, False otherwise.
         """
 
         has_error = any(error for error in self.as_dict().values())
@@ -84,5 +91,7 @@ class ErrorBase(metaclass=MetaError):
 
 
 class Error(ErrorBase):
+    """A class for storing errors for a message broker."""
+
     connection_params = ErrorField("connection_params")
     params = ErrorField("params")
