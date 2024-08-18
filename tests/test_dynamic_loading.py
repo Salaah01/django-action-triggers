@@ -1,7 +1,10 @@
 """Tests for the `dynamic_loading` module."""
 
 import pytest
-from action_triggers.dynamic_loading import restricted_import_string
+from action_triggers.dynamic_loading import (
+    restricted_import_string,
+    get_path_result,
+)
 from django.test import override_settings
 
 
@@ -63,3 +66,24 @@ class TestRestrictedImportString:
     def test_returns_path_to_import(self, path, expected):
         result = restricted_import_string(path)
         assert result is expected
+
+
+class TestGetPathResult:
+    """Tests for the `get_path_result` function."""
+
+    @pytest.mark.parametrize(
+        "path,expected",
+        (
+            (
+                "tests.test_dynamic_loading.get_webhook_headers",
+                get_webhook_headers(),
+            ),
+            (
+                "tests.test_dynamic_loading.WEBHOOK_API_TOKEN",
+                WEBHOOK_API_TOKEN,
+            ),
+        ),
+    )
+    def test_returns_correctly(self, path, expected):
+        result = get_path_result(path)
+        assert result == expected

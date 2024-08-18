@@ -1,8 +1,10 @@
+import typing as _t
+
 from django.conf import settings
 from django.utils.module_loading import import_string
 
 
-def restricted_import_string(path: str):
+def restricted_import_string(path: str) -> _t.Any:
     """A restricted version of import_string that only allows importing from
     any path that has been defined in
     `settings.ACTION_TRIGGER_SETTINGS.ALLOWED_DYNAMIC_IMPORT_PATHS`.
@@ -10,6 +12,9 @@ def restricted_import_string(path: str):
     This is to prevent arbitrary code execution via dynamic imports.
 
     :param path: The path to import from in the format `module.submodule.attr`.
+    :raises RuntimeError: If no allowed paths are defined in settings.
+    :raises ValueError: If the path is not allowed.
+    :return: The imported object.
     """
 
     ACTION_TRIGGER_SETTINGS = getattr(settings, "ACTION_TRIGGER_SETTINGS", {})
@@ -28,3 +33,16 @@ def restricted_import_string(path: str):
         )
 
     return import_string(path)
+
+
+def get_path_result(path: str) -> _t.Any:
+    """Get the result of a path.
+
+    :param path: The path to import from in the format `module.submodule.attr`.
+    :return: The imported object.
+    """
+
+    obj = restricted_import_string(path)
+    if callable(obj):
+        return obj()
+    return obj
