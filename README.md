@@ -120,6 +120,18 @@ For example, if you want to use the function `get_token` which resides in `myapp
 }
 ```
 
+In order for this to work, the path to the callable must be redefined in your settings file. In this case, you would add the following to your settings file:
+
+```python
+ACTION_TRIGGER_SETTINGS = {
+    "ALLOWED_DYNAMIC_IMPORT_PATHS": (
+        "myapp.utils.get_token",
+    )
+}
+```
+
+This will ensure that only certain paths can be evaluated at runtime and prevent any malicious code from being executed via this feature.
+
 The application will evaluate the string `myapp.utils.get_token` and call the function `get_token` from the `myapp.utils` module.
 
 **Limitations**
