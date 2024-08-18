@@ -5,6 +5,7 @@ from action_triggers.dynamic_loading import (
     restricted_import_string,
     get_path_result,
     replace_string_with_result,
+    replace_dict_values_with_results,
 )
 from django.test import override_settings
 
@@ -18,6 +19,14 @@ def get_webhook_headers() -> dict:
         "Content-Type": "application/json",
         "Authorization": "Bearer test_token",
     }
+
+
+def get_api_token() -> str:
+    """A mocked function that will return the API token for a webhook
+    request.
+    """
+
+    return "test_token"
 
 
 # A mocked value to test if the variable can be loaded using dynamic imports.
@@ -129,5 +138,26 @@ class TestReplaceStringWithResult:
             "'Authorization': 'Bearer test_token'} and the API token is "
             "test_token"
         )
+
+        assert result == expected
+
+
+class TestReplaceDictValuesWithResults:
+    """Tests for the `replace_dict_values_with_results` function."""
+
+    def test_can_replace_a_with_a_callable_result(self):
+        dictionary = {
+            "headers": {
+                "content_type": "application/json",
+                "Auth": "Bearer: {{ tests.test_dynamic_loading.get_api_token }}",  # noqa: E501
+            }
+        }
+        result = replace_dict_values_with_results(dictionary)
+        expected = {
+            "headers": {
+                "content_type": "application/json",
+                "Auth": "Bearer: test_token",
+            }
+        }
 
         assert result == expected

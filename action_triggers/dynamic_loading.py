@@ -67,3 +67,30 @@ def replace_string_with_result(
         lambda m: str(get_path_result(m.group(1).strip())),
         string,
     )
+
+
+def replace_dict_values_with_results(
+    dictionary: dict,
+    opener: str = "{{",
+    closer: str = "}}",
+) -> dict:
+    """Recursively all instances of `{{ path }}` in the values of a dictionary
+    with the result of the path.
+
+    :param dictionary: The dictionary to replace the paths in.
+    :param opener: The opener of the path.
+    :param closer: The closer of the path.
+    :return: The dictionary with the paths replaced.
+    """
+
+    new_dict = {}
+
+    for k, v in dictionary.items():
+        if isinstance(v, str):
+            new_dict[k] = replace_string_with_result(v, opener, closer)
+        elif isinstance(v, dict):
+            new_dict[k] = replace_dict_values_with_results(v, opener, closer)
+        else:
+            new_dict[k] = v
+
+    return new_dict
