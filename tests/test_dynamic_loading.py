@@ -1,13 +1,14 @@
 """Tests for the `dynamic_loading` module."""
 
 import pytest
-from action_triggers.dynamic_loading import (
-    restricted_import_string,
-    get_path_result,
-    replace_string_with_result,
-    replace_dict_values_with_results,
-)
 from django.test import override_settings
+
+from action_triggers.dynamic_loading import (
+    get_path_result,
+    replace_dict_values_with_results,
+    replace_string_with_result,
+    restricted_import_string,
+)
 
 
 def get_webhook_headers() -> dict:

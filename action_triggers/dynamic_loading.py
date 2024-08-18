@@ -1,5 +1,6 @@
-import typing as _t
 import re
+import typing as _t
+
 from django.conf import settings
 from django.utils.module_loading import import_string
 

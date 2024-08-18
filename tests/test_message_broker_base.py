@@ -1,5 +1,7 @@
 """Tests for the `message_broker.base` module."""
 
+import typing as _t
+
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 
 
@@ -18,7 +20,7 @@ class MockBrokerBase(BrokerBase):
 
     conn_class = MockConnectionBase
 
-    def _send_message_impl(self, message: str):
+    def _send_message_impl(self, conn: _t.Any, message: str) -> None:
         pass
 
 

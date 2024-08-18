@@ -1,7 +1,8 @@
-import typing as _t
 import json
-from action_triggers.models import MessageBrokerQueue
+import typing as _t
+
 from action_triggers.message_broker.broker import get_broker_class
+from action_triggers.models import MessageBrokerQueue
 
 
 def process_msg_broker_queue(

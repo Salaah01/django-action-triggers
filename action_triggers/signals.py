@@ -13,9 +13,9 @@ from django.db.models.signals import (
     pre_save,
 )
 
+from action_triggers.dispatch import handle_action
 from action_triggers.enums import SignalChoices
 from action_triggers.models import Config
-from action_triggers.dispatch import handle_action
 
 logger = logging.getLogger(__name__)
 

@@ -3,9 +3,8 @@ from abc import ABC, abstractmethod
 
 from django.conf import settings
 
-from action_triggers.message_broker.error import Error
-
 from action_triggers.dynamic_loading import replace_dict_values_with_results
+from action_triggers.message_broker.error import Error
 
 
 class ConnectionBase(ABC):

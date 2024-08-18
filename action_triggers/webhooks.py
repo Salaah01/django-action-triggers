@@ -4,8 +4,8 @@ import typing as _t
 
 import requests
 
-from action_triggers.models import Webhook
 from action_triggers.dynamic_loading import replace_dict_values_with_results
+from action_triggers.models import Webhook
 
 
 class WebhookProcessor:
