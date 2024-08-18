@@ -134,3 +134,17 @@ def customer_kafka_post_save_signal(
         customer_post_save_signal,
         kafka_1_trigger,
     )
+
+
+@pytest.fixture
+def customer_webhook_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    webhook,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        webhook,
+    )
