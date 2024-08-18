@@ -3,7 +3,6 @@ be triggered.
 """
 
 import logging
-import typing as _t
 from functools import partial
 
 from django.db.models import Model, signals
@@ -22,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def signal_callback(
-    instance: _t.Type[Model],
+    instance: Model,
     signal: signals.ModelSignal,
     **kwargs,
 ) -> None:

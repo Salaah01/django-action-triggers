@@ -83,7 +83,7 @@ def replace_dict_values_with_results(
     :return: The dictionary with the paths replaced.
     """
 
-    new_dict = {}
+    new_dict: _t.Dict[str, _t.Any] = {}
 
     for k, v in dictionary.items():
         if isinstance(v, str):
