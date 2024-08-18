@@ -5,6 +5,7 @@ import typing as _t
 import requests
 
 from action_triggers.models import Webhook
+from action_triggers.dynamic_loading import replace_dict_values_with_results
 
 
 class WebhookProcessor:
@@ -53,7 +54,7 @@ class WebhookProcessor:
         fn_kwargs: _t.Dict[str, _t.Any] = {"url": self.webhook.url}
         headers = self.get_headers()
         if headers:
-            fn_kwargs["headers"] = headers
+            fn_kwargs["headers"] = replace_dict_values_with_results(headers)
 
         if isinstance(self.payload, dict):
             fn_kwargs["json"] = self.payload
