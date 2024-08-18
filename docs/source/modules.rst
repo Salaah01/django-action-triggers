@@ -51,6 +51,11 @@ Module Documentation
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: action_triggers.dynamic_loading
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: action_triggers.models
    :members:
    :undoc-members:
