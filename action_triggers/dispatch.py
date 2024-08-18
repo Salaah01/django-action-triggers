@@ -11,8 +11,7 @@ from action_triggers.webhooks import WebhookProcessor
 def handle_action(config: Config, instance: Model) -> None:
     payload_gen = get_payload_generator(config)
     payload = payload_gen(instance)
-    webhooks = config.webhooks.all()
-    for webhook in webhooks:
+    for webhook in config.webhooks.all():
         WebhookProcessor(webhook, payload).process()
     for msg_broker_queue in config.message_broker_queues.all():
         process_msg_broker_queue(msg_broker_queue, payload)

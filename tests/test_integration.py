@@ -109,7 +109,7 @@ class TestIntegrationWebhook:
         assert len(responses.calls) == 1
         assert responses.calls[0].request.url == "https://example.com/"
         assert (
-            responses.calls[0].request.body == '{"message": "Hello, World!"}'
+            responses.calls[0].request.body == b'{"message": "Hello, World!"}'
         )
 
     @responses.activate
@@ -133,4 +133,4 @@ class TestIntegrationWebhook:
 
         assert len(responses.calls) == 1
         assert responses.calls[0].request.url == "https://example.com/"
-        assert responses.calls[0].request.body == '"Hello World!"'
+        assert responses.calls[0].request.body == "Hello World!"

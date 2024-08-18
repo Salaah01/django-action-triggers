@@ -1,6 +1,7 @@
 import typing as _t
-
+import json
 from action_triggers.models import MessageBrokerQueue
+from action_triggers.message_broker.broker import get_broker_class
 
 
 def process_msg_broker_queue(
@@ -16,3 +17,10 @@ def process_msg_broker_queue(
     Returns:
         None
     """
+
+    broker_class = get_broker_class(msg_broker_queue.name)
+    broker_class(
+        msg_broker_queue.name,
+        msg_broker_queue.conn_details,
+        msg_broker_queue.parameters,
+    ).send_message(json.dumps(payload))
