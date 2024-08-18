@@ -1,5 +1,7 @@
+import json
 import typing as _t
 
+from action_triggers.message_broker.broker import get_broker_class
 from action_triggers.models import MessageBrokerQueue
 
 
@@ -15,3 +17,10 @@ def process_msg_broker_queue(
     :type payload: Union[str, dict]
     :return: None
     """
+
+    broker_class = get_broker_class(msg_broker_queue.name)
+    broker_class(
+        msg_broker_queue.name,
+        msg_broker_queue.conn_details,
+        msg_broker_queue.parameters,
+    ).send_message(json.dumps(payload))

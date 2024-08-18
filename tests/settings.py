@@ -93,3 +93,11 @@ ACTION_TRIGGERS = {
         },
     }
 }
+
+ACTION_TRIGGER_SETTINGS = {
+    "ALLOWED_DYNAMIC_IMPORT_PATHS": (
+        "tests.test_dynamic_loading.get_webhook_headers",
+        "tests.test_dynamic_loading.WEBHOOK_API_TOKEN",
+        "tests.test_dynamic_loading.get_api_token",
+    )
+}

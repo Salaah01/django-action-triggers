@@ -47,6 +47,23 @@ class TestWebhookProcessor:
             "data": "foo=bar",
         }
 
+    def test_get_fn_kwargs_replaces_headers_with_results(self, webhook):
+        webhook.headers = {
+            "content-type": "application/json",
+            "Authorization": "Bearer {{ tests.test_dynamic_loading.get_api_token }}",  # noqa: E501
+        }
+        webhook.save()
+        processor = WebhookProcessor(webhook, {})
+
+        assert processor.get_fn_kwargs() == {
+            "url": webhook.url,
+            "json": {},
+            "headers": {
+                "content-type": "application/json",
+                "Authorization": "Bearer test_token",
+            },
+        }
+
     @pytest.mark.parametrize(
         "payload,expected_data_or_json",
         (
