@@ -1,7 +1,8 @@
+from contextlib import contextmanager
+
 import pika  # type: ignore[import-untyped]
 from django.conf import settings
-from kafka import KafkaConsumer
-from contextlib import contextmanager
+from kafka import KafkaConsumer  # type: ignore[import-untyped]
 
 
 def get_rabbitmq_conn(key: str = "rabbitmq_1") -> pika.BlockingConnection:
@@ -38,15 +39,11 @@ def get_kafka_consumer(key: str = "kafka_1") -> KafkaConsumer:
         enable_auto_commit=False,
         auto_offset_reset="earliest",
         group_id="test_group_1",
-        # heartbeat_interval_ms=2000,
-        # session_timeout_ms=3000,
         fetch_max_wait_ms=4000,
-        # request_timeout_ms=5500,
-        # connections_max_idle_ms=6000,
         **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],
     )
     conn.subscribe(
-        settings.ACTION_TRIGGERS["brokers"][key]["params"]["topic"],
+        settings.ACTION_TRIGGERS["brokers"][key]["params"]["topic"],  # type: ignore[index]  # noqa E501
     )
 
     yield conn

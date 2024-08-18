@@ -1,6 +1,7 @@
 """Integration tests."""
 
 from unittest.mock import patch
+
 from model_bakery import baker
 
 from action_triggers.registry import add_to_registry
