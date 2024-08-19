@@ -1,8 +1,8 @@
-Welcome to django-action-triggers's documentation!
-==================================================
+Django Action Triggers Documentation
+====================================
 
-Django Action Triggers is a Django application that allows the user to trigger
-actions based on changes in the database.
+Django Action Triggers (django-action-triggers) is a Django application that
+allows the user to trigger actions based on changes in the database.
 
 This application uses the term "trigger" to refer to the event that will cause
 an "action" to be executed. The triggers are specially changes in the database.
