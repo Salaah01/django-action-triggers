@@ -52,12 +52,10 @@ def get_payload_generator(
     config.
 
     :param config: The configuration object to use for generating the payload.
-    :type config: Config
     :return: If the config has a payload, the function will return a callable
         that generates the payload using the provided payload in the config
         object. Otherwise, it will return a callable that generates the payload
         from the model instance
-    :rtype: Callable[[Model], Union[dict, str]]
     """
 
     if config.payload:
