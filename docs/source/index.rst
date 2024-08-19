@@ -25,6 +25,7 @@ Contents
    api
    dynamic_loading
    webhooks
+   message_brokers
    modules
 
 Indices and tables
