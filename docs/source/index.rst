@@ -26,6 +26,18 @@ Contents
    dynamic_loading
    webhooks
    message_brokers
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Message Brokers:
+   
+   message_brokers/kafka
+   message_brokers/rabbitmq
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Modules:
+   
    modules
 
 Indices and tables

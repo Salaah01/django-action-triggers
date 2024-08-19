@@ -76,9 +76,9 @@ then the returning payload will be JSON, otherwise, it'll be just plain text.
   from action-triggers.enums import HTTPMethod
 
   webhook = Webhook.objects.create(
+    config=config,
     url="https://example.com/webhook",
     method=HTTPMethod.POST,
-    config=config,
     headers={
       "Content-Type": "application/json",
       "Authorization": "Bearer my-api-key"
@@ -109,6 +109,9 @@ In the example above, we hardcoded the API key in the `webhooks.headers` field.
 This is not recommended as the API key will be stored in plaintext in the
 database. Instead, we can use a callable to fetch the API key at runtime.
 
+Replacing Hardcoding
+--------------------
+
 Let's suppose we have a the function `myproject.my_module.fetch_api_key` that
 fetches the API key for us. We can specify the path to this function in the
 `webhooks.headers` field like so:
@@ -128,6 +131,9 @@ fetches the API key for us. We can specify the path to this function in the
       "Authorization": "Bearer {{ myproject.my_module.fetch_api_key }}"
     }
   )
+
+Adding Dynamic Import Paths to Settings
+---------------------------------------
 
 In order to use this feature, you must ensure that the callable or variable
 that you are specifying in the field must be defined in the settings file.
