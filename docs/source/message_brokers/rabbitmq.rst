@@ -40,7 +40,6 @@ In this example, the `my_rabbit_mq_broker` broker is configured to connect to
 a RabbitMQ broker running on `localhost` on port `5672`. The broker will send
 messages to the `my_queue` queue.
 
-
 Creating a RabbitMQ Action
 ==========================
 
@@ -50,24 +49,7 @@ activated.
 
 Let's start with a scenario. Suppose we have the following Django models:
 
-.. code-block:: python
-
-  from django.db import models
-
-  class Customer(models.Model):
-    name = models.CharField(max_length=255)
-    email = models.EmailField()
-
-  class Product(models.Model):
-      name = models.CharField(max_length=255)
-      description = models.TextField()
-
-
-  class Sale(models.Model):
-      customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-      product = models.ForeignKey(Product, on_delete=models.CASCADE)
-      quantity = models.IntegerField()
-
+.. include:: ../partials/django_models_for_scenarios.rst
   
 Suppose we want to send a message to the RabbitMQ broker when certain triggers
 are activated. We can set this up by following these steps:
