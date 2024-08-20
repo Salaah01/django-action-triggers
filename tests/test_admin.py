@@ -1,9 +1,10 @@
 """Tests for the `admin` module."""
 
 from django.contrib.admin.sites import AdminSite
+from django.test import RequestFactory
+
 from action_triggers import admin as action_triggers_admin
 from action_triggers import models as action_triggers_models
-from django.test import RequestFactory
 
 
 class TestConfigAdmin:
