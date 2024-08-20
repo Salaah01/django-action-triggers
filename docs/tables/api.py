@@ -1,6 +1,7 @@
 """Module to generate tables for the API documentation."""
 
 import os
+
 from tabulate import tabulate
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))

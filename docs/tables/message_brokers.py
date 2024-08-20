@@ -1,6 +1,7 @@
 """Module to generate tables for the message brokers documentation."""
 
 import os
+
 from tabulate import tabulate
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,5 +35,7 @@ def config_options():
         ],
     ]
 
-    with open(os.path.join(SOURCE_DIR, "message_brokers", "config_options.rst"), "a+") as f:
+    with open(
+        os.path.join(SOURCE_DIR, "message_brokers", "config_options.rst"), "a+"
+    ) as f:
         f.write(tabulate(data, headers=headers, tablefmt="rst"))

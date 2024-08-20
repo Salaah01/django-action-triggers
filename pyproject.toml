@@ -25,7 +25,7 @@ django = ">=3.2"
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main"]
-exclude = ["action_triggers/migrations"]
+exclude = ["action_triggers/migrations", "docs", "venv"]
 
 [tool.django-stubs]
 django_settings_module = "tests.settings"
