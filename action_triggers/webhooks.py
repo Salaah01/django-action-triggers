@@ -11,9 +11,10 @@ from action_triggers.models import Webhook
 class WebhookProcessor:
     """Process an action which involves sending a webhook.
 
-    Args:
-        webhook: The webhook configuration to process.
-        payload: The payload to send with the webhook.
+    :param webhook: The webhook configuration to process.
+    :type webhook: Webhook
+    :param payload: The payload to send with the webhook.
+    :type payload: Union[str, dict]
     """
 
     def __init__(self, webhook: Webhook, payload: _t.Union[str, dict]):
@@ -38,8 +39,8 @@ class WebhookProcessor:
     def get_request_fn(self) -> _t.Callable[..., requests.Response]:
         """Returns the request function to use for the webhook.
 
-        Returns:
-            The request function to use for the webhook.
+        :raises AttributeError: If the HTTP method is not supported.
+        :return: The request function to use for the webhook.
         """
 
         return getattr(requests, self.webhook.http_method.lower())
@@ -47,10 +48,9 @@ class WebhookProcessor:
     def get_fn_kwargs(self) -> dict:
         """Returns the keyword arguments to pass to the request function.
 
-        Returns:
-            The keyword arguments to pass to the request function.
+        :return: The keyword arguments to pass to the request function.
+        :rtype: dict
         """
-
         fn_kwargs: _t.Dict[str, _t.Any] = {"url": self.webhook.url}
         headers = self.get_headers()
         if headers:
@@ -66,8 +66,8 @@ class WebhookProcessor:
     def get_headers(self) -> dict:
         """Returns the headers to use for the webhook.
 
-        Returns:
-            The headers to use for the webhook.
+        :return: The headers to use for the webhook.
+        :rtype: dict
         """
 
         return self.webhook.headers

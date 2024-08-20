@@ -10,9 +10,8 @@ from action_triggers.message_broker.error import Error
 class ConnectionBase(ABC):
     """Base class for establishing a connection to a message broker.
 
-    Args:
-        conn_details: The connection parameters to use for establishing the
-            connection.
+    :param conn_details: The connection parameters to use for establishing the
+        connection.
     """
 
     def __init__(self, conn_details: dict, params: dict):
@@ -49,10 +48,10 @@ class BrokerBase(ABC):
     """Base class for a message broker. This class should be subclassed
     to implement the specific message broker.
 
-    Args:
-        conn_details: The connection parameters to use for establishing the
-            connection.
-        **kwargs: Additional keyword arguments to pass to the subclass.
+    :param conn_details: The connection parameters to use for establishing the
+        connection.
+    :param params: Additional parameters to use for the message broker.
+    :param kwargs: Additional keyword arguments to pass to the subclass.
     """
 
     conn_class: _t.Type[ConnectionBase]
@@ -84,11 +83,7 @@ class BrokerBase(ABC):
     def send_message(self, message: str) -> None:
         """Starts a connection with the message broker and sends a message.
 
-        Args:
-            message: The message to send to the message
-
-        Returns:
-            None
+        :param message: The message to send to the message broker.
         """
 
         with self._conn as conn:
@@ -99,10 +94,6 @@ class BrokerBase(ABC):
         """Implementation of sending a message to the message broken given an
         established connection.
 
-        Args:
-            conn: The established connection to the message broker.
-            message: The message to send to the message broker.
-
-        Returns:
-            None
+        :param conn: The established connection to the message broker.
+        :param message: The message to send to the message broker.
         """

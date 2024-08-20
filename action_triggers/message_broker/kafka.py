@@ -44,9 +44,8 @@ class KafkaBroker(BrokerBase):
     def _send_message_impl(self, conn: _t.Any, message: str) -> None:
         """Send a message to the Kafka broker.
 
-        Args:
-            conn: The connection to the broker.
-            message: The message to send.
+        :param conn: The connection to the broker.
+        :param message: The message to send.
         """
 
         producer = conn.conn

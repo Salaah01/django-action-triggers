@@ -17,11 +17,10 @@ def model_str(model: T_ModelOrModelBase) -> str:
     """Returns a string representation of the model which can be used to
     identify both the app label and the model name.
 
-    Args:
-        model: The model to get the string representation of.
-
-    Returns:
-        A string representation of the model.
+    :param model: The model to get the string representation of.
+    :type model: Union[Model, Type[Model]]
+    :return: A string representation of the model.
+    :rtype: str
     """
     return f"{model._meta.app_label}.{model._meta.model_name}"
 
@@ -29,8 +28,9 @@ def model_str(model: T_ModelOrModelBase) -> str:
 def add_to_registry(model: T_ModelOrModelBase) -> None:
     """Adds a model to the registry.
 
-    Args:
-        model: The model to add to the registry.
+    :param model: The model to add to the registry.
+    :type model: Union[Model, Type[Model]]
+    :return: None
     """
 
     if not isinstance(model, ModelBase):
@@ -42,11 +42,10 @@ def add_to_registry(model: T_ModelOrModelBase) -> None:
 def model_in_registry(model: T_ModelOrModelBase) -> bool:
     """Checks if a model is in the registry.
 
-    Args:
-        model: The model to check.
-
-    Returns:
-        True if the model is in the registry, False otherwise.
+    :param model: The model to check.
+    :type model: Union[Model, Type[Model]]
+    :return: True if the model is in the registry, False otherwise.
+    :rtype: bool
     """
     return model_str(model) in registered_models
 
@@ -55,8 +54,8 @@ def registered_content_types() -> QuerySet[ContentType]:
     """Return a queryset of all the content types registered in the
     registry.
 
-    Returns:
-        A queryset of all the content types registered in the registry.
+    :return: A queryset of all the content types registered in the registry.
+    :rtype: QuerySet[ContentType]
     """
     content_types = []
     for model in registered_models.values():

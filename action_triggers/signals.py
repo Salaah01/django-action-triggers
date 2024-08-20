@@ -29,13 +29,12 @@ def signal_callback(
     The callback function will dispatch the relevant signals for the
     model.
 
-    Args:
-        instance: The model instance which triggered the signal.
-        signal: The signal which was triggered.
-        **kwargs: Additional keyword arguments.
-
-    Returns:
-        None
+    :param instance: The model instance which triggered the signal.
+    :type instance: Model
+    :param signal: The signal which was triggered.
+    :type signal: signals.ModelSignal
+    :param kwargs: Additional keyword arguments.
+    :type kwargs: Any
     """
     configs = (
         Config.objects.for_signal(SignalChoices.for_signal(signal))

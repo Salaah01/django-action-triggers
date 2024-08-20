@@ -28,7 +28,15 @@ class RabbitMQConnection(ConnectionBase):
 
 
 class RabbitMQBroker(BrokerBase):
-    """Broker class for RabbitMQ."""
+    """Broker class for RabbitMQ.
+
+    :param broker_key: The key for the broker (must existing in
+        `settings.ACTION_TRIGGERS`).
+    :param conn_params: The connection parameters to use for establishing the
+        connection.
+    :param params: Additional parameters to use for the message broker.
+    :param kwargs: Additional keyword arguments to pass to the subclass.
+    """
 
     broker_type = BrokerType.RABBITMQ
     conn_class = RabbitMQConnection
@@ -47,9 +55,8 @@ class RabbitMQBroker(BrokerBase):
     def _send_message_impl(self, conn: _t.Any, message: str) -> None:
         """Send a message to the RabbitMQ broker.
 
-        Args:
-            conn: The connection to the broker.
-            message: The message to send.
+        :param conn: The connection to the broker.
+        :param message: The message to send.
         """
 
         channel = conn.conn.channel()

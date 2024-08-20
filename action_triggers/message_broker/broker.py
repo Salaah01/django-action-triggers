@@ -11,14 +11,9 @@ from action_triggers.message_broker.rabbitmq import RabbitMQBroker
 def get_broker_class(broker_name: str) -> _t.Type[BrokerBase]:
     """Get the broker class based on the broker name.
 
-    Args:
-        broker_name: The name of the broker.
-
-    Returns:
-        The broker class.
-
-    Raises:
-        ValueError: If the broker name is invalid.
+    :param broker_name: The name of the broker.
+    :return: The broker class.
+    :raises ValueError: If the broker name is invalid.
     """
 
     broker_type_to_class_map = {
