@@ -15,7 +15,6 @@ jobs:
           poetry install --all-extras
 
           # Additional dependencies for building the docs
-          cd docs
           poetry run pip install -r docs/requirements.txt
 
       - name: Sphinx Build
