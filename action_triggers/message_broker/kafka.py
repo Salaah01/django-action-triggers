@@ -5,9 +5,9 @@ from action_triggers.message_broker.enums import BrokerType
 from action_triggers.message_broker.exceptions import MissingDependenciesError
 
 try:
-    from kafka import KafkaProducer  # type: ignore[import-untyped]
+    from confluent_kafka import Producer
 except ImportError:  # pragma: no cover
-    raise MissingDependenciesError("Kafka", "kafka", "kafka-python")
+    raise MissingDependenciesError("Kafka", "kafka", "confluent-kafka")
 
 
 class KafkaConnection(ConnectionBase):
@@ -22,7 +22,7 @@ class KafkaConnection(ConnectionBase):
         self._errors.is_valid(raise_exception=True)
 
     def connect(self):
-        self.conn = KafkaProducer(**self.conn_details)
+        self.conn = Producer(**self.conn_details)
 
 
 class KafkaBroker(BrokerBase):
@@ -49,5 +49,5 @@ class KafkaBroker(BrokerBase):
         """
 
         producer = conn.conn
-        producer.send(self.topic, message.encode())
+        producer.produce(self.topic, message.encode())
         producer.flush()
