@@ -10,6 +10,7 @@ django.setup()
 
 from django.contrib.contenttypes.models import ContentType  # noqa: E402
 from model_bakery import baker  # noqa: E402
+from django.contrib.auth.models import User  # noqa: E402
 
 from action_triggers.enums import SignalChoices  # noqa: E402
 from action_triggers.models import (  # noqa: E402
@@ -148,3 +149,7 @@ def customer_webhook_post_save_signal(
         customer_post_save_signal,
         webhook,
     )
+
+@pytest.fixture
+def superuser():
+    return baker.make(User, is_staff=True, is_superuser=True)
