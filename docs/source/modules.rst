@@ -41,6 +41,12 @@ Module Documentation
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: action_triggers.admin
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 .. automodule:: action_triggers.conf
    :members:
    :undoc-members:
