@@ -54,7 +54,7 @@ RABBIT_MQ_CONN_DETAILS = (
     or DEFAULT_RABBIT_MQ_CONN_DETAILS
 )
 DEFAULT_KAFKA_CONN_DETAILS = {
-    "bootstrap_servers": "localhost:29092",
+    "bootstrap.servers": "localhost:29092",
 }
 KAFKA_CONN_DETAILS = (
     json.loads(os.getenv("KAFKA_CONN_DETAILS", "{}"))

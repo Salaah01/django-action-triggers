@@ -166,9 +166,7 @@ ACTION_TRIGGERS = {
         "kafka_1": {
             "broker_type": "kafka",
             "conn_details": {
-                "host": "localhost",
-                "port": 9092,
-                "group_id": "test_group_1",
+                "bootstrap.servers": "localhost:29092",
             },
             "params": {
                 "topic": "test_topic_1",
