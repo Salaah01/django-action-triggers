@@ -12,16 +12,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry
-          poetry install --all-extras --no-root
+          poetry install --all-extras
 
           # Additional dependencies for building the docs
           cd docs
-          pip install -r requirements.txt
+          poetry run pip install -r docs/requirements.txt
 
       - name: Sphinx Build
         run: |
-          cd docs
-          make html
+          poetry run make -C docs html
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
