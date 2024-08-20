@@ -5,7 +5,7 @@ from action_triggers.message_broker.enums import BrokerType
 from action_triggers.message_broker.exceptions import MissingDependenciesError
 
 try:
-    from confluent_kafka import Producer
+    from confluent_kafka import Producer  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
     raise MissingDependenciesError("Kafka", "kafka", "confluent-kafka")
 

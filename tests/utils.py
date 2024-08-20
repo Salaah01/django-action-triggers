@@ -1,8 +1,8 @@
 from contextlib import contextmanager
 
 import pika  # type: ignore[import-untyped]
+from confluent_kafka import Consumer, Producer  # type: ignore[import-untyped]
 from django.conf import settings
-from confluent_kafka import Consumer, Producer
 
 
 def get_rabbitmq_conn(key: str = "rabbitmq_1") -> pika.BlockingConnection:
@@ -40,7 +40,7 @@ def get_kafka_conn(key: str = "kafka_1") -> Consumer:
             "enable.auto.commit": False,
             "auto.offset.reset": "earliest",
             "group.id": "test_group_1",
-            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],
+            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[dict-item]  # noqa E501
         }
     )
 
