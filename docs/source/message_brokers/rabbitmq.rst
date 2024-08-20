@@ -2,23 +2,32 @@
 RabbitMQ
 ========
 
-Django Action Triggers supports sending messages to a RabbitMQ message broker.
+**Django Action Triggers** supports sending messages to a RabbitMQ message
+broker. This section will guide you through the process of configuring RabbitMQ
+as a message broker and creating actions that send messages to it.
 
 Configuration
 =============
 
-Before messages can be sent to a RabbitMQ message broker, the broker needs to
-be configured in the Django settings.
+Before messages can be sent to a RabbitMQ message broker, you need to configure
+the broker in your Django settings.
+
 
 .. include:: ../partials/note_ref_message_brokers_configuration_guide.rst
 
 The RabbitMQ configuration requires that `params.queue` be set to the name of
 the queue to which messages will be sent within the context of the trigger.
 
-Example Configuration
-=====================
+RabbitMQ Configuration
+----------------------
 
-An example configuration for RabbitMQ would look like this:
+In the RabbitMQ configuration, you must set the `params.queue` to specify the
+queue where messages will be sent when a trigger is activated.
+
+Example Configuration in `settings.py`
+--------------------------------------
+
+Here is an example configuration for RabbitMQ:
 
 .. code-block:: python
 
@@ -36,79 +45,90 @@ An example configuration for RabbitMQ would look like this:
   }
 
 
-In this example, the `my_rabbit_mq_broker` broker is configured to connect to
-a RabbitMQ broker running on `localhost` on port `5672`. The broker will send
-messages to the `my_queue` queue.
+In this configuration:
+- The `my_rabbit_mq_broker` is set to connect to RabbitMQ running on `localhost` on port `5672`.
+- Messages will be sent to the `my_queue` queue.
 
 Creating a RabbitMQ Action
 ==========================
 
-Now that the RabbitMQ broker is configured, you can create a trigger that will
-execute the action to send messages to the RabbitMQ broker when the trigger is
-activated.
+Once you've configured RabbitMQ, you can create a trigger that sends messages
+to the RabbitMQ broker whenever the trigger is activated.
 
-Let's start with a scenario. Suppose we have the following Django models:
+Scenario
+--------
+
+Suppose you have the following Django models:
 
 .. include:: ../partials/django_models_for_scenarios.rst
   
-Suppose we want to send a message to the RabbitMQ broker when certain triggers
-are activated. We can set this up by following these steps:
+Let's say you want to send a message to RabbitMQ when a new sale is created.
+You can achieve this by following these steps:
 
-1. Create a :class:`Config` model instance (base action):
+Step 1: Create a `Config` Model Instance (Base Action)
+------------------------------------------------------
+
+The `Config` model defines the base action, including the payload that will be
+sent when the trigger is activated.
 
 .. code-block:: python
 
-  from django.contrib.contenttypes.models import ContentType
-  from action_triggers.models import Config
+    from django.contrib.contenttypes.models import ContentType
+    from action_triggers.models import Config
 
-  config = Config.objects.create(
-    payload={
-      "customer_name": "{{ customer.name }}",
-      "product_name": "{{ product.name }}",
-      "quantity": "{{ quantity }}"
-    },
-    active=True,
-    content_types=[
-      ContentType.objects.get_for_model(Sale)
-    ]
-  )
+    config = Config.objects.create(
+        payload={
+            "customer_name": "{{ customer.name }}",
+            "product_name": "{{ product.name }}",
+            "quantity": "{{ quantity }}"
+        },
+        active=True,
+        content_types=[
+            ContentType.objects.get_for_model(Sale)
+        ]
+    )
 
-This forms the basis of any action. The `payload` is designed to behave like a
-Django template. If the resulting value after any parsing is JSON-serializable,
-then the returning payload will be JSON, otherwise, it'll be just plain text.
+The `payload` is designed to behave like a Django template. If the resultin
+value is JSON-serializable, the payload will be returned as JSON; otherwise, it
+will be returned as plain text.
 
-2. Create a :class:`MessageBrokerQueue` model instance (RabbitMQ action):
+Step 2: Create a `MessageBrokerQueue` Model Instance (RabbitMQ Action)
+----------------------------------------------------------------------
+
+Now, create a :class:`MessageBrokerQueue` instance to define the RabbitMQ
+action.
 
 .. warning::
-  In this example, we hardcode the connection details which contains sensitive
-  information. This is not recommended. Instead, we will explore how instead we
-  can point to a callable or variable that will be evaluated at runtime in the
-  next section.
+  Hardcoding sensitive information such as connection details is not
+  recommended. In the next section, we will explore how to dynamically set
+  these values using callables or variables at runtime.
 
 .. code-block:: python
 
-  from action_triggers.models import MessageBrokerQueue
+    from action_triggers.models import MessageBrokerQueue
 
-  message_broker_queue = MessageBrokerQueue.objects.create(
-    config=config,
-    name="my_rabbit_mq_broker",
-    conn_details={
-      "host": "localhost",
-      "port": 5672,
-      "username": "guest",
-      "password": "guest",
-    },
-    parameters={
-      "queue": "my_queue"
-    }
-  )
+    message_broker_queue = MessageBrokerQueue.objects.create(
+        config=config,
+        name="my_rabbit_mq_broker",
+        conn_details={
+            "host": "localhost",
+            "port": 5672,
+            "username": "guest",
+            "password": "guest",
+        },
+        parameters={
+            "queue": "my_queue"
+        }
+    )
 
-In this example, the `my_rabbit_mq_broker` broker is configured to connect to
-a RabbitMQ broker running on `localhost` on port `5672`. The broker will send
-messages to the `my_queue` queue.
+In this example:
+- The `my_rabbit_mq_broker` connects to RabbitMQ on `localhost` at port `5672`.
+- Messages will be sent to the `my_queue` queue.
 
+Step 3: Create a `ConfigSignal` Model Instance (Trigger)
+---------------------------------------------------------
 
-3. Create a :class:`ConfigSignal` model instance (trigger):
+Finally, link the action to a trigger event, such as saving a model instance.
 
 .. code-block:: python
 
@@ -120,56 +140,48 @@ messages to the `my_queue` queue.
     signal=SignalChoices.POST_SAVE,
   )
 
-Now we have a message broker action that will be triggered when a new sale is
-created.
+Now, whenever a new sale is created, the RabbitMQ action will be triggered.
 
 Dynamically Setting `conn_details` and `parameters`
 ===================================================
 
-In the example above, we hardcoded the connection details and parameters. This
-is not recommended as it exposes sensitive information. Instead, we can point
-to a callable or variable that will be evaluated at runtime.
 
-To do this, we can use the :ref:`dynamic loading<dynamic-loading>` feature.
-This feature allows you to specify a path to a callable or variable that will
-be evaluated at runtime to fetch the value.
+In the previous example, hardcoding connection details and parameters is
+insecure. Instead, you can dynamically set these values at runtime using
+the :ref:`dynamic loading feature<dynamic-loading>`.
 
-Replacing Hardcoding
----------------------
+Replacing Hardcoded Values
+--------------------------
+
+
 
 Let's suppose we have the following functions and variables:
 
-* `myproject.settings.RABBITMQ_HOST` - A variable that stores the RabbitMQ
-  host.
-* `myproject.settings.RABBITMQ_PORT` - A variable that stores the RabbitMQ
-  port.
-* `myproject.settings.RABBITMQ_USERNAME` - A variable that stores the RabbitMQ
-  username.
-* `myproject.settings.RABBITMQ_PASSWORD` - A variable that stores the RabbitMQ
-  password.
-* `myproject.app.queues.get_queue_name` - A function that fetches the queue
-  name.
+* `myproject.settings.RABBITMQ_HOST` - A variable containing the RabbitMQ host.
+* `myproject.settings.RABBITMQ_PORT` - A variable containing the RabbitMQ port.
+* `myproject.settings.RABBITMQ_USERNAME` - A variable containing the RabbitMQ username.
+* `myproject.settings.RABBITMQ_PASSWORD` - A variable containing the RabbitMQ password.
+* `myproject.app.queues.get_queue_name` - A function that retrieves the queue name.
 
-We can specify the path to these variables in the `conn_details` and
-`parameters`:
+You can use these in the `conn_details` and `parameters` fields as follows:
 
 .. code-block:: python
 
-  from action_triggers.models import MessageBrokerQueue
+    from action_triggers.models import MessageBrokerQueue
 
-  message_broker_queue = MessageBrokerQueue.objects.create(
-    config=config,
-    name="my_rabbit_mq_broker",
-    conn_details={
-      "host": "{{ myproject.settings.RABBITMQ_HOST }}",
-      "port": "{{ myproject.settings.RABBITMQ_PORT }}",
-      "username": "{{ myproject.settings.RABBITMQ_USERNAME }}",
-      "password": "{{ myproject.settings.RABBITMQ_PASSWORD }}"
-    },
-    parameters={
-      "queue": "{{ myproject.app.queues.get_queue_name }}"
-    }
-  )
+    message_broker_queue = MessageBrokerQueue.objects.create(
+        config=config,
+        name="my_rabbit_mq_broker",
+        conn_details={
+            "host": "{{ myproject.settings.RABBITMQ_HOST }}",
+            "port": "{{ myproject.settings.RABBITMQ_PORT }}",
+            "username": "{{ myproject.settings.RABBITMQ_USERNAME }}",
+            "password": "{{ myproject.settings.RABBITMQ_PASSWORD }}"
+        },
+        parameters={
+           "queue": "{{ myproject.app.queues.get_queue_name }}"
+        }
+    )
 
 Adding Dynamic Import Paths to Settings
 ---------------------------------------
@@ -196,4 +208,8 @@ file:
       ),
   }
 
+---
 
+By following these steps, you can securely and effectively set up RabbitMQ as a
+message broker in **Django Action Triggers**. For more advanced configurations,
+refer to the related documentation sections.

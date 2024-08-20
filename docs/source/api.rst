@@ -4,14 +4,23 @@ API
 
 .. warning::
   
-    The API is currently under development and is not yet ready for use.
+    The API is currently under development and not yet ready for production
+    use. Expect changes in future releases.
 
+
+Overview
+========
+
+The **Django Action Triggers** API allows users to create, update, and manage
+triggers and actions programmatically. This API is designed to provide
+flexibility and control over the application's behaviour, enabling integrations
+with external systems through webhooks and message brokers.
 
 Setup
 =====
 
-If you would like to use the API, you will need to add the following to your
-project's ``urls.py`` file:
+To enable the API in your Django project, you need to include the following in
+your project's `urls.py` file:
 
 .. code-block:: python
 
@@ -25,68 +34,78 @@ project's ``urls.py`` file:
 Usage
 =====
 
-The application will allow users to create triggers and actions in the Django
-admin or via the API.
+The Django Action Triggers application allows users to create and manage
+triggers and actions either through the Django admin interface or via the API.
 
 API Endpoints
 -------------
 
-A single API endpoint is available for interacting with the application. The
-endpoint is as follows:
+The API provides the following endpoints for interacting with triggers:
 
-- ``/api/action-triggers``
-  - ``GET``: Retrieve all triggers
-  - ``POST``: Create a new trigger
-  - ``PUT``: Update an existing trigger
-  - ``DELETE``: Delete an existing trigger
+- `/api/action-triggers`
 
-- ``/api/action-triggers/<trigger_id>``
-  - ``GET``: Retrieve a single trigger
-  - ``PUT``: Update a single trigger
-  - ``DELETE``: Delete a single trigger
+  * `GET`: Retrieve a list of all triggers.
+
+  * `POST`: Create a new trigger
+
+  * `PUT`: Update an existing trigger
+
+  * `DELETE`: Delete an existing trigger
+
+- `/api/action-triggers/<trigger_id>`
+
+  * `GET`: Retrieve a single trigger by its ID.
+
+  * `PUT`: Update a single trigger
+
+  * `DELETE`: Delete a single trigger
 
 API Specification
 -----------------
-
-The API specifications are below illustrate how to interact with the API and
-how webhook and queue actions are defined.
+Below is an example of the payload structure used when interacting with the API. This structure defines how triggers, webhooks, and message broker actions are configured.
 
 .. code-block:: typescript
 
   {
     "trigger": {
-      "signals": string[]
-      "models": {
-        "app_label": string,
-        "model_name": string,
-      }[],
-    }
-    "webhooks"?: {
-      "url": string,
-      "method": "GET" | "POST" | "PUT" | "DELETE",
-      "headers"?: {
-        [key: string]: string
-      },
-    }[],
-    "msg_broker_queues"?: {
-      "broker_config_name": string,
-      "connection_details"?: {
-        [key: string]: string
-      },
-      "parameters"?: {
-        [key: string]: string
+      "signals": string[],  // List of signals, e.g., "pre_save", "post_save"
+      "models": [
+        {
+          "app_label": string,  // Django app label, e.g., "myapp"
+          "model_name": string  // Model name, e.g., "User"
+        }
+      ]
+    },
+    "webhooks"?: [
+      {
+        "url": string,  // Webhook URL
+        "method": "GET" | "POST" | "PUT" | "DELETE",  // HTTP method
+        "headers"?: {
+          [key: string]: string  // Optional headers
+        }
       }
-    }[],
-    "active": boolean,
+    ],
+    "msg_broker_queues"?: [
+      {
+        "broker_config_name": string,  // Reference to configured broker
+        "connection_details"?: {
+          [key: string]: string  // Optional connection details
+        },
+        "parameters"?: {
+          [key: string]: string  // Optional parameters
+        }
+      }
+    ],
+    "active": boolean,  // Whether the trigger is active
     "payload"?: {
-      [key: string]: string
+      [key: string]: string | dict  // Optional payload for the action
     }
   }
 
 API Constraints
 ---------------
 
-The following constraints apply when sending an API request:
+When interacting with the API, the following constraints apply:
 
 +-------------------+----------------------------------------------------------------------+
 | Field             | Constraints                                                          |
@@ -102,21 +121,20 @@ The following fields are available for use in the API:
 .. include:: api/field_descriptions.rst
 
 
-Dynamically Settings Values at Runtime
-======================================
+Dynamic Value Assignment
+========================
 
 Django Action Triggers supports dynamically setting values at runtime. This
-feature allows you to specify a path to a callable or variable that will be
-evaluated at runtime to fetch the value.
+feature allows you to define paths to callables or variables that will be
+evaluated dynamically when the trigger is executed.
 
-For information on how to use this feature, see the :ref:`dynamic-loading`
-guide.
+For more details, refer to the :ref:`dynamic-loading` guide.
 
 Examples
 ========
 
-The following examples illustrate how to use the API to create triggers and
-actions.
+Below are examples illustrating how to use the API to create and manage
+triggers and actions.
 
 For the following examples, we will use the following models:
 
@@ -127,8 +145,8 @@ Example 1: Trigger a Webhook on Customer Creation, Update, and Deletion
 
 .. include:: partials/note_ref_webhooks_guide.rst
 
-The following example illustrates how to create a trigger that will hit a
-webhook when a new customer is created, updated, or deleted.
+In this example, a trigger is created that sends a POST request to a webhook
+whenever a `Customer` model instance is created, updated, or deleted.
 
 .. code-block:: json
 
@@ -138,7 +156,7 @@ webhook when a new customer is created, updated, or deleted.
       "models": [
         {
           "app_label": "myapp",
-          "model_name": "User"
+          "model_name": "Customer"
         }
       ]
     },
@@ -160,8 +178,8 @@ Example 2: Trigger Webhooks and Send Messages to a Broker on `Product` and `Sale
 .. include:: partials/note_ref_message_brokers_guide.rst
 .. include:: partials/note_ref_webhooks_guide.rst
 
-The following example illustrates how to create a trigger that will hit a
-webhook and send a message to a broker when a new product or sale is created or
+This example demonstrates how to create a trigger that sends requests to
+webhooks and messages to a broker when a `Product` or `Sale` is created or
 updated.
 
 .. code-block:: json

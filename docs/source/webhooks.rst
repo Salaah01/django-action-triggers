@@ -4,71 +4,86 @@
 Webhooks
 ========
 
-Webhook actions can be used to send a request to a specified URL when a trigger
-is activated.
+Webhook actions in **Django Action Triggers** allow you to send a request to a
+specified URL whenever a trigger is activated. This can be useful for
+integrating your Django application with external services, such as notifying
+other systems when certain events occur.
+
 
 Creating a Webhook Action
 =========================
 
-To create a webhook action, a :class:`Config` model instance must be created
-with at least one content type provided, a :class:`Webhook` model instance must
-be created, and a :class:`ConfigSignal` model instance must be created.
+To create a webhook action, you need to follow these steps:
 
-Let's start with a scenario. Suppose we have the following Django models:
+1. **Create a :class:`Config` model instance** (defines the base action).
+2. **Create a :class:`Webhook` model instance** (defines the webhook-specific action).
+3. **Create a :class:`ConfigSignal` model instance** (defines the trigger).
 
-.. code-block:: python
-
-  from django.db import models
-
-  class Customer(models.Model):
-    name = models.CharField(max_length=255)
-    email = models.EmailField()
-
-  class Product(models.Model):
-      name = models.CharField(max_length=255)
-      description = models.TextField()
-
-
-  class Sale(models.Model):
-      customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-      product = models.ForeignKey(Product, on_delete=models.CASCADE)
-      quantity = models.IntegerField()
-
-Suppose we want a webhook to be triggered when a new sale is created. We can
-create a webhook action by following these steps:
-
-1. Create a :class:`Config` model instance (base action):
+Scenario
+--------
+Suppose you have the following Django models:
 
 .. code-block:: python
 
-  from django.contrib.contenttypes.models import ContentType
-  from action_triggers.models import Config
+    from django.db import models
 
-  config = Config.objects.create(
-    payload={
-      "customer_name": "{{ customer.name }}",
-      "product_name": "{{ product.name }}",
-      "quantity": "{{ quantity }}"
-    },
-    active=True,
-    content_types=[
-      ContentType.objects.get_for_model(Sale)
-    ]
-  )
+    class Customer(models.Model):
+        name = models.CharField(max_length=255)
+        email = models.EmailField()
+
+    class Product(models.Model):
+        name = models.CharField(max_length=255)
+        description = models.TextField()
 
 
-This forms the basis of any action. The `payload` is designed to behave like a
-Django template. If the resulting value after any parsing is JSON-serializable,
-then the returning payload will be JSON, otherwise, it'll be just plain text.
+    class Sale(models.Model):
+        customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+        product = models.ForeignKey(Product, on_delete=models.CASCADE)
+        quantity = models.IntegerField()
 
-2. Create a :class:`Webhook` model instance (webhook action):
+Now , suppose you want to trigger a webhook whenever a new sale is created.
+Here's how you can set that up:
+
+
+Step 1: Create a `Config` Model Instance
+----------------------------------------
+
+The `Config` model forms the basis of any action. It defines the payload that
+will be sent when the action is triggered. The payload can use Django template
+syntax to include dynamic data.
+
+.. code-block:: python
+
+    from django.contrib.contenttypes.models import ContentType
+    from action_triggers.models import Config
+
+    config = Config.objects.create(
+        payload={
+            "customer_name": "{{ customer.name }}",
+            "product_name": "{{ product.name }}",
+            "quantity": "{{ quantity }}"
+        },
+        active=True,
+        content_types=[
+            ContentType.objects.get_for_model(Sale)
+        ]
+    )
+
+
+Step 2: Create a `Webhook` Model Instance
+-----------------------------------------
+
+The :class:`Webhook` model defines the URL and method used to send the request
+when the trigger is activated.
+
 
 .. warning::
 
-  In the example below, the API key is hardcoded. This means that the database
-  will store the API key in plaintext. This is not recommended. Instead, you
-  should use a callable to fetch the API key at runtime. See the following
-  section to see how we implement this.
+  In the example below, the API key is hardcoded. This is not recommended
+  because storing sensitive information in plaintext in the database is
+  insecure. Instead, use a callable to fetch the API key at runtime (explained
+  in the next section).
+
 
 .. code-block:: python
 
@@ -85,72 +100,88 @@ then the returning payload will be JSON, otherwise, it'll be just plain text.
     }
   )
 
-Now we have a webhook action. But we still don't have a trigger.
 
-3. Create a :class:`ConfigSignal` model instance (trigger):
+Step 3: Create a `ConfigSignal` Model Instance
+----------------------------------------------
+
+ally, the :class:`ConfigSignal` model links the action to a specific trigger
+event, such as saving a model instance.
 
 .. code-block:: python
 
-  from action_triggers.models import ConfigSignal
-  from action_triggers.enums import SignalChoices
+    from action_triggers.models import ConfigSignal
+    from action_triggers.enums import SignalChoices
 
-  config_signal = ConfigSignal.objects.create(
-    config=config,
-    signal=SignalChoices.POST_SAVE,
-  )
+    config_signal = ConfigSignal.objects.create(
+        config=config,
+        signal=SignalChoices.POST_SAVE,
+    )
 
-Now we have a webhook action that will be triggered when a new sale is created.
+Now, whenever a new sale is created (or updated, if using `POST_SAVE`), the
+webhook will be triggered.
 
 
 Dynamically Setting Headers
 ===========================
 
-In the example above, we hardcoded the API key in the `webhooks.headers` field.
-This is not recommended as the API key will be stored in plaintext in the
-database. Instead, we can use a callable to fetch the API key at runtime.
+In the previous example, the API key was hardcoded in the `webhooks.headers`
+field. This is insecure because the key is stored in plaintext. Instead, you
+can dynamically set the header values at runtime by using a callable.
 
-Replacing Hardcoding
---------------------
 
-Let's suppose we have a the function `myproject.my_module.fetch_api_key` that
-fetches the API key for us. We can specify the path to this function in the
-`webhooks.headers` field like so:
+Replacing Hardcoded Headers
+---------------------------
 
+Suppose you have a function `myproject.my_module.fetch_api_key` that retrieves
+the API key securely. You can specify the path to this function in the
+`webhooks.headers` field:
 
 .. code-block:: python
 
-  from action_triggers.models import Webhook
-  from action-triggers.enums import HTTPMethod
+    from action_triggers.models import Webhook
+    from action-triggers.enums import HTTPMethod
 
-  webhook = Webhook.objects.create(
-    url="https://example.com/webhook",
-    method=HTTPMethod.POST,
-    config=config,
-    headers={
-      "Content-Type": "application/json",
-      "Authorization": "Bearer {{ myproject.my_module.fetch_api_key }}"
-    }
-  )
+    webhook = Webhook.objects.create(
+        url="https://example.com/webhook",
+        method=HTTPMethod.POST,
+        config=config,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": "Bearer {{ myproject.my_module.fetch_api_key }}"
+        }
+    )
 
 Adding Dynamic Import Paths to Settings
 ---------------------------------------
 
-In order to use this feature, you must ensure that the callable or variable
-that you are specifying in the field must be defined in the settings file.
+To use dynamic imports for headers (or any other fields), you must allow the
+specific callable or variable in your settings.
 
-Any callable or variable that you wish to be evaluated at runtime must be
-defined in `ACTION_TRIGGER_SETTINGS.ALLOWED_DYNAMIC_IMPORT_PATHS`.
-
-Using the example above, you would need to add the following to your settings
-file:
+Add the following to your `settings.py` file:
 
 .. code-block:: python
 
-  ACTION_TRIGGER_SETTINGS = {
-      ...
-      'ALLOWED_DYNAMIC_IMPORT_PATHS': (
-          'myproject.my_module.fetch_api_key',
-      ),
-  }
+    ACTION_TRIGGER_SETTINGS = {
+        'ALLOWED_DYNAMIC_IMPORT_PATHS': (
+            'myproject.my_module.fetch_api_key',
+        ),
+    }
 
-More information on dynamically setting headers can be found in :ref:`dynamic-loading`.
+This configuration ensures that the specified callable can be safely evaluated
+at runtime.
+
+For more information on dynamically setting headers, refer to the
+:ref:`dynamic-loading` guide.
+
+Best Practices
+==============
+
+- **Avoid Hardcoding Sensitive Information**: Use dynamic imports to manage sensitive information such as API keys.
+- **Test Your Webhooks**: Ensure that your webhook is functioning correctly by testing it with different scenarios.
+- **Monitor Webhook Responses**: Keep track of webhook responses to ensure that your external systems are receiving and processing the requests correctly.
+
+---
+
+By following these steps and best practices, you can effectively integrate
+webhooks into your Django project using Django Action Triggers. For more
+advanced configurations, refer to other sections of this documentation.

@@ -1,8 +1,8 @@
-====================  ========  ==================================================================================================================================================================
+====================  ========  ==================================================================================================================
 Field                 Type      Description
-====================  ========  ==================================================================================================================================================================
+====================  ========  ==================================================================================================================
 `broker_config_name`  `string`  A unique name for the broker configuration.
 `broker_type`         `string`  The type of the broker. Can be either `rabbitmq` or `kafka`.
-`conn_details`        `dict`    A key-value pair of connection details that will be used to connect to the broker. The value can receive the path to a callable that will be evaluated at runtime.
-`params`              `dict`    A key-value pair of parameters that will be used to configure the broker. The value can receive the path to a callable that will be evaluated at runtime.
-====================  ========  ==================================================================================================================================================================
+`conn_details`        `dict`    Connection details required to establish a connection with the broker, such as host, port, username, and password.
+`params`              `dict`    Additional parameters specific to the broker, such as the name of the queue for RabbitMQ or the topic for Kafka.
+====================  ========  ==================================================================================================================

@@ -25,12 +25,12 @@ def config_options():
         [
             "`conn_details`",
             "`dict`",
-            "A key-value pair of connection details that will be used to connect to the broker. The value can receive the path to a callable that will be evaluated at runtime.",
+            "Connection details required to establish a connection with the broker, such as host, port, username, and password.",
         ],
         [
             "`params`",
             "`dict`",
-            "A key-value pair of parameters that will be used to configure the broker. The value can receive the path to a callable that will be evaluated at runtime.",
+            "Additional parameters specific to the broker, such as the name of the queue for RabbitMQ or the topic for Kafka.",
         ],
     ]
 

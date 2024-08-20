@@ -4,44 +4,62 @@
 Message Brokers
 ===============
 
-Message broker actions allow you to send messages to a message broker when a
-trigger is activated.
+Message broker actions in **Django Action Triggers** allow you to send messages
+to a message broker when a trigger is activated. This is useful for integrating
+with distributed systems, event-driven architectures, and asynchronous
+processing.
 
-The supported message brokers are Kafka and RabbitMQ.
+Currently, the supported message brokers are **Kafka** and **RabbitMQ**.
+
+Support for other message brokers are planned for future releases. If you would
+like to see support for a specific message broker, please open an issue on the
+`GitHub repository <https://github.com/Salaah01/django-action-triggers>`_.
 
 .. _message_brokers_configuration:
 
 Configuration
 =============
 
-Before messages can be sent to a message broker, the broker needs to be
-configured in the Django settings.
+Before you can send messages to a message broker, you must configure the broker
+in your Django settings. This involves specifying the connection details and
+any necessary parameters for the broker.
 
-Message brokers are configured in `ACTION_TRIGGERS.brokers` in the Django
-settings. A configuration for a given broker should look like this:
+Configuring Message Brokers
+---------------------------
 
-**settings.py**
+Message brokers are configured in the `ACTION_TRIGGERS.brokers` dictionary in
+your `settings.py` file. Each broker configuration includes the broker type,
+connection details, and any additional parameters required.
+
+**Example Configuration in `settings.py`**
+
+Here is the structure of a basic message broker configuration:
 
 .. code-block:: python
 
-  ACTION_BROKERS = {
-    "<broker_config_name>": {
-      "broker_type": "<broker_type>",
-      "conn_details", {"<key>": "<value>"},  # Key-value pair of connection details
-      "params": {"<key>": "<value>"},  # Key-value pair of parameters
+    ACTION_TRIGGERS = {
+        "brokers": {
+            "<broker_config_name>": {
+                "broker_type": "<broker_type>",  # e.g., "rabbitmq" or "kafka"
+                "conn_details": {
+                    "<key>": "<value>"  # Key-value pairs of connection details (e.g., host, port)
+                },
+                "params": {
+                    "<key>": "<value>"  # Key-value pairs of broker-specific parameters (e.g., queue, topic)
+                }
+            }
+        }
     }
-  }
 
 
-Config Options
-==============
+**Configuration Options**
 
 .. include:: message_brokers/config_options.rst
 
 Example Configuration
 =====================
 
-An example configuration for RabbitMQ would look like this:
+Below is an example configuration for setting up a RabbitMQ broker:
   
 .. code-block:: python
 
@@ -56,12 +74,21 @@ An example configuration for RabbitMQ would look like this:
         "virtual_host": "/"
       },
       "params": {
-        "queue": "my_queue"
+        "queue": "my_queue"  # The name of the queue to which messages will be sent
       }
     }
   }
 
+Best Practices for Configuration
+================================
 
+- **Security**: Avoid hardcoding sensitive information, such as passwords, in your `settings.py` file. Use environment variables or a secure vault to manage these credentials.
+- **Testing**: Before deploying to production, thoroughly test your broker configuration in a development environment to ensure that messages are being sent and received correctly.
+
+Broker Configuration Guides
+===========================
+
+This guide should help you configure message brokers within **Django Action Triggers**. For more advanced configurations, refer to the specific guides for Kafka and RabbitMQ.
 
 .. toctree::
    :maxdepth: 2

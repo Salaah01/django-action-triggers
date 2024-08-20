@@ -1,17 +1,29 @@
+====================================
 Django Action Triggers Documentation
 ====================================
 
 Django Action Triggers (django-action-triggers) is a Django application that
 allows the user to trigger actions based on changes in the database.
 
-This application uses the term "trigger" to refer to the event that will cause
-an "action" to be executed. The triggers are specially changes in the database.
-An action is the code that will be executed when the trigger is activated.
+Overview
+========
 
-The support actions are:
+In this application, the term **"trigger"** refers to an event that causes a
+corresponding **"action"** to be executed. Triggers are typically database
+changes, while actions are pieces of code that execute in response to those
+changes.
 
-- Hit a webhook
-- Send a to a messaging broker
+Supported actions include:
+
+- Sending a request to a webhook
+- Sending a message to a messaging broker
+
+Key Features
+============
+
+- **Database-Driven Triggers**: Automatically trigger actions based on specific database changes.
+- **Flexible Action Handling**: Integrate with various webhooks and messaging brokers.
+- **Extensible**: Easily extend to support custom triggers and actions.
 
 Contents
 ========
@@ -22,6 +34,7 @@ Contents
    
    installation
    setup
+   action_trigger_settings
    api
    dynamic_loading
    webhooks
