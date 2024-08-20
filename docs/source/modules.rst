@@ -1,5 +1,5 @@
 Module Documentation
-=====================
+====================
 
 .. automodule:: action_triggers.message_broker
    :members:
