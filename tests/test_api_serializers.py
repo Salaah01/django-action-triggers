@@ -16,36 +16,12 @@ from tests.models import CustomerModel, CustomerOrderModel, M2MModel
 class TestConfigSerializer:
     """Tests for the `ConfigSerializer` class."""
 
-    def test_shows_data_correctly(self):
-        config = baker.make(Config, payload={"key": "value"})
-
-        config.content_types.set(
-            [
-                ContentType.objects.get_for_model(CustomerModel),
-                ContentType.objects.get_for_model(CustomerOrderModel),
-            ]
-        )
-
-        webhook_1, webhook_2 = baker.make(
-            Webhook,
-            config=config,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": "Bearer {{ path.to.token }}",
-            },
-            _quantity=2,
-        )
-        message_broker_queue_1, message_broker_queue_2 = baker.make(
-            MessageBrokerQueue,
-            config=config,
-            conn_details={"host": "localhost", "port": 5672},
-            parameters={"queue": "test_queue_1"},
-            _quantity=2,
-        )
-        config_signal_1, config_signal_2 = baker.make(
-            ConfigSignal,
-            config=config,
-            _quantity=2,
+    def test_shows_data_correctly(self, full_loaded_config):
+        config = full_loaded_config.config
+        config_signal_1, config_signal_2 = full_loaded_config.config_signals
+        webhook_1, webhook_2 = full_loaded_config.webhooks
+        message_broker_queue_1, message_broker_queue_2 = (
+            full_loaded_config.mesage_broker_queues
         )
 
         serializer = ConfigSerializer(config)

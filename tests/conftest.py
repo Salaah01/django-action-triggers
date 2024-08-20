@@ -150,6 +150,52 @@ def customer_webhook_post_save_signal(
         webhook,
     )
 
+
+@pytest.fixture
+def full_loaded_config(config):
+    config.payload = {"key": "value"}
+    config.save()
+    
+    config.content_types.set(
+        [
+            ContentType.objects.get_for_model(CustomerModel),
+            ContentType.objects.get_for_model(CustomerOrderModel),
+        ]
+    )
+
+    webhook_1, webhook_2 = baker.make(
+        Webhook,
+        config=config,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": "Bearer {{ path.to.token }}",
+        },
+        _quantity=2,
+    )
+    message_broker_queue_1, message_broker_queue_2 = baker.make(
+        MessageBrokerQueue,
+        config=config,
+        conn_details={"host": "localhost", "port": 5672},
+        parameters={"queue": "test_queue_1"},
+        _quantity=2,
+    )
+    config_signal_1, config_signal_2 = baker.make(
+        ConfigSignal,
+        config=config,
+        _quantity=2,
+    )
+
+    return namedtuple(
+        "ConfigContext",
+        ["config", "webhooks", "mesage_broker_queues", "config_signals"],
+    )(
+        config,
+        [webhook_1, webhook_2],
+        [message_broker_queue_1, message_broker_queue_2],
+        [config_signal_1, config_signal_2],
+    )
+
+
 @pytest.fixture
 def superuser():
     return baker.make(User, is_staff=True, is_superuser=True)
