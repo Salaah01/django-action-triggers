@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Action Trigger Settings &mdash; django-action-triggers 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Setup" href="setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Action Trigger Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-options-action-triggers">Configuration Options (<cite>ACTION_TRIGGERS</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-configuration">Example Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-message-brokers-action-triggers-brokers">Configuring Message Brokers (<cite>ACTION_TRIGGERS.brokers</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-schema">Configuration Schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-rabbitmq-configuration">Example: RabbitMQ Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-webhooks-action-triggers-webhooks">Configuring Webhooks (<cite>ACTION_TRIGGERS.webhooks</cite>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#behavioural-settings-action-trigger-settings">Behavioural Settings (<cite>ACTION_TRIGGER_SETTINGS</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#defining-allowed-dynamic-loading">Defining Allowed Dynamic Loading</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers.html">Message Brokers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/rabbitmq.html">RabbitMQ</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Module Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Action Trigger Settings</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/action_trigger_settings.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="action-trigger-settings">
+<span id="id1"></span><h1>Action Trigger Settings<a class="headerlink" href="#action-trigger-settings" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p><strong>Django Action Triggers</strong> provides a flexible way to configure settings
+related to triggers and actions. These settings can be customized within your
+Django project’s <cite>settings.py</cite> file to fine-tune the behaviour of the
+application.</p>
+</section>
+<section id="configuration-options-action-triggers">
+<h2>Configuration Options (<cite>ACTION_TRIGGERS</cite>)<a class="headerlink" href="#configuration-options-action-triggers" title="Link to this heading"></a></h2>
+<p>The primary configuration options for Django Action Triggers are contained
+within the <cite>ACTION_TRIGGERS</cite> dictionary. The key options include:</p>
+<ul class="simple">
+<li><p><strong>brokers</strong>: A dictionary of settings related to messaging brokers.</p></li>
+<li><p><strong>webhooks</strong>: A dictionary of settings related to webhooks.</p></li>
+</ul>
+<p>In addition, there is a separate dictionary for behavioural settings:</p>
+<ul class="simple">
+<li><p><strong>ACTION_TRIGGER_SETTINGS</strong>: A dictionary for configuring the behaviour of triggers and actions.</p></li>
+</ul>
+<p>Each of these options allows you to customise the way Django Action Triggers
+operates within your application.</p>
+<section id="example-configuration">
+<h3>Example Configuration<a class="headerlink" href="#example-configuration" title="Link to this heading"></a></h3>
+<p>A basic configuration for Django Action Triggers might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_TRIGGERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;brokers&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">&quot;webhooks&quot;</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This configuration can be expanded with specific settings for brokers and
+webhooks, as described below.</p>
+</section>
+</section>
+<section id="configuring-message-brokers-action-triggers-brokers">
+<h2>Configuring Message Brokers (<cite>ACTION_TRIGGERS.brokers</cite>)<a class="headerlink" href="#configuring-message-brokers-action-triggers-brokers" title="Link to this heading"></a></h2>
+<p>Django Action Triggers supports sending messages to multiple messaging brokers
+simultaneously. Each broker can be uniquely configured with its own settings.</p>
+<section id="configuration-schema">
+<h3>Configuration Schema<a class="headerlink" href="#configuration-schema" title="Link to this heading"></a></h3>
+<p>The configuration schema for a message broker is as follows:</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">broker_type</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">conn_details</span><span class="o">:</span><span class="w"> </span><span class="kt">dict</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="kt">dict</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>name</strong>: A unique identifier for the broker.</p></li>
+<li><p><strong>broker_type</strong>: Specifies the type of broker (e.g., <cite>rabbitmq</cite>, <cite>kafka</cite>).</p></li>
+<li><p><strong>conn_details</strong>: A dictionary containing connection details specific to the broker.</p></li>
+<li><p><strong>params</strong>: A dictionary containing additional parameters required by the broker.</p></li>
+</ul>
+</section>
+<section id="example-rabbitmq-configuration">
+<h3>Example: RabbitMQ Configuration<a class="headerlink" href="#example-rabbitmq-configuration" title="Link to this heading"></a></h3>
+<p>Below is an example configuration for a RabbitMQ broker:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_TRIGGERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;brokers&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;my_rabbit_mq_broker&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;broker_type&quot;</span><span class="p">:</span> <span class="s2">&quot;rabbitmq&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;conn_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">5672</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;queue&quot;</span><span class="p">:</span> <span class="s2">&quot;my_queue&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;webhooks&quot;</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>my_rabbit_mq_broker</strong>: A unique name for the broker, referenced when creating actions.</p></li>
+<li><p><strong>broker_type</strong>: Specifies the type of broker (<cite>rabbitmq</cite> in this case). Refer to <code class="xref py py-class docutils literal notranslate"><span class="pre">action_triggers.enums.BrokerType</span></code> for a list of supported brokers.</p></li>
+<li><p><strong>conn_details</strong>: Contains the connection details required for the broker.</p></li>
+<li><p><strong>params</strong>: Additional parameters needed by the broker (e.g., the queue name).</p></li>
+</ul>
+<p>Once configured, this broker can be referenced when creating actions. For more
+details, refer to the <a class="reference internal" href="message_brokers.html#message-brokers"><span class="std std-ref">Message Brokers</span></a> guide.</p>
+</section>
+</section>
+<section id="configuring-webhooks-action-triggers-webhooks">
+<h2>Configuring Webhooks (<cite>ACTION_TRIGGERS.webhooks</cite>)<a class="headerlink" href="#configuring-webhooks-action-triggers-webhooks" title="Link to this heading"></a></h2>
+<p>Django Action Triggers also supports sending messages to multiple webhooks.
+The <cite>webhooks</cite> dictionary can be configured with settings specific to each
+webhook.</p>
+<p>For more detailed instructions on configuring webhooks, refer to the
+<a class="reference internal" href="webhooks.html#webhooks"><span class="std std-ref">Webhooks</span></a> guide.</p>
+</section>
+<section id="behavioural-settings-action-trigger-settings">
+<h2>Behavioural Settings (<cite>ACTION_TRIGGER_SETTINGS</cite>)<a class="headerlink" href="#behavioural-settings-action-trigger-settings" title="Link to this heading"></a></h2>
+<p>The <cite>ACTION_TRIGGER_SETTINGS</cite> dictionary allows you to configure various
+behavioural aspects of triggers and actions. These settings control how
+triggers and actions are executed.</p>
+<p>An empty configuration for <cite>ACTION_TRIGGER_SETTINGS</cite> might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_TRIGGER_SETTINGS</span> <span class="o">=</span> <span class="p">{}</span>
+</pre></div>
+</div>
+<p>This dictionary can be populated with various settings, including those that
+govern dynamic loading.</p>
+<section id="defining-allowed-dynamic-loading">
+<h3>Defining Allowed Dynamic Loading<a class="headerlink" href="#defining-allowed-dynamic-loading" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Visit the <a class="reference internal" href="dynamic_loading.html#dynamic-loading"><span class="std std-ref">Dynamically Loading Values at Runtime</span></a> guide for more information on dynamic
+loading.</p>
+</div>
+<p>The <cite>ACTION_TRIGGER_SETTINGS.ALLOWED_DYNAMIC_IMPORT_PATHS</cite> setting can be used
+to define a list of allowed import paths for dynamic loading/execution of a
+variable or callable.</p>
+<p>Add the paths to the callables or variables that are allowed to be dynamically
+loaded at runtime.</p>
+<p>Let’s explore an example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_TRIGGER_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ALLOWED_DYNAMIC_IMPORT_PATHS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;my_project.my_module.fetch_api_key&quot;</span>
+        <span class="s2">&quot;my_project.app.constants.RESOURCE_NAME&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example, the <cite>fetch_api_key</cite> function and <cite>RESOURCE_NAME</cite> variable are
+allowed to be dynamically loaded at runtime.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="setup.html" class="btn btn-neutral float-left" title="Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

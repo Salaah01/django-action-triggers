@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>action_triggers.registry &mdash; django-action-triggers 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers.html">Message Brokers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Module Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">action_triggers.registry</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for action_triggers.registry</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Contains collection of models that have been registered to have signals</span>
+<span class="sd">dispatched for. Also contains helper functions relating to the registry.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">_t</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib.contenttypes.models</span> <span class="kn">import</span> <span class="n">ContentType</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">QuerySet</span>
+<span class="kn">from</span> <span class="nn">django.db.models.base</span> <span class="kn">import</span> <span class="n">ModelBase</span>
+
+<span class="n">T_ModelOrModelBase</span> <span class="o">=</span> <span class="n">_t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">_t</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">Model</span><span class="p">]]</span>
+
+<span class="n">registered_models</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_t</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">Model</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="model_str">
+<a class="viewcode-back" href="../../modules.html#action_triggers.registry.model_str">[docs]</a>
+<span class="k">def</span> <span class="nf">model_str</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">T_ModelOrModelBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a string representation of the model which can be used to</span>
+<span class="sd">    identify both the app label and the model name.</span>
+
+<span class="sd">    :param model: The model to get the string representation of.</span>
+<span class="sd">    :type model: Union[Model, Type[Model]]</span>
+<span class="sd">    :return: A string representation of the model.</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="add_to_registry">
+<a class="viewcode-back" href="../../modules.html#action_triggers.registry.add_to_registry">[docs]</a>
+<span class="k">def</span> <span class="nf">add_to_registry</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">T_ModelOrModelBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a model to the registry.</span>
+
+<span class="sd">    :param model: The model to add to the registry.</span>
+<span class="sd">    :type model: Union[Model, Type[Model]]</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ModelBase</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="vm">__class__</span>
+
+    <span class="n">registered_models</span><span class="p">[</span><span class="n">model_str</span><span class="p">(</span><span class="n">model</span><span class="p">)]</span> <span class="o">=</span> <span class="n">model</span></div>
+
+
+
+<div class="viewcode-block" id="model_in_registry">
+<a class="viewcode-back" href="../../modules.html#action_triggers.registry.model_in_registry">[docs]</a>
+<span class="k">def</span> <span class="nf">model_in_registry</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">T_ModelOrModelBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if a model is in the registry.</span>
+
+<span class="sd">    :param model: The model to check.</span>
+<span class="sd">    :type model: Union[Model, Type[Model]]</span>
+<span class="sd">    :return: True if the model is in the registry, False otherwise.</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">model_str</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="ow">in</span> <span class="n">registered_models</span></div>
+
+
+
+<div class="viewcode-block" id="registered_content_types">
+<a class="viewcode-back" href="../../modules.html#action_triggers.registry.registered_content_types">[docs]</a>
+<span class="k">def</span> <span class="nf">registered_content_types</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">QuerySet</span><span class="p">[</span><span class="n">ContentType</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a queryset of all the content types registered in the</span>
+<span class="sd">    registry.</span>
+
+<span class="sd">    :return: A queryset of all the content types registered in the registry.</span>
+<span class="sd">    :rtype: QuerySet[ContentType]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">content_types</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">registered_models</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">content_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+
+    <span class="n">content_type_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">ct</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">ct</span> <span class="ow">in</span> <span class="n">content_types</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">content_type_ids</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module Documentation &mdash; django-action-triggers 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="RabbitMQ" href="message_brokers/rabbitmq.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers.html">Message Brokers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/rabbitmq.html">RabbitMQ</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Module Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase"><code class="docutils literal notranslate"><span class="pre">BrokerBase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase.conn_class"><code class="docutils literal notranslate"><span class="pre">BrokerBase.conn_class</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase.send_message"><code class="docutils literal notranslate"><span class="pre">BrokerBase.send_message()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase"><code class="docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.close"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.close()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.connect"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.broker.get_broker_class"><code class="docutils literal notranslate"><span class="pre">get_broker_class()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType"><code class="docutils literal notranslate"><span class="pre">BrokerType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType.KAFKA"><code class="docutils literal notranslate"><span class="pre">BrokerType.KAFKA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType.RABBITMQ"><code class="docutils literal notranslate"><span class="pre">BrokerType.RABBITMQ</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.error.Error"><code class="docutils literal notranslate"><span class="pre">Error</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.error.Error.add_connection_params_error"><code class="docutils literal notranslate"><span class="pre">Error.add_connection_params_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.error.Error.add_params_error"><code class="docutils literal notranslate"><span class="pre">Error.add_params_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.error.Error.connection_params"><code class="docutils literal notranslate"><span class="pre">Error.connection_params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.error.Error.params"><code class="docutils literal notranslate"><span class="pre">Error.params</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.error.ErrorBase"><code class="docutils literal notranslate"><span class="pre">ErrorBase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.error.ErrorBase.as_dict"><code class="docutils literal notranslate"><span class="pre">ErrorBase.as_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.error.ErrorBase.is_valid"><code class="docutils literal notranslate"><span class="pre">ErrorBase.is_valid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.error.ErrorField"><code class="docutils literal notranslate"><span class="pre">ErrorField</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.error.ErrorField.add_error"><code class="docutils literal notranslate"><span class="pre">ErrorField.add_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.error.MetaError"><code class="docutils literal notranslate"><span class="pre">MetaError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaBroker"><code class="docutils literal notranslate"><span class="pre">KafkaBroker</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaBroker.broker_type"><code class="docutils literal notranslate"><span class="pre">KafkaBroker.broker_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaBroker.conn_class"><code class="docutils literal notranslate"><span class="pre">KafkaBroker.conn_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection"><code class="docutils literal notranslate"><span class="pre">KafkaConnection</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.connect"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.validate"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker"><code class="docutils literal notranslate"><span class="pre">RabbitMQBroker</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker.broker_type"><code class="docutils literal notranslate"><span class="pre">RabbitMQBroker.broker_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker.conn_class"><code class="docutils literal notranslate"><span class="pre">RabbitMQBroker.conn_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.apps.ActionTriggersConfig"><code class="docutils literal notranslate"><span class="pre">ActionTriggersConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.apps.ActionTriggersConfig.name"><code class="docutils literal notranslate"><span class="pre">ActionTriggersConfig.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.apps.ActionTriggersConfig.ready"><code class="docutils literal notranslate"><span class="pre">ActionTriggersConfig.ready()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.apps.ActionTriggersConfig.verbose_name"><code class="docutils literal notranslate"><span class="pre">ActionTriggersConfig.verbose_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.autocomplete_fields"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.autocomplete_fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.date_hierarchy"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.date_hierarchy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.inlines"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.inlines</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.list_display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.list_filter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.media"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.ordering</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.readonly_fields"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.readonly_fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.autocomplete_fields"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.autocomplete_fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.list_display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.list_filter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.media"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.admin.ConfigSignalInline"><code class="docutils literal notranslate"><span class="pre">ConfigSignalInline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalInline.extra"><code class="docutils literal notranslate"><span class="pre">ConfigSignalInline.extra</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalInline.media"><code class="docutils literal notranslate"><span class="pre">ConfigSignalInline.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalInline.model"><code class="docutils literal notranslate"><span class="pre">ConfigSignalInline.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin.autocomplete_fields"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin.autocomplete_fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin.list_display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin.media"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueInline"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueInline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueInline.extra"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueInline.extra</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueInline.media"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueInline.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueInline.model"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueInline.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.autocomplete_fields"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.autocomplete_fields</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.list_display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.list_filter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.media"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.admin.WebhookInline"><code class="docutils literal notranslate"><span class="pre">WebhookInline</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookInline.extra"><code class="docutils literal notranslate"><span class="pre">WebhookInline.extra</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookInline.media"><code class="docutils literal notranslate"><span class="pre">WebhookInline.media</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookInline.model"><code class="docutils literal notranslate"><span class="pre">WebhookInline.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.dispatch.handle_action"><code class="docutils literal notranslate"><span class="pre">handle_action()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.dynamic_loading.get_path_result"><code class="docutils literal notranslate"><span class="pre">get_path_result()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.dynamic_loading.replace_dict_values_with_results"><code class="docutils literal notranslate"><span class="pre">replace_dict_values_with_results()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.dynamic_loading.replace_string_with_result"><code class="docutils literal notranslate"><span class="pre">replace_string_with_result()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.dynamic_loading.restricted_import_string"><code class="docutils literal notranslate"><span class="pre">restricted_import_string()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.models.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Config.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Config.MultipleObjectsReturned</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.active"><code class="docutils literal notranslate"><span class="pre">Config.active</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.config_signals"><code class="docutils literal notranslate"><span class="pre">Config.config_signals</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.content_types"><code class="docutils literal notranslate"><span class="pre">Config.content_types</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.created_by"><code class="docutils literal notranslate"><span class="pre">Config.created_by</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.created_by_id"><code class="docutils literal notranslate"><span class="pre">Config.created_by_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.created_on"><code class="docutils literal notranslate"><span class="pre">Config.created_on</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.get_next_by_created_on"><code class="docutils literal notranslate"><span class="pre">Config.get_next_by_created_on()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.get_previous_by_created_on"><code class="docutils literal notranslate"><span class="pre">Config.get_previous_by_created_on()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.id"><code class="docutils literal notranslate"><span class="pre">Config.id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.message_broker_queues"><code class="docutils literal notranslate"><span class="pre">Config.message_broker_queues</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.objects"><code class="docutils literal notranslate"><span class="pre">Config.objects</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.payload"><code class="docutils literal notranslate"><span class="pre">Config.payload</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Config.webhooks"><code class="docutils literal notranslate"><span class="pre">Config.webhooks</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.models.ConfigQuerySet"><code class="docutils literal notranslate"><span class="pre">ConfigQuerySet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigQuerySet.active"><code class="docutils literal notranslate"><span class="pre">ConfigQuerySet.active()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigQuerySet.for_model"><code class="docutils literal notranslate"><span class="pre">ConfigQuerySet.for_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigQuerySet.for_signal"><code class="docutils literal notranslate"><span class="pre">ConfigQuerySet.for_signal()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.models.ConfigSignal"><code class="docutils literal notranslate"><span class="pre">ConfigSignal</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigSignal.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">ConfigSignal.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigSignal.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">ConfigSignal.MultipleObjectsReturned</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigSignal.config"><code class="docutils literal notranslate"><span class="pre">ConfigSignal.config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigSignal.config_id"><code class="docutils literal notranslate"><span class="pre">ConfigSignal.config_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigSignal.get_signal_display"><code class="docutils literal notranslate"><span class="pre">ConfigSignal.get_signal_display()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigSignal.id"><code class="docutils literal notranslate"><span class="pre">ConfigSignal.id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigSignal.objects"><code class="docutils literal notranslate"><span class="pre">ConfigSignal.objects</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.ConfigSignal.signal"><code class="docutils literal notranslate"><span class="pre">ConfigSignal.signal</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.MultipleObjectsReturned</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.config"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.config_id"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.config_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.conn_details"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.conn_details</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.id"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.name"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.objects"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.objects</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue.parameters"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueue.parameters</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.models.Webhook"><code class="docutils literal notranslate"><span class="pre">Webhook</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Webhook.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Webhook.MultipleObjectsReturned</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.config"><code class="docutils literal notranslate"><span class="pre">Webhook.config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.config_id"><code class="docutils literal notranslate"><span class="pre">Webhook.config_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.get_http_method_display"><code class="docutils literal notranslate"><span class="pre">Webhook.get_http_method_display()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.headers"><code class="docutils literal notranslate"><span class="pre">Webhook.headers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.http_method"><code class="docutils literal notranslate"><span class="pre">Webhook.http_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.id"><code class="docutils literal notranslate"><span class="pre">Webhook.id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.objects"><code class="docutils literal notranslate"><span class="pre">Webhook.objects</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.url"><code class="docutils literal notranslate"><span class="pre">Webhook.url</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.msg_broker_queues.process_msg_broker_queue"><code class="docutils literal notranslate"><span class="pre">process_msg_broker_queue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.payload.get_payload_generator"><code class="docutils literal notranslate"><span class="pre">get_payload_generator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.payload.parse_payload"><code class="docutils literal notranslate"><span class="pre">parse_payload()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.payload.payload_from_instance"><code class="docutils literal notranslate"><span class="pre">payload_from_instance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.registry.add_to_registry"><code class="docutils literal notranslate"><span class="pre">add_to_registry()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.registry.model_in_registry"><code class="docutils literal notranslate"><span class="pre">model_in_registry()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.registry.model_str"><code class="docutils literal notranslate"><span class="pre">model_str()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.registry.registered_content_types"><code class="docutils literal notranslate"><span class="pre">registered_content_types()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.signals.setup"><code class="docutils literal notranslate"><span class="pre">setup()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.signals.signal_callback"><code class="docutils literal notranslate"><span class="pre">signal_callback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.webhooks.WebhookProcessor"><code class="docutils literal notranslate"><span class="pre">WebhookProcessor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.webhooks.WebhookProcessor.get_fn_kwargs"><code class="docutils literal notranslate"><span class="pre">WebhookProcessor.get_fn_kwargs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.webhooks.WebhookProcessor.get_headers"><code class="docutils literal notranslate"><span class="pre">WebhookProcessor.get_headers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.webhooks.WebhookProcessor.get_request_fn"><code class="docutils literal notranslate"><span class="pre">WebhookProcessor.get_request_fn()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.webhooks.WebhookProcessor.process"><code class="docutils literal notranslate"><span class="pre">WebhookProcessor.process()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Module Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-action_triggers.message_broker">
+<span id="module-documentation"></span><h1>Module Documentation<a class="headerlink" href="#module-action_triggers.message_broker" title="Link to this heading"></a></h1>
+<dl class="py class" id="module-action_triggers.message_broker.base">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.BrokerBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.base.</span></span><span class="sig-name descname"><span class="pre">BrokerBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#BrokerBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.BrokerBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Base class for a message broker. This class should be subclassed
+to implement the specific message broker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conn_details</strong> – The connection parameters to use for establishing the
+connection.</p></li>
+<li><p><strong>params</strong> – Additional parameters to use for the message broker.</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments to pass to the subclass.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.BrokerBase.conn_class">
+<span class="sig-name descname"><span class="pre">conn_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><span class="pre">ConnectionBase</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#action_triggers.message_broker.base.BrokerBase.conn_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.BrokerBase.send_message">
+<span class="sig-name descname"><span class="pre">send_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#BrokerBase.send_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.BrokerBase.send_message" title="Link to this definition"></a></dt>
+<dd><p>Starts a connection with the message broker and sends a message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> – The message to send to the message broker.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.base.</span></span><span class="sig-name descname"><span class="pre">ConnectionBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Base class for establishing a connection to a message broker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>conn_details</strong> – The connection parameters to use for establishing the
+connection.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.close" title="Link to this definition"></a></dt>
+<dd><p>Close the connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.connect">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.connect" title="Link to this definition"></a></dt>
+<dd><p>Establish a connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate the connection parameters. Raise an exception if
+invalid.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function" id="module-action_triggers.message_broker.broker">
+<dt class="sig sig-object py" id="action_triggers.message_broker.broker.get_broker_class">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.broker.</span></span><span class="sig-name descname"><span class="pre">get_broker_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><span class="pre">BrokerBase</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/broker.html#get_broker_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.broker.get_broker_class" title="Link to this definition"></a></dt>
+<dd><p>Get the broker class based on the broker name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>broker_name</strong> – The name of the broker.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The broker class.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the broker name is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class" id="module-action_triggers.message_broker.enums">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.enums.</span></span><span class="sig-name descname"><span class="pre">BrokerType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/enums.html#BrokerType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Represents the types of brokers supported by the application.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType.KAFKA">
+<span class="sig-name descname"><span class="pre">KAFKA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kafka'</span></em><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType.KAFKA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType.RABBITMQ">
+<span class="sig-name descname"><span class="pre">RABBITMQ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rabbitmq'</span></em><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType.RABBITMQ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-action_triggers.message_broker.error">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.Error">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.error.</span></span><span class="sig-name descname"><span class="pre">Error</span></span><a class="reference internal" href="_modules/action_triggers/message_broker/error.html#Error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.error.Error" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.error.ErrorBase" title="action_triggers.message_broker.error.ErrorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErrorBase</span></code></a></p>
+<p>A class for storing errors for a message broker.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.Error.add_connection_params_error">
+<span class="sig-name descname"><span class="pre">add_connection_params_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#action_triggers.message_broker.error.Error.add_connection_params_error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.Error.add_params_error">
+<span class="sig-name descname"><span class="pre">add_params_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#action_triggers.message_broker.error.Error.add_params_error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.Error.connection_params">
+<span class="sig-name descname"><span class="pre">connection_params</span></span><a class="headerlink" href="#action_triggers.message_broker.error.Error.connection_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.Error.params">
+<span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#action_triggers.message_broker.error.Error.params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.ErrorBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.error.</span></span><span class="sig-name descname"><span class="pre">ErrorBase</span></span><a class="reference internal" href="_modules/action_triggers/message_broker/error.html#ErrorBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.error.ErrorBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.ErrorBase.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/error.html#ErrorBase.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.error.ErrorBase.as_dict" title="Link to this definition"></a></dt>
+<dd><p>Return the error message as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary containing the errors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.ErrorBase.is_valid">
+<span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raise_exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/error.html#ErrorBase.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.error.ErrorBase.is_valid" title="Link to this definition"></a></dt>
+<dd><p>Check if the error is valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raise_exception</strong> – Whether to raise an exception if
+<cite>raise_exception</cite> is <cite>True</cite> and there are errors.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the error is valid, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.ErrorField">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.error.</span></span><span class="sig-name descname"><span class="pre">ErrorField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/error.html#ErrorField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.error.ErrorField" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.ErrorField.add_error">
+<span class="sig-name descname"><span class="pre">add_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/error.html#ErrorField.add_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.error.ErrorField.add_error" title="Link to this definition"></a></dt>
+<dd><p>Adds an error for the field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance of the class.</p></li>
+<li><p><strong>key</strong> – The key for the error.</p></li>
+<li><p><strong>message</strong> – The error message.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.MetaError">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.error.</span></span><span class="sig-name descname"><span class="pre">MetaError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/error.html#MetaError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.error.MetaError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></p>
+<p>A metaclass for the Error class. This metaclass automatically generates
+methods for adding errors to the fields of the <cite>Error</cite> class.</p>
+</dd></dl>
+
+<dl class="py class" id="module-action_triggers.message_broker.kafka">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaBroker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.kafka.</span></span><span class="sig-name descname"><span class="pre">KafkaBroker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/kafka.html#KafkaBroker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaBroker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrokerBase</span></code></a></p>
+<p>Broker class for Kafka.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaBroker.broker_type">
+<span class="sig-name descname"><span class="pre">broker_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kafka'</span></em><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaBroker.broker_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaBroker.conn_class">
+<span class="sig-name descname"><span class="pre">conn_class</span></span><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaBroker.conn_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection" title="action_triggers.message_broker.kafka.KafkaConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">KafkaConnection</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.kafka.</span></span><span class="sig-name descname"><span class="pre">KafkaConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/kafka.html#KafkaConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
+<p>Connection class for Kafka.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/kafka.html#KafkaConnection.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection.connect" title="Link to this definition"></a></dt>
+<dd><p>Establish a connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/kafka.html#KafkaConnection.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate the connection parameters. Raise an exception if
+invalid.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-action_triggers.message_broker.rabbitmq">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQBroker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.rabbitmq.</span></span><span class="sig-name descname"><span class="pre">RabbitMQBroker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQBroker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrokerBase</span></code></a></p>
+<p>Broker class for RabbitMQ.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>broker_key</strong> – The key for the broker (must existing in
+<cite>settings.ACTION_TRIGGERS</cite>).</p></li>
+<li><p><strong>conn_params</strong> – The connection parameters to use for establishing the
+connection.</p></li>
+<li><p><strong>params</strong> – Additional parameters to use for the message broker.</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments to pass to the subclass.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQBroker.broker_type">
+<span class="sig-name descname"><span class="pre">broker_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rabbitmq'</span></em><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker.broker_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQBroker.conn_class">
+<span class="sig-name descname"><span class="pre">conn_class</span></span><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker.conn_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection" title="action_triggers.message_broker.rabbitmq.RabbitMQConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">RabbitMQConnection</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.rabbitmq.</span></span><span class="sig-name descname"><span class="pre">RabbitMQConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
+<p>Connection class for RabbitMQ.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect" title="Link to this definition"></a></dt>
+<dd><p>Establish a connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate the connection parameters. Raise an exception if
+invalid.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-action_triggers.apps">
+<dt class="sig sig-object py" id="action_triggers.apps.ActionTriggersConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.apps.</span></span><span class="sig-name descname"><span class="pre">ActionTriggersConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/apps.html#ActionTriggersConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.apps.ActionTriggersConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AppConfig</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.apps.ActionTriggersConfig.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'action_triggers'</span></em><a class="headerlink" href="#action_triggers.apps.ActionTriggersConfig.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.apps.ActionTriggersConfig.ready">
+<span class="sig-name descname"><span class="pre">ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/apps.html#ActionTriggersConfig.ready"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.apps.ActionTriggersConfig.ready" title="Link to this definition"></a></dt>
+<dd><p>Register the models with the registry.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.apps.ActionTriggersConfig.verbose_name">
+<span class="sig-name descname"><span class="pre">verbose_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Action</span> <span class="pre">Triggers'</span></em><a class="headerlink" href="#action_triggers.apps.ActionTriggersConfig.verbose_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-action_triggers.admin">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">ConfigAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/admin.html#ConfigAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.ConfigAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Admin interface for the <cite>Config</cite> model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.autocomplete_fields">
+<span class="sig-name descname"><span class="pre">autocomplete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('created_by',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.autocomplete_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.date_hierarchy">
+<span class="sig-name descname"><span class="pre">date_hierarchy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'created_on'</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.date_hierarchy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.inlines">
+<span class="sig-name descname"><span class="pre">inlines</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'action_triggers.admin.ConfigSignalInline'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'action_triggers.admin.WebhookInline'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'action_triggers.admin.MessageBrokerQueueInline'&gt;)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.inlines" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'created_on',</span> <span class="pre">'created_by',</span> <span class="pre">'active')</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.list_filter">
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('active',</span> <span class="pre">'created_on',</span> <span class="pre">'content_types')</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.list_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('-created_on',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.ordering" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.readonly_fields">
+<span class="sig-name descname"><span class="pre">readonly_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('created_on',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.readonly_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'created_by__username')</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.search_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">ConfigSignalAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/admin.html#ConfigSignalAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Admin interface for the <cite>ConfigSignal</cite> model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.autocomplete_fields">
+<span class="sig-name descname"><span class="pre">autocomplete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.autocomplete_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'config',</span> <span class="pre">'signal')</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.list_filter">
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('signal',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.list_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config__id',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.search_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalInline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">ConfigSignalInline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/admin.html#ConfigSignalInline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.ConfigSignalInline" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TabularInline</span></code></p>
+<p>Support for inlining <cite>ConfigSignal</cite> objects.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalInline.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalInline.extra" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalInline.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.ConfigSignalInline.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalInline.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.admin.ConfigSignalInline.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.models.ConfigSignal" title="action_triggers.models.ConfigSignal"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSignal</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">MessageBrokerQueueAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/admin.html#MessageBrokerQueueAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Admin interface for the <cite>MessageBrokerQueue</cite> model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin.autocomplete_fields">
+<span class="sig-name descname"><span class="pre">autocomplete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config',)</span></em><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin.autocomplete_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'name',</span> <span class="pre">'config')</span></em><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config__id',)</span></em><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin.search_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueInline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">MessageBrokerQueueInline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/admin.html#MessageBrokerQueueInline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueInline" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StackedInline</span></code></p>
+<p>Support for inlining <cite>MessageBrokerQueue</cite> objects.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueInline.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueInline.extra" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueInline.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueInline.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueInline.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueInline.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.models.MessageBrokerQueue" title="action_triggers.models.MessageBrokerQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBrokerQueue</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">WebhookAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/admin.html#WebhookAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.WebhookAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Admin interface for the <cite>Webhook</cite> model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.autocomplete_fields">
+<span class="sig-name descname"><span class="pre">autocomplete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config',)</span></em><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.autocomplete_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'config',</span> <span class="pre">'url',</span> <span class="pre">'http_method')</span></em><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.list_filter">
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('http_method',)</span></em><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.list_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config__id',)</span></em><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.search_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookInline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">WebhookInline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/admin.html#WebhookInline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.WebhookInline" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StackedInline</span></code></p>
+<p>Support for inlining <cite>Webhook</cite> objects.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookInline.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#action_triggers.admin.WebhookInline.extra" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookInline.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.WebhookInline.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookInline.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.admin.WebhookInline.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.models.Webhook" title="action_triggers.models.Webhook"><code class="xref py py-class docutils literal notranslate"><span class="pre">Webhook</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-action_triggers.dispatch"><span id="module-action_triggers.conf"></span>Handles the dispatching of actions to the appropriate action handler.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.dispatch.handle_action">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.dispatch.</span></span><span class="sig-name descname"><span class="pre">handle_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#action_triggers.models.Config" title="action_triggers.models.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/dispatch.html#handle_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.dispatch.handle_action" title="Link to this definition"></a></dt>
+<dd><p>Handle the action for the given config and instance.</p>
+<p>For each webhook and message broker queue associated with the config,
+the payload is generated and sent to the respective handlers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – The configuration object.</p></li>
+<li><p><strong>instance</strong> – The model instance which triggered the action.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function" id="module-action_triggers.dynamic_loading">
+<dt class="sig sig-object py" id="action_triggers.dynamic_loading.get_path_result">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.dynamic_loading.</span></span><span class="sig-name descname"><span class="pre">get_path_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/action_triggers/dynamic_loading.html#get_path_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.dynamic_loading.get_path_result" title="Link to this definition"></a></dt>
+<dd><p>Get the result of a path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> – The path to import from in the format <cite>module.submodule.attr</cite>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The imported object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.dynamic_loading.replace_dict_values_with_results">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.dynamic_loading.</span></span><span class="sig-name descname"><span class="pre">replace_dict_values_with_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opener</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'{{'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'}}'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/action_triggers/dynamic_loading.html#replace_dict_values_with_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.dynamic_loading.replace_dict_values_with_results" title="Link to this definition"></a></dt>
+<dd><p>Recursively all instances of <cite>{{ path }}</cite> in the values of a dictionary
+with the result of the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dictionary</strong> – The dictionary to replace the paths in.</p></li>
+<li><p><strong>opener</strong> – The opener of the path.</p></li>
+<li><p><strong>closer</strong> – The closer of the path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dictionary with the paths replaced.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.dynamic_loading.replace_string_with_result">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.dynamic_loading.</span></span><span class="sig-name descname"><span class="pre">replace_string_with_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opener</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'{{'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'}}'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/action_triggers/dynamic_loading.html#replace_string_with_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.dynamic_loading.replace_string_with_result" title="Link to this definition"></a></dt>
+<dd><p>Replace all instances of <cite>{{ path }}</cite> in a string with the result of
+the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – The string to replace the paths in.</p></li>
+<li><p><strong>opener</strong> – The opener of the path.</p></li>
+<li><p><strong>closer</strong> – The closer of the path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The string with the paths replaced.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.dynamic_loading.restricted_import_string">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.dynamic_loading.</span></span><span class="sig-name descname"><span class="pre">restricted_import_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/action_triggers/dynamic_loading.html#restricted_import_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.dynamic_loading.restricted_import_string" title="Link to this definition"></a></dt>
+<dd><p>A restricted version of import_string that only allows importing from
+any path that has been defined in
+<cite>settings.ACTION_TRIGGER_SETTINGS.ALLOWED_DYNAMIC_IMPORT_PATHS</cite>.</p>
+<p>This is to prevent arbitrary code execution via dynamic imports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> – The path to import from in the format <cite>module.submodule.attr</cite>.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RuntimeError</strong> – If no allowed paths are defined in settings.</p></li>
+<li><p><strong>ValueError</strong> – If the path is not allowed.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The imported object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class" id="module-action_triggers.models">
+<dt class="sig sig-object py" id="action_triggers.models.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.models.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/models.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.Config" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>Model to represent the action triggers configuration.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="action_triggers.models.Config.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#action_triggers.models.Config.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="action_triggers.models.Config.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#action_triggers.models.Config.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.active">
+<span class="sig-name descname"><span class="pre">active</span></span><a class="headerlink" href="#action_triggers.models.Config.active" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.config_signals">
+<span class="sig-name descname"><span class="pre">config_signals</span></span><a class="headerlink" href="#action_triggers.models.Config.config_signals" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.content_types">
+<span class="sig-name descname"><span class="pre">content_types</span></span><a class="headerlink" href="#action_triggers.models.Config.content_types" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.created_by">
+<span class="sig-name descname"><span class="pre">created_by</span></span><a class="headerlink" href="#action_triggers.models.Config.created_by" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.created_by_id">
+<span class="sig-name descname"><span class="pre">created_by_id</span></span><a class="headerlink" href="#action_triggers.models.Config.created_by_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.created_on">
+<span class="sig-name descname"><span class="pre">created_on</span></span><a class="headerlink" href="#action_triggers.models.Config.created_on" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.models.Config.get_next_by_created_on">
+<span class="sig-name descname"><span class="pre">get_next_by_created_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">created_on&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#action_triggers.models.Config.get_next_by_created_on" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.models.Config.get_previous_by_created_on">
+<span class="sig-name descname"><span class="pre">get_previous_by_created_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">created_on&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#action_triggers.models.Config.get_previous_by_created_on" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#action_triggers.models.Config.id" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.message_broker_queues">
+<span class="sig-name descname"><span class="pre">message_broker_queues</span></span><a class="headerlink" href="#action_triggers.models.Config.message_broker_queues" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.manager.ManagerFromConfigQuerySet</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#action_triggers.models.Config.objects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.payload">
+<span class="sig-name descname"><span class="pre">payload</span></span><a class="headerlink" href="#action_triggers.models.Config.payload" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Config.webhooks">
+<span class="sig-name descname"><span class="pre">webhooks</span></span><a class="headerlink" href="#action_triggers.models.Config.webhooks" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigQuerySet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.models.</span></span><span class="sig-name descname"><span class="pre">ConfigQuerySet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">using</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/models.html#ConfigQuerySet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.ConfigQuerySet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QuerySet</span></code></p>
+<p>Custom queryset for the Config model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigQuerySet.active">
+<span class="sig-name descname"><span class="pre">active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#action_triggers.models.ConfigQuerySet" title="action_triggers.models.ConfigQuerySet"><span class="pre">ConfigQuerySet</span></a></span></span><a class="reference internal" href="_modules/action_triggers/models.html#ConfigQuerySet.active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.ConfigQuerySet.active" title="Link to this definition"></a></dt>
+<dd><p>Return only active configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A queryset of active configurations</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#action_triggers.models.ConfigQuerySet" title="action_triggers.models.ConfigQuerySet">ConfigQuerySet</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigQuerySet.for_model">
+<span class="sig-name descname"><span class="pre">for_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#action_triggers.models.ConfigQuerySet" title="action_triggers.models.ConfigQuerySet"><span class="pre">ConfigQuerySet</span></a></span></span><a class="reference internal" href="_modules/action_triggers/models.html#ConfigQuerySet.for_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.ConfigQuerySet.for_model" title="Link to this definition"></a></dt>
+<dd><p>Return only configurations for the given model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Union</em><em>[</em><em>models.Model</em><em>, </em><em>Type</em><em>[</em><em>models.Model</em><em>]</em><em>]</em>) – The model to filter by.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A queryset of configurations for the given model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#action_triggers.models.ConfigQuerySet" title="action_triggers.models.ConfigQuerySet">ConfigQuerySet</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigQuerySet.for_signal">
+<span class="sig-name descname"><span class="pre">for_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SignalChoices</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#action_triggers.models.ConfigQuerySet" title="action_triggers.models.ConfigQuerySet"><span class="pre">ConfigQuerySet</span></a></span></span><a class="reference internal" href="_modules/action_triggers/models.html#ConfigQuerySet.for_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.ConfigQuerySet.for_signal" title="Link to this definition"></a></dt>
+<dd><p>Return only configurations for the given signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>signal</strong> (<em>SignalChoices</em>) – The signal to filter by.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A queryset of configurations for the given signal</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#action_triggers.models.ConfigQuerySet" title="action_triggers.models.ConfigQuerySet">ConfigQuerySet</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.models.</span></span><span class="sig-name descname"><span class="pre">ConfigSignal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/models.html#ConfigSignal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.ConfigSignal" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>Model to represent the type of signals to trigger for.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#action_triggers.models.ConfigSignal.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#action_triggers.models.ConfigSignal.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#action_triggers.models.ConfigSignal.config" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal.config_id">
+<span class="sig-name descname"><span class="pre">config_id</span></span><a class="headerlink" href="#action_triggers.models.ConfigSignal.config_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal.get_signal_display">
+<span class="sig-name descname"><span class="pre">get_signal_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.CharField:</span> <span class="pre">signal&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#action_triggers.models.ConfigSignal.get_signal_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#action_triggers.models.ConfigSignal.id" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#action_triggers.models.ConfigSignal.objects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.ConfigSignal.signal">
+<span class="sig-name descname"><span class="pre">signal</span></span><a class="headerlink" href="#action_triggers.models.ConfigSignal.signal" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.models.</span></span><span class="sig-name descname"><span class="pre">MessageBrokerQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/models.html#MessageBrokerQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>Model to represent a message broker queue configuration.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.config" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.config_id">
+<span class="sig-name descname"><span class="pre">config_id</span></span><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.config_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.conn_details">
+<span class="sig-name descname"><span class="pre">conn_details</span></span><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.conn_details" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.id" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.name" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.objects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.MessageBrokerQueue.parameters">
+<span class="sig-name descname"><span class="pre">parameters</span></span><a class="headerlink" href="#action_triggers.models.MessageBrokerQueue.parameters" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.models.</span></span><span class="sig-name descname"><span class="pre">Webhook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/models.html#Webhook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.Webhook" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>Model to represent the webhook configuration.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#action_triggers.models.Webhook.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#action_triggers.models.Webhook.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#action_triggers.models.Webhook.config" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.config_id">
+<span class="sig-name descname"><span class="pre">config_id</span></span><a class="headerlink" href="#action_triggers.models.Webhook.config_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.get_http_method_display">
+<span class="sig-name descname"><span class="pre">get_http_method_display</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.CharField:</span> <span class="pre">http_method&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#action_triggers.models.Webhook.get_http_method_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.headers">
+<span class="sig-name descname"><span class="pre">headers</span></span><a class="headerlink" href="#action_triggers.models.Webhook.headers" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.http_method">
+<span class="sig-name descname"><span class="pre">http_method</span></span><a class="headerlink" href="#action_triggers.models.Webhook.http_method" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#action_triggers.models.Webhook.id" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#action_triggers.models.Webhook.objects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.url">
+<span class="sig-name descname"><span class="pre">url</span></span><a class="headerlink" href="#action_triggers.models.Webhook.url" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function" id="module-action_triggers.msg_broker_queues">
+<dt class="sig sig-object py" id="action_triggers.msg_broker_queues.process_msg_broker_queue">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.msg_broker_queues.</span></span><span class="sig-name descname"><span class="pre">process_msg_broker_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg_broker_queue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#action_triggers.models.MessageBrokerQueue" title="action_triggers.models.MessageBrokerQueue"><span class="pre">MessageBrokerQueue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/msg_broker_queues.html#process_msg_broker_queue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.msg_broker_queues.process_msg_broker_queue" title="Link to this definition"></a></dt>
+<dd><p>Process the action for the message broker queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg_broker_queue</strong> (<a class="reference internal" href="#action_triggers.models.MessageBrokerQueue" title="action_triggers.models.MessageBrokerQueue"><em>MessageBrokerQueue</em></a>) – The message broker queue object to process.</p></li>
+<li><p><strong>payload</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>]</em>) – The payload to send to the message broker queue.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function" id="module-action_triggers.payload">
+<dt class="sig sig-object py" id="action_triggers.payload.get_payload_generator">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.payload.</span></span><span class="sig-name descname"><span class="pre">get_payload_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#action_triggers.models.Config" title="action_triggers.models.Config"><span class="pre">Config</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/action_triggers/payload.html#get_payload_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.payload.get_payload_generator" title="Link to this definition"></a></dt>
+<dd><p>Returns a function that generates a payload from a model instance and
+config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> – The configuration object to use for generating the payload.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the config has a payload, the function will return a callable
+that generates the payload using the provided payload in the config
+object. Otherwise, it will return a callable that generates the payload
+from the model instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.payload.parse_payload">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.payload.</span></span><span class="sig-name descname"><span class="pre">parse_payload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="_modules/action_triggers/payload.html#parse_payload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.payload.parse_payload" title="Link to this definition"></a></dt>
+<dd><p>Parse a payload dictionary with a model instance and return the parsed
+object. If the parsed object is JSON serializable, it will be returned as
+a dictionary, otherwise it will be returned as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The model instance to parse the payload for.</p></li>
+<li><p><strong>payload</strong> – The payload to parse.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The parsed payload - either a dictionary or a string depending on
+whether the parsed object is JSON serializable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.payload.payload_from_instance">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.payload.</span></span><span class="sig-name descname"><span class="pre">payload_from_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/action_triggers/payload.html#payload_from_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.payload.payload_from_instance" title="Link to this definition"></a></dt>
+<dd><p>Generates a payload from a model instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> – The model instance to generate the payload from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary representing the payload derived from the model
+instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-action_triggers.registry">Contains collection of models that have been registered to have signals
+dispatched for. Also contains helper functions relating to the registry.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.registry.add_to_registry">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.registry.</span></span><span class="sig-name descname"><span class="pre">add_to_registry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/registry.html#add_to_registry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.registry.add_to_registry" title="Link to this definition"></a></dt>
+<dd><p>Adds a model to the registry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Union</em><em>[</em><em>Model</em><em>, </em><em>Type</em><em>[</em><em>Model</em><em>]</em><em>]</em>) – The model to add to the registry.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.registry.model_in_registry">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.registry.</span></span><span class="sig-name descname"><span class="pre">model_in_registry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/action_triggers/registry.html#model_in_registry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.registry.model_in_registry" title="Link to this definition"></a></dt>
+<dd><p>Checks if a model is in the registry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Union</em><em>[</em><em>Model</em><em>, </em><em>Type</em><em>[</em><em>Model</em><em>]</em><em>]</em>) – The model to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the model is in the registry, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.registry.model_str">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.registry.</span></span><span class="sig-name descname"><span class="pre">model_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/action_triggers/registry.html#model_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.registry.model_str" title="Link to this definition"></a></dt>
+<dd><p>Returns a string representation of the model which can be used to
+identify both the app label and the model name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Union</em><em>[</em><em>Model</em><em>, </em><em>Type</em><em>[</em><em>Model</em><em>]</em><em>]</em>) – The model to get the string representation of.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string representation of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.registry.registered_content_types">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.registry.</span></span><span class="sig-name descname"><span class="pre">registered_content_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QuerySet</span></span></span><a class="reference internal" href="_modules/action_triggers/registry.html#registered_content_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.registry.registered_content_types" title="Link to this definition"></a></dt>
+<dd><p>Return a queryset of all the content types registered in the
+registry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A queryset of all the content types registered in the registry.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>QuerySet[ContentType]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-action_triggers.signals">Dynamically create signals for each model so that the relevant actions can
+be triggered.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.signals.setup">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.signals.</span></span><span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/signals.html#setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.signals.setup" title="Link to this definition"></a></dt>
+<dd><p>Connects signals to each model which will trigger the callback function
+when the signal is dispatched.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="action_triggers.signals.signal_callback">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.signals.</span></span><span class="sig-name descname"><span class="pre">signal_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ModelSignal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/signals.html#signal_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.signals.signal_callback" title="Link to this definition"></a></dt>
+<dd><p>Callback function to be called when a signal is triggered.
+The callback function will dispatch the relevant signals for the
+model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> (<em>Model</em>) – The model instance which triggered the signal.</p></li>
+<li><p><strong>signal</strong> (<em>signals.ModelSignal</em>) – The signal which was triggered.</p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>) – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-action_triggers.webhooks">Module for processing webhook based actions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.webhooks.WebhookProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.webhooks.</span></span><span class="sig-name descname"><span class="pre">WebhookProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">webhook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#action_triggers.models.Webhook" title="action_triggers.models.Webhook"><span class="pre">Webhook</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/webhooks.html#WebhookProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.webhooks.WebhookProcessor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Process an action which involves sending a webhook.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>webhook</strong> (<a class="reference internal" href="#action_triggers.models.Webhook" title="action_triggers.models.Webhook"><em>Webhook</em></a>) – The webhook configuration to process.</p></li>
+<li><p><strong>payload</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>]</em>) – The payload to send with the webhook.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.webhooks.WebhookProcessor.get_fn_kwargs">
+<span class="sig-name descname"><span class="pre">get_fn_kwargs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/action_triggers/webhooks.html#WebhookProcessor.get_fn_kwargs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.webhooks.WebhookProcessor.get_fn_kwargs" title="Link to this definition"></a></dt>
+<dd><p>Returns the keyword arguments to pass to the request function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The keyword arguments to pass to the request function.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.webhooks.WebhookProcessor.get_headers">
+<span class="sig-name descname"><span class="pre">get_headers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/action_triggers/webhooks.html#WebhookProcessor.get_headers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.webhooks.WebhookProcessor.get_headers" title="Link to this definition"></a></dt>
+<dd><p>Returns the headers to use for the webhook.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The headers to use for the webhook.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.webhooks.WebhookProcessor.get_request_fn">
+<span class="sig-name descname"><span class="pre">get_request_fn</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Response</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/action_triggers/webhooks.html#WebhookProcessor.get_request_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.webhooks.WebhookProcessor.get_request_fn" title="Link to this definition"></a></dt>
+<dd><p>Returns the request function to use for the webhook.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AttributeError</strong> – If the HTTP method is not supported.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The request function to use for the webhook.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.webhooks.WebhookProcessor.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Response</span></span></span><a class="reference internal" href="_modules/action_triggers/webhooks.html#WebhookProcessor.process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.webhooks.WebhookProcessor.process" title="Link to this definition"></a></dt>
+<dd><p>Processes the webhook action.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="message_brokers/rabbitmq.html" class="btn btn-neutral float-left" title="RabbitMQ" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

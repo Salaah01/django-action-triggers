@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API &mdash; django-action-triggers 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dynamically Loading Values at Runtime" href="dynamic_loading.html" />
+    <link rel="prev" title="Action Trigger Settings" href="action_trigger_settings.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api-endpoints">API Endpoints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-specification">API Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-constraints">API Constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#field-descriptions">Field Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-value-assignment">Dynamic Value Assignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-1-trigger-a-webhook-on-customer-creation-update-and-deletion">Example 1: Trigger a Webhook on Customer Creation, Update, and Deletion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-2-trigger-webhooks-and-send-messages-to-a-broker-on-product-and-sale-creation-or-update">Example 2: Trigger Webhooks and Send Messages to a Broker on <cite>Product</cite> and <cite>Sale</cite> Creation or Update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-3-trigger-a-webhook-when-a-sale-is-created-updated-sending-customer-and-product-information">Example 3: Trigger a Webhook When a <cite>Sale</cite> is Created/Updated Sending Customer and Product Information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers.html">Message Brokers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/rabbitmq.html">RabbitMQ</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Module Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api">
+<h1>API<a class="headerlink" href="#api" title="Link to this heading"></a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The API is currently under development and not yet ready for production
+use. Expect changes in future releases.</p>
+</div>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The <strong>Django Action Triggers</strong> API allows users to create, update, and manage
+triggers and actions programmatically. This API is designed to provide
+flexibility and control over the application’s behaviour, enabling integrations
+with external systems through webhooks and message brokers.</p>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<p>To enable the API in your Django project, you need to include the following in
+your project’s <cite>urls.py</cite> file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">...</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;api/action-triggers&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;action_triggers.urls&#39;</span><span class="p">)),</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>The Django Action Triggers application allows users to create and manage
+triggers and actions either through the Django admin interface or via the API.</p>
+<section id="api-endpoints">
+<h3>API Endpoints<a class="headerlink" href="#api-endpoints" title="Link to this heading"></a></h3>
+<p>The API provides the following endpoints for interacting with triggers:</p>
+<ul class="simple">
+<li><p><cite>/api/action-triggers</cite></p>
+<ul>
+<li><p><cite>GET</cite>: Retrieve a list of all triggers.</p></li>
+<li><p><cite>POST</cite>: Create a new trigger</p></li>
+<li><p><cite>PUT</cite>: Update an existing trigger</p></li>
+<li><p><cite>DELETE</cite>: Delete an existing trigger</p></li>
+</ul>
+</li>
+<li><p><cite>/api/action-triggers/&lt;trigger_id&gt;</cite></p>
+<ul>
+<li><p><cite>GET</cite>: Retrieve a single trigger by its ID.</p></li>
+<li><p><cite>PUT</cite>: Update a single trigger</p></li>
+<li><p><cite>DELETE</cite>: Delete a single trigger</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="api-specification">
+<h3>API Specification<a class="headerlink" href="#api-specification" title="Link to this heading"></a></h3>
+<p>Below is an example of the payload structure used when interacting with the API. This structure defines how triggers, webhooks, and message broker actions are configured.</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;trigger&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;signals&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[],</span><span class="w">  </span><span class="c1">// List of signals, e.g., &quot;pre_save&quot;, &quot;post_save&quot;</span>
+<span class="w">    </span><span class="s2">&quot;models&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;app_label&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w">  </span><span class="c1">// Django app label, e.g., &quot;myapp&quot;</span>
+<span class="w">        </span><span class="s2">&quot;model_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Model name, e.g., &quot;User&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="s2">&quot;webhooks&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;url&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w">  </span><span class="c1">// Webhook URL</span>
+<span class="w">      </span><span class="s2">&quot;method&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;PUT&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;DELETE&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// HTTP method</span>
+<span class="w">      </span><span class="s2">&quot;headers&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Optional headers</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="s2">&quot;msg_broker_queues&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;broker_config_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w">  </span><span class="c1">// Reference to configured broker</span>
+<span class="w">      </span><span class="s2">&quot;connection_details&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Optional connection details</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;parameters&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Optional parameters</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="s2">&quot;active&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">,</span><span class="w">  </span><span class="c1">// Whether the trigger is active</span>
+<span class="w">  </span><span class="s2">&quot;payload&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">dict</span><span class="w">  </span><span class="c1">// Optional payload for the action</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="api-constraints">
+<h3>API Constraints<a class="headerlink" href="#api-constraints" title="Link to this heading"></a></h3>
+<p>When interacting with the API, the following constraints apply:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Constraints</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>trigger.signals</cite></p></td>
+<td><p>Allowed values: <cite>pre_save</cite>, <cite>post_save</cite>, <cite>pre_delete</cite>, <cite>post_delete</cite></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="field-descriptions">
+<h3>Field Descriptions<a class="headerlink" href="#field-descriptions" title="Link to this heading"></a></h3>
+<p>The following fields are available for use in the API:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Constraint</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>trigger.signal</cite></p></td>
+<td><p><cite>string[]</cite></p></td>
+<td><p>The list of signals that will trigger the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>trigger.models</cite></p></td>
+<td><p><cite>object[]</cite></p></td>
+<td><p>The list of models that will trigger the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>trigger.models.app_label</cite></p></td>
+<td><p><cite>string</cite></p></td>
+<td><p>The app label of the model that will trigger the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>trigger.models.model_name</cite></p></td>
+<td><p><cite>string</cite></p></td>
+<td><p>The model name that will trigger the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>webhooks</cite></p></td>
+<td><p><cite>object[]</cite> (optional)</p></td>
+<td><p>The list of webhooks that will be triggered.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>webhooks.url</cite></p></td>
+<td><p><cite>string</cite></p></td>
+<td><p>The URL of the webhook.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>webhooks.method</cite></p></td>
+<td><p><cite>string</cite></p></td>
+<td><p>The HTTP method of the webhook.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>webhooks.headers</cite></p></td>
+<td><p><cite>object[]</cite> (optional)</p></td>
+<td><p>A key-value pair of headers that will be sent with the webhook. The value can receive the path to a callable that will be evaluated at runtime.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>msg_broker_queues</cite></p></td>
+<td><p><cite>object[]</cite> (optional)</p></td>
+<td><p>The list of queues that will be receive the message.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>msg_broker_queues.broker_config_name</cite></p></td>
+<td><p><cite>string</cite></p></td>
+<td><p>The name of the queue as defined in <cite>settings.py.ACTION_TRIGGERS.brokers</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>msg_broker_queues.connection_details</cite></p></td>
+<td><p><cite>object[]</cite> (optional)</p></td>
+<td><p>A key-value pair of connection details that will be used to connect to the broker. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;broker_config_name&gt;.conn_details</cite> will be used instead.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>msg_broker_queues.parameters</cite></p></td>
+<td><p><cite>object[]</cite> (optional)</p></td>
+<td><p>A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;broker_config_name&gt;.params</cite> will be used instead.</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>active</cite></p></td>
+<td><p><cite>boolean</cite></p></td>
+<td><p>Whether the trigger is enabled or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>payload</cite></p></td>
+<td><p><cite>object[]</cite> (optional)</p></td>
+<td><p>A Django template like value. If the resulting value after any parsing is JSON-serializable, then the returning payload will be JSON, otherwise, it’ll be just plain text.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dynamic-value-assignment">
+<h2>Dynamic Value Assignment<a class="headerlink" href="#dynamic-value-assignment" title="Link to this heading"></a></h2>
+<p>Django Action Triggers supports dynamically setting values at runtime. This
+feature allows you to define paths to callables or variables that will be
+evaluated dynamically when the trigger is executed.</p>
+<p>For more details, refer to the <a class="reference internal" href="dynamic_loading.html#dynamic-loading"><span class="std std-ref">Dynamically Loading Values at Runtime</span></a> guide.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>Below are examples illustrating how to use the API to create and manage
+triggers and actions.</p>
+<p>For the following examples, we will use the following models:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Customer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+  <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+  <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Sale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">customer</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Customer</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">product</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Product</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">quantity</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+</pre></div>
+</div>
+<section id="example-1-trigger-a-webhook-on-customer-creation-update-and-deletion">
+<h3>Example 1: Trigger a Webhook on Customer Creation, Update, and Deletion<a class="headerlink" href="#example-1-trigger-a-webhook-on-customer-creation-update-and-deletion" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See the <a class="reference internal" href="webhooks.html#webhooks"><span class="std std-ref">webhooks</span></a> guide for more information on how the
+webhook action works.</p>
+</div>
+<p>In this example, a trigger is created that sends a POST request to a webhook
+whenever a <cite>Customer</cite> model instance is created, updated, or deleted.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;post_save&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;post_delete&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Customer&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;webhooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-webhook.com&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer {{ myapp.utils.get_token }}&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="example-2-trigger-webhooks-and-send-messages-to-a-broker-on-product-and-sale-creation-or-update">
+<h3>Example 2: Trigger Webhooks and Send Messages to a Broker on <cite>Product</cite> and <cite>Sale</cite> Creation or Update<a class="headerlink" href="#example-2-trigger-webhooks-and-send-messages-to-a-broker-on-product-and-sale-creation-or-update" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See the <a class="reference internal" href="message_brokers.html#message-brokers"><span class="std std-ref">message brokers</span></a> guide for more information on
+how the message broker action works.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See the <a class="reference internal" href="webhooks.html#webhooks"><span class="std std-ref">webhooks</span></a> guide for more information on how the
+webhook action works.</p>
+</div>
+<p>This example demonstrates how to create a trigger that sends requests to
+webhooks and messages to a broker when a <cite>Product</cite> or <cite>Sale</cite> is created or
+updated.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;post_save&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Product&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sale&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;webhooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-webhook.com&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer {{ myapp.utils.get_token }}&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-other-webhook.com&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer {{ myapp.utils.get_token }}&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;msg_broker_queues&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;broker_config_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-queue&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{ myapp.utils.get_product_id }}&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;broker_config_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-other-queue&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;sale_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{ myapp.utils.get_sale_id }}&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="example-3-trigger-a-webhook-when-a-sale-is-created-updated-sending-customer-and-product-information">
+<h3>Example 3: Trigger a Webhook When a <cite>Sale</cite> is Created/Updated Sending Customer and Product Information<a class="headerlink" href="#example-3-trigger-a-webhook-when-a-sale-is-created-updated-sending-customer-and-product-information" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See the <a class="reference internal" href="message_brokers.html#message-brokers"><span class="std std-ref">message brokers</span></a> guide for more information on
+how the message broker action works.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See the <a class="reference internal" href="webhooks.html#webhooks"><span class="std std-ref">webhooks</span></a> guide for more information on how the
+webhook action works.</p>
+</div>
+<p>The following example illustrates how to create a trigger that will hit a
+webhook when a new sale is created or updated. The webhook will send the
+customer name and product name along with a static action.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;post_save&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sale&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;webhooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-webhook.com&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer {{ myapp.utils.get_token }}&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;new_sale&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;customer_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{ instance.customer.name }}&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;product_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{ instance.product.name }}&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="action_trigger_settings.html" class="btn btn-neutral float-left" title="Action Trigger Settings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dynamic_loading.html" class="btn btn-neutral float-right" title="Dynamically Loading Values at Runtime" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
