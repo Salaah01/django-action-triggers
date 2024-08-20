@@ -1,13 +1,15 @@
 import typing as _t
-from rest_framework import serializers
-from action_triggers.models import (
-    Config,
-    Webhook,
-    MessageBrokerQueue,
-    ConfigSignal,
-)
+
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
+from rest_framework import serializers  # type: ignore[import-untyped]
+
+from action_triggers.models import (
+    Config,
+    ConfigSignal,
+    MessageBrokerQueue,
+    Webhook,
+)
 
 
 class ConfigSignalSerializer(serializers.ModelSerializer):
@@ -140,3 +142,5 @@ class ConfigSerializer(serializers.ModelSerializer):
 
         for queue in message_broker_queues:
             MessageBrokerQueue.objects.create(config=instance, **queue)
+
+        return instance

@@ -1,15 +1,15 @@
 """Tests for the `api.serializers` module."""
 
-import pytest
-from action_triggers.api.serializers import ConfigSerializer
+from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
+
+from action_triggers.api.serializers import ConfigSerializer
 from action_triggers.models import (
     Config,
-    Webhook,
-    MessageBrokerQueue,
     ConfigSignal,
+    MessageBrokerQueue,
+    Webhook,
 )
-from django.contrib.contenttypes.models import ContentType
 from tests.models import CustomerModel, CustomerOrderModel, M2MModel
 
 
@@ -244,8 +244,9 @@ class TestConfigSerializer:
         }
 
         serializer = ConfigSerializer(config)
-        serializer.update(config, data)
+        res = serializer.update(config, data)
 
+        assert res == config
         assert set(config.config_signals.values_list("signal", flat=True)) == {
             "pre_save",
             "post_save",

@@ -1,10 +1,7 @@
-from rest_framework import viewsets
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
+from rest_framework import viewsets  # type: ignore[import-untyped]
 
-from action_triggers.models import Config
 from action_triggers.api.serializers import ConfigSerializer
+from action_triggers.models import Config
 
 
 class ConfigViewSet(viewsets.ModelViewSet):
