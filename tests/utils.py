@@ -1,8 +1,8 @@
 from contextlib import contextmanager
 
 import pika  # type: ignore[import-untyped]
+from confluent_kafka import Consumer, Producer  # type: ignore[import-untyped]
 from django.conf import settings
-from kafka import KafkaConsumer, KafkaProducer  # type: ignore[import-untyped]
 
 
 def get_rabbitmq_conn(key: str = "rabbitmq_1") -> pika.BlockingConnection:
@@ -24,7 +24,7 @@ def get_rabbitmq_conn(key: str = "rabbitmq_1") -> pika.BlockingConnection:
 
 
 @contextmanager
-def get_kafka_conn(key: str = "kafka_1") -> KafkaConsumer:
+def get_kafka_conn(key: str = "kafka_1") -> Consumer:
     """Get a connection to a Kafka broker.
 
     Args:
@@ -32,15 +32,16 @@ def get_kafka_conn(key: str = "kafka_1") -> KafkaConsumer:
             Defaults to "kafka_1".
 
     Yields:
-        KafkaConsumer: The connection to the broker
+        Consumer: The connection to the broker
     """
 
-    conn = KafkaConsumer(
-        enable_auto_commit=False,
-        auto_offset_reset="earliest",
-        group_id="test_group_1",
-        fetch_max_wait_ms=4000,
-        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],
+    conn = Consumer(
+        {
+            "enable.auto.commit": False,
+            "auto.offset.reset": "earliest",
+            "group.id": "test_group_1",
+            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[dict-item]  # noqa E501
+        }
     )
 
     yield conn
@@ -49,7 +50,7 @@ def get_kafka_conn(key: str = "kafka_1") -> KafkaConsumer:
 
 
 @contextmanager
-def get_kafka_consumer(key: str = "kafka_1") -> KafkaConsumer:
+def get_kafka_consumer(key: str = "kafka_1") -> Consumer:
     """Consume a message from a Kafka broker.
 
     Args:
@@ -57,7 +58,7 @@ def get_kafka_consumer(key: str = "kafka_1") -> KafkaConsumer:
             Defaults to "kafka_1".
 
     Returns:
-        KafkaConsumer: The Kafka consumer
+        Consumer: The Kafka consumer
     """
 
     with get_kafka_conn(key) as conn:
@@ -77,10 +78,10 @@ def get_kafka_producer(key: str = "kafka_1"):
             Defaults to "kafka_1".
 
     Yields:
-        KafkaProducer: The Kafka producer
+        Producer: The Kafka producer
     """
 
-    producer = KafkaProducer(
+    producer = Producer(
         **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],
     )
 
