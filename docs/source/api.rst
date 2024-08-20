@@ -26,7 +26,7 @@ your project's `urls.py` file:
 
     urlpatterns = [
         ...
-        path('api/action-triggers', include('action_triggers.urls')),
+        path('api/action-triggers/', include('action_triggers.urls')),
         ...
     ]
 
