@@ -1,5 +1,19 @@
 
-# Django Action Triggers
+# Django Action Triggers (In Development)
+
+## Table of Contents
+- [Django Action Triggers (In Development)](#django-action-triggers-in-development)
+  - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Key Features](#key-features)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Example Scenarios](#example-scenarios)
+    - [Example 1: Webhook Trigger on User Creation/Update/Deletion](#example-1-webhook-trigger-on-user-creationupdatedeletion)
+    - [Example 2: Webhooks and Message Queues on Product and Sale Creation/Update](#example-2-webhooks-and-message-queues-on-product-and-sale-creationupdate)
+  - [Documentation](#documentation)
+  - [License](#license)
+
 
 ## Description
 
@@ -136,12 +150,9 @@ Trigger multiple webhooks and add messages to queues when `Product` or `Sale` mo
 
 ## Documentation
 
-For detailed documentation, including setup, configuration options, API specifications, and more examples, please refer to the [official documentation](link_to_docs).
+For detailed documentation, including setup, configuration options, API specifications, and more examples, please refer to the [official documentation](https://salaah01.github.io/django-action-triggers/).
 
-## Contributing
-
-Contributions are welcome! Please check out the [contributing guide](link_to_contributing_guide) for more information on how to get involved.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](link_to_license) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
