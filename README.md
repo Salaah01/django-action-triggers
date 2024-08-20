@@ -63,7 +63,7 @@ urlpatterns = [
 
 Once installed, you can create triggers and actions using the Django admin interface or programmatically through the API.
 
-For detailed usage instructions, configuration options, and examples, please refer to the [official documentation](link_to_your_docs).
+For detailed usage instructions, configuration options, and examples, please refer to the [official documentation](https://salaah01.github.io/django-action-triggers/).
 
 ## Example Scenarios
 
