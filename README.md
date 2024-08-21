@@ -73,19 +73,20 @@ Trigger a webhook whenever a `User` model is created, updated, or deleted:
 
 ```json
 {
-  "trigger": {
-    "signals": ["post_save", "post_delete"],
-    "models": [
-      {
-        "app_label": "auth",
-        "model_name": "User"
-      }
-    ]
-  },
+  "config_signals": [
+    {"signal": "post_save"},
+    {"signal": "post_delete"}
+  ],
+  "content_types": [
+    {
+      "app_label": "auth",
+      "model_name": "User"
+    }
+  ],
   "webhooks": [
     {
       "url": "https://my-webhook.com",
-      "method": "POST",
+      "http_method": "POST",
       "headers": {
         "Authorization": "Bearer {{ myapp.utils.get_token }}"
       }
@@ -93,6 +94,7 @@ Trigger a webhook whenever a `User` model is created, updated, or deleted:
   ],
   "active": true
 }
+
 ```
 
 ### Example 2: Webhooks and Message Queues on Product and Sale Creation/Update
@@ -101,30 +103,30 @@ Trigger multiple webhooks and add messages to queues when `Product` or `Sale` mo
 
 ```json
 {
-  "trigger": {
-    "signals": ["post_save"],
-    "models": [
-      {
-        "app_label": "myapp",
-        "model_name": "Product"
-      },
-      {
-        "app_label": "myapp",
-        "model_name": "Sale"
-      }
-    ]
-  },
+  "config_signals": [
+    {"signal": "post_save"}
+  ],
+  "content_types": [
+    {
+      "app_label": "myapp",
+      "model_name": "Product"
+    },
+    {
+      "app_label": "myapp",
+      "model_name": "Sale"
+    }
+  ],
   "webhooks": [
     {
       "url": "https://my-webhook.com",
-      "method": "POST",
+      "http_method": "POST",
       "headers": {
         "Authorization": "Bearer {{ myapp.utils.get_token }}"
       }
     },
     {
       "url": "https://my-other-webhook.com",
-      "method": "POST",
+      "http_method": "POST",
       "headers": {
         "Authorization": "Bearer {{ myapp.utils.get_token }}"
       }
@@ -132,13 +134,13 @@ Trigger multiple webhooks and add messages to queues when `Product` or `Sale` mo
   ],
   "msg_broker_queues": [
     {
-      "broker_config_name": "my-queue",
+      "name": "my-msg-broker-config",
       "parameters": {
         "product_id": "{{ myapp.utils.get_product_id }}"
       }
     },
     {
-      "broker_config_name": "my-other-queue",
+      "name": "my-other-msg-broker-config",
       "parameters": {
         "sale_id": "{{ myapp.utils.get_sale_id }}"
       }

@@ -2,12 +2,6 @@
 API
 ===
 
-.. warning::
-  
-    The API is currently under development and not yet ready for production
-    use. Expect changes in future releases.
-
-
 Overview
 ========
 
@@ -26,7 +20,7 @@ your project's `urls.py` file:
 
     urlpatterns = [
         ...
-        path('api/action-triggers', include('action_triggers.urls')),
+        path('api/action-triggers/', include('action_triggers.urls')),
         ...
     ]
 
@@ -67,19 +61,18 @@ Below is an example of the payload structure used when interacting with the API.
 .. code-block:: typescript
 
   {
-    "trigger": {
-      "signals": string[],  // List of signals, e.g., "pre_save", "post_save"
-      "models": [
-        {
-          "app_label": string,  // Django app label, e.g., "myapp"
-          "model_name": string  // Model name, e.g., "User"
-        }
-      ]
-    },
+    // List of signals objects, e.g., [{"signal": "pre_save"}, {"signal": "post_save"}]
+    "config_signals": {"signal": string}[],  // List of signals objects
+    "content_types": [
+      {
+        "app_label": string,  // Django app label, e.g., "myapp"
+        "model_name": string  // Model name, e.g., "User"
+      }
+    ],
     "webhooks"?: [
       {
         "url": string,  // Webhook URL
-        "method": "GET" | "POST" | "PUT" | "DELETE",  // HTTP method
+        "http_method": "GET" | "POST" | "PUT" | "DELETE",  // HTTP method
         "headers"?: {
           [key: string]: string  // Optional headers
         }
@@ -87,8 +80,8 @@ Below is an example of the payload structure used when interacting with the API.
     ],
     "msg_broker_queues"?: [
       {
-        "broker_config_name": string,  // Reference to configured broker
-        "connection_details"?: {
+        "name": string,  // Reference to configured broker
+        "conn_details"?: {
           [key: string]: string  // Optional connection details
         },
         "parameters"?: {
@@ -107,11 +100,11 @@ API Constraints
 
 When interacting with the API, the following constraints apply:
 
-+-------------------+----------------------------------------------------------------------+
-| Field             | Constraints                                                          |
-+===================+======================================================================+
-| `trigger.signals` | Allowed values: `pre_save`, `post_save`, `pre_delete`, `post_delete` |
-+-------------------+----------------------------------------------------------------------+
++--------------------------+----------------------------------------------------------------------+
+| Field                    | Constraints                                                          |
++==========================+======================================================================+
+| `config_signals.signals` | Allowed values: `pre_save`, `post_save`, `pre_delete`, `post_delete` |
++--------------------------+----------------------------------------------------------------------+
 
 Field Descriptions
 ------------------
@@ -151,19 +144,20 @@ whenever a `Customer` model instance is created, updated, or deleted.
 .. code-block:: json
 
   {
-    "trigger": {
-      "signals": ["post_save", "post_delete"],
-      "models": [
-        {
-          "app_label": "myapp",
-          "model_name": "Customer"
-        }
-      ]
-    },
+    "config_signals": [
+      {"signal": "post_save"},
+      {"signal": "post_delete"}
+    ],
+    "content_types": [
+      {
+        "app_label": "myapp",
+        "model_name": "Customer"
+      }
+    ],
     "webhooks": [
       {
         "url": "https://my-webhook.com",
-        "method": "POST",
+        "http_method": "POST",
         "headers": {
           "Authorization": "Bearer {{ myapp.utils.get_token }}"
         }
@@ -185,30 +179,30 @@ updated.
 .. code-block:: json
 
   {
-    "trigger": {
-      "signals": ["post_save"],
-      "models": [
-        {
-          "app_label": "myapp",
-          "model_name": "Product"
-        },
-        {
-          "app_label": "myapp",
-          "model_name": "Sale"
-        }
-      ]
-    },
+    "config_signals": [
+      {"signal": "post_save"}
+    ],
+    "content_types": [
+      {
+        "app_label": "myapp",
+        "model_name": "Product"
+      },
+      {
+        "app_label": "myapp",
+        "model_name": "Sale"
+      }
+    ]
     "webhooks": [
       {
         "url": "https://my-webhook.com",
-        "method": "POST",
+        "http_method": "POST",
         "headers": {
           "Authorization": "Bearer {{ myapp.utils.get_token }}"
         }
       },
       {
         "url": "https://my-other-webhook.com",
-        "method": "POST",
+        "http_method": "POST",
         "headers": {
           "Authorization": "Bearer {{ myapp.utils.get_token }}"
         }
@@ -216,13 +210,13 @@ updated.
     ],
     "msg_broker_queues": [
       {
-        "broker_config_name": "my-queue",
+        "name": "my-msg-broker-config",
         "parameters": {
           "product_id": "{{ myapp.utils.get_product_id }}"
         }
       },
       {
-        "broker_config_name": "my-other-queue",
+        "name": "my-other-msg-broker-config",
         "parameters": {
           "sale_id": "{{ myapp.utils.get_sale_id }}"
         }
@@ -244,19 +238,19 @@ customer name and product name along with a static action.
 .. code-block:: json
 
   {
-    "trigger": {
-      "signals": ["post_save"],
-      "models": [
-        {
-          "app_label": "myapp",
-          "model_name": "Sale"
-        }
-      ]
-    },
+    "config_signals": [
+      {"signal": "post_save"}
+    ],
+    "content_types": [
+      {
+        "app_label": "myapp",
+        "model_name": "Sale"
+      }
+    ]
     "webhooks": [
       {
         "url": "https://my-webhook.com",
-        "method": "POST",
+        "http_method": "POST",
         "headers": {
           "Authorization": "Bearer {{ myapp.utils.get_token }}"
         }

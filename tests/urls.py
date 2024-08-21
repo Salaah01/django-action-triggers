@@ -1,2 +1,5 @@
+from django.urls import include, path
 
-urlpattners = []  # type: ignore
+urlpatterns = [
+    path("action-triggers/", include("action_triggers.urls")),
+]
