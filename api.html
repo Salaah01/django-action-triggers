@@ -105,11 +105,6 @@
              
   <section id="api">
 <h1>API<a class="headerlink" href="#api" title="Link to this heading"></a></h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The API is currently under development and not yet ready for production
-use. Expect changes in future releases.</p>
-</div>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>The <strong>Django Action Triggers</strong> API allows users to create, update, and manage
@@ -123,7 +118,7 @@ with external systems through webhooks and message brokers.</p>
 your project’s <cite>urls.py</cite> file:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
     <span class="o">...</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;api/action-triggers&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;action_triggers.urls&#39;</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;api/action-triggers/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;action_triggers.urls&#39;</span><span class="p">)),</span>
     <span class="o">...</span>
 <span class="p">]</span>
 </pre></div>
@@ -158,19 +153,18 @@ triggers and actions either through the Django admin interface or via the API.</
 <h3>API Specification<a class="headerlink" href="#api-specification" title="Link to this heading"></a></h3>
 <p>Below is an example of the payload structure used when interacting with the API. This structure defines how triggers, webhooks, and message broker actions are configured.</p>
 <div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;trigger&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;signals&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[],</span><span class="w">  </span><span class="c1">// List of signals, e.g., &quot;pre_save&quot;, &quot;post_save&quot;</span>
-<span class="w">    </span><span class="s2">&quot;models&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;app_label&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w">  </span><span class="c1">// Django app label, e.g., &quot;myapp&quot;</span>
-<span class="w">        </span><span class="s2">&quot;model_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Model name, e.g., &quot;User&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="c1">// List of signals objects, e.g., [{&quot;signal&quot;: &quot;pre_save&quot;}, {&quot;signal&quot;: &quot;post_save&quot;}]</span>
+<span class="w">  </span><span class="s2">&quot;config_signals&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;signal&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">}[],</span><span class="w">  </span><span class="c1">// List of signals objects</span>
+<span class="w">  </span><span class="s2">&quot;content_types&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;app_label&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w">  </span><span class="c1">// Django app label, e.g., &quot;myapp&quot;</span>
+<span class="w">      </span><span class="s2">&quot;model_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Model name, e.g., &quot;User&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="s2">&quot;webhooks&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="s2">&quot;url&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w">  </span><span class="c1">// Webhook URL</span>
-<span class="w">      </span><span class="s2">&quot;method&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;PUT&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;DELETE&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// HTTP method</span>
+<span class="w">      </span><span class="s2">&quot;http_method&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;PUT&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;DELETE&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// HTTP method</span>
 <span class="w">      </span><span class="s2">&quot;headers&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="p">[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Optional headers</span>
 <span class="w">      </span><span class="p">}</span>
@@ -178,8 +172,8 @@ triggers and actions either through the Django admin interface or via the API.</
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="s2">&quot;msg_broker_queues&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;broker_config_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w">  </span><span class="c1">// Reference to configured broker</span>
-<span class="w">      </span><span class="s2">&quot;connection_details&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w">  </span><span class="c1">// Reference to configured broker</span>
+<span class="w">      </span><span class="s2">&quot;conn_details&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="p">[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w">  </span><span class="c1">// Optional connection details</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="s2">&quot;parameters&quot;</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
@@ -205,7 +199,7 @@ triggers and actions either through the Django admin interface or via the API.</
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><cite>trigger.signals</cite></p></td>
+<tr class="row-even"><td><p><cite>config_signals.signals</cite></p></td>
 <td><p>Allowed values: <cite>pre_save</cite>, <cite>post_save</cite>, <cite>pre_delete</cite>, <cite>post_delete</cite></p></td>
 </tr>
 </tbody>
@@ -222,19 +216,19 @@ triggers and actions either through the Django admin interface or via the API.</
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><cite>trigger.signal</cite></p></td>
-<td><p><cite>string[]</cite></p></td>
-<td><p>The list of signals that will trigger the action.</p></td>
+<tr class="row-even"><td><p><cite>config_signals</cite></p></td>
+<td><p><cite>{“signal”: string}[]</cite></p></td>
+<td><p>The list of signals objects that will trigger the action. For example: <cite>[{“signal”: “post_save”}]</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>trigger.models</cite></p></td>
+<tr class="row-odd"><td><p><cite>content_types</cite></p></td>
 <td><p><cite>object[]</cite></p></td>
-<td><p>The list of models that will trigger the action.</p></td>
+<td><p>The list of content types that will trigger the action.</p></td>
 </tr>
-<tr class="row-even"><td><p><cite>trigger.models.app_label</cite></p></td>
+<tr class="row-even"><td><p><cite>content_types.app_label</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The app label of the model that will trigger the action.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>trigger.models.model_name</cite></p></td>
+<tr class="row-odd"><td><p><cite>content_types.model_name</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The model name that will trigger the action.</p></td>
 </tr>
@@ -246,7 +240,7 @@ triggers and actions either through the Django admin interface or via the API.</
 <td><p><cite>string</cite></p></td>
 <td><p>The URL of the webhook.</p></td>
 </tr>
-<tr class="row-even"><td><p><cite>webhooks.method</cite></p></td>
+<tr class="row-even"><td><p><cite>webhooks.http_method</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The HTTP method of the webhook.</p></td>
 </tr>
@@ -258,17 +252,17 @@ triggers and actions either through the Django admin interface or via the API.</
 <td><p><cite>object[]</cite> (optional)</p></td>
 <td><p>The list of queues that will be receive the message.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>msg_broker_queues.broker_config_name</cite></p></td>
+<tr class="row-odd"><td><p><cite>msg_broker_queues.name</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The name of the queue as defined in <cite>settings.py.ACTION_TRIGGERS.brokers</cite></p></td>
 </tr>
 <tr class="row-even"><td><p><cite>msg_broker_queues.connection_details</cite></p></td>
 <td><p><cite>object[]</cite> (optional)</p></td>
-<td><p>A key-value pair of connection details that will be used to connect to the broker. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;broker_config_name&gt;.conn_details</cite> will be used instead.</p></td>
+<td><p>A key-value pair of connection details that will be used to connect to the broker. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;name&gt;.conn_details</cite> will be used instead.</p></td>
 </tr>
 <tr class="row-odd"><td><p><cite>msg_broker_queues.parameters</cite></p></td>
 <td><p><cite>object[]</cite> (optional)</p></td>
-<td><p>A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;broker_config_name&gt;.params</cite> will be used instead.</p></td>
+<td><p>A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;name&gt;.params</cite> will be used instead.</p></td>
 </tr>
 <tr class="row-even"><td><p><cite>active</cite></p></td>
 <td><p><cite>boolean</cite></p></td>
@@ -321,19 +315,20 @@ webhook action works.</p>
 <p>In this example, a trigger is created that sends a POST request to a webhook
 whenever a <cite>Customer</cite> model instance is created, updated, or deleted.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;post_save&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;post_delete&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Customer&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;config_signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;signal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;post_save&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;signal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;post_delete&quot;</span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;content_types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Customer&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nt">&quot;webhooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-webhook.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;http_method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer {{ myapp.utils.get_token }}&quot;</span>
 <span class="w">      </span><span class="p">}</span>
@@ -360,30 +355,30 @@ webhook action works.</p>
 webhooks and messages to a broker when a <cite>Product</cite> or <cite>Sale</cite> is created or
 updated.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;post_save&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Product&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sale&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;config_signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;signal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;post_save&quot;</span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;content_types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Product&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sale&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
 <span class="w">  </span><span class="nt">&quot;webhooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-webhook.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;http_method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer {{ myapp.utils.get_token }}&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-other-webhook.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;http_method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer {{ myapp.utils.get_token }}&quot;</span>
 <span class="w">      </span><span class="p">}</span>
@@ -391,13 +386,13 @@ updated.</p>
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nt">&quot;msg_broker_queues&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;broker_config_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-queue&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-msg-broker-config&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{ myapp.utils.get_product_id }}&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;broker_config_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-other-queue&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-other-msg-broker-config&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;sale_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{ myapp.utils.get_sale_id }}&quot;</span>
 <span class="w">      </span><span class="p">}</span>
@@ -424,19 +419,19 @@ webhook action works.</p>
 webhook when a new sale is created or updated. The webhook will send the
 customer name and product name along with a static action.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;post_save&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sale&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;config_signals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="nt">&quot;signal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;post_save&quot;</span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;content_types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;app_label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sale&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
 <span class="w">  </span><span class="nt">&quot;webhooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://my-webhook.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;http_method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;Authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Bearer {{ myapp.utils.get_token }}&quot;</span>
 <span class="w">      </span><span class="p">}</span>

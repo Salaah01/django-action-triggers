@@ -91,19 +91,19 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><cite>trigger.signal</cite></p></td>
-<td><p><cite>string[]</cite></p></td>
-<td><p>The list of signals that will trigger the action.</p></td>
+<tr class="row-even"><td><p><cite>config_signals</cite></p></td>
+<td><p><cite>{“signal”: string}[]</cite></p></td>
+<td><p>The list of signals objects that will trigger the action. For example: <cite>[{“signal”: “post_save”}]</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>trigger.models</cite></p></td>
+<tr class="row-odd"><td><p><cite>content_types</cite></p></td>
 <td><p><cite>object[]</cite></p></td>
-<td><p>The list of models that will trigger the action.</p></td>
+<td><p>The list of content types that will trigger the action.</p></td>
 </tr>
-<tr class="row-even"><td><p><cite>trigger.models.app_label</cite></p></td>
+<tr class="row-even"><td><p><cite>content_types.app_label</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The app label of the model that will trigger the action.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>trigger.models.model_name</cite></p></td>
+<tr class="row-odd"><td><p><cite>content_types.model_name</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The model name that will trigger the action.</p></td>
 </tr>
@@ -115,7 +115,7 @@
 <td><p><cite>string</cite></p></td>
 <td><p>The URL of the webhook.</p></td>
 </tr>
-<tr class="row-even"><td><p><cite>webhooks.method</cite></p></td>
+<tr class="row-even"><td><p><cite>webhooks.http_method</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The HTTP method of the webhook.</p></td>
 </tr>
@@ -127,17 +127,17 @@
 <td><p><cite>object[]</cite> (optional)</p></td>
 <td><p>The list of queues that will be receive the message.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>msg_broker_queues.broker_config_name</cite></p></td>
+<tr class="row-odd"><td><p><cite>msg_broker_queues.name</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The name of the queue as defined in <cite>settings.py.ACTION_TRIGGERS.brokers</cite></p></td>
 </tr>
 <tr class="row-even"><td><p><cite>msg_broker_queues.connection_details</cite></p></td>
 <td><p><cite>object[]</cite> (optional)</p></td>
-<td><p>A key-value pair of connection details that will be used to connect to the broker. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;broker_config_name&gt;.conn_details</cite> will be used instead.</p></td>
+<td><p>A key-value pair of connection details that will be used to connect to the broker. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;name&gt;.conn_details</cite> will be used instead.</p></td>
 </tr>
 <tr class="row-odd"><td><p><cite>msg_broker_queues.parameters</cite></p></td>
 <td><p><cite>object[]</cite> (optional)</p></td>
-<td><p>A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;broker_config_name&gt;.params</cite> will be used instead.</p></td>
+<td><p>A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;name&gt;.params</cite> will be used instead.</p></td>
 </tr>
 <tr class="row-even"><td><p><cite>active</cite></p></td>
 <td><p><cite>boolean</cite></p></td>
