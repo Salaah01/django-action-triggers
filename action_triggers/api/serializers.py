@@ -56,11 +56,12 @@ class ConfigSerializer(serializers.ModelSerializer):
         model = Config
         fields = (
             "id",
+            "active",
+            "payload",
             "config_signals",
             "content_types",
             "webhooks",
             "message_broker_queues",
-            "payload",
         )
 
     @staticmethod
