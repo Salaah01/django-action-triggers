@@ -42,7 +42,7 @@ API key for us. We can specify the path to this function in the
 
     {
       "Content-Type": "application/json",
-      "Authorization": "Bearer {my_project.my_module.fetch_api_key}"
+      "Authorization": "Bearer {{ my_project.my_module.fetch_api_key }}"
     }
 
 Setup
