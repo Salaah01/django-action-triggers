@@ -2,12 +2,6 @@
 API
 ===
 
-.. warning::
-  
-    The API is currently under development and not yet ready for production
-    use. Expect changes in future releases.
-
-
 Overview
 ========
 
