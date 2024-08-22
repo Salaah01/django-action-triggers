@@ -1,9 +1,13 @@
 [tool.poetry]
 name = "django-action-triggers"
 version = "0.1.0"
-description = ""
+description = "A Django application that triggers actions based on database changes. Supports webhook integration, message brokers (Kafka, RabbitMQ), and flexible configurations."
 authors = ["Salaah Amin <salaah01@users.noreply.github.com>"]
 readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/Salaah01/django-action-triggers"
+repository = "https://github.com/Salaah01/django-action-triggers"
+documentation = "https://salaah01.github.io/django-action-triggers/"
 
 [tool.ruff]
 line-length = 79
