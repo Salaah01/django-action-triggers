@@ -28,6 +28,7 @@ class TestConfigSerializer:
 
         assert serializer.data == {
             "id": config.id,
+            "active": config.active,
             "config_signals": [
                 {"signal": config_signal_1.signal},
                 {"signal": config_signal_2.signal},
@@ -77,6 +78,7 @@ class TestConfigSerializer:
 
         assert serializer.data == {
             "id": config.id,
+            "active": config.active,
             "config_signals": [],
             "content_types": [],
             "webhooks": [],

@@ -3,7 +3,10 @@
 import json
 import socket
 
-import pika  # type: ignore[import-untyped]
+try:
+    import pika  # type: ignore[import-untyped]
+except ImportError:  # pragma: no cover
+    pika = None
 import pytest
 from django.conf import settings
 
@@ -17,6 +20,9 @@ from tests.utils import get_rabbitmq_conn
 
 def conn_test() -> bool:
     """Verify that a connection can be made to RabbitMQ."""
+    if pika is None:
+        return False
+
     try:
         get_rabbitmq_conn()
         return True

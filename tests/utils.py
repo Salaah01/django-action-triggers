@@ -1,11 +1,20 @@
 from contextlib import contextmanager
 
-import pika  # type: ignore[import-untyped]
-from confluent_kafka import Consumer, Producer  # type: ignore[import-untyped]
+try:
+    import pika  # type: ignore[import-untyped]
+except ImportError:  # pragma: no cover
+    pika = None
+try:
+    from confluent_kafka import (  # type: ignore[import-untyped]
+        Consumer,
+        Producer,
+    )
+except ImportError:  # pragma: no cover
+    Consumer = Producer = None
 from django.conf import settings
 
 
-def get_rabbitmq_conn(key: str = "rabbitmq_1") -> pika.BlockingConnection:
+def get_rabbitmq_conn(key: str = "rabbitmq_1"):
     """Get a connection to a RabbitMQ broker.
 
     Args:
@@ -24,7 +33,7 @@ def get_rabbitmq_conn(key: str = "rabbitmq_1") -> pika.BlockingConnection:
 
 
 @contextmanager
-def get_kafka_conn(key: str = "kafka_1") -> Consumer:
+def get_kafka_conn(key: str = "kafka_1"):
     """Get a connection to a Kafka broker.
 
     Args:
@@ -50,7 +59,7 @@ def get_kafka_conn(key: str = "kafka_1") -> Consumer:
 
 
 @contextmanager
-def get_kafka_consumer(key: str = "kafka_1") -> Consumer:
+def get_kafka_consumer(key: str = "kafka_1"):
     """Consume a message from a Kafka broker.
 
     Args:
@@ -97,6 +106,9 @@ def can_connect_to_rabbitmq() -> bool:
         bool: True if the service can connect to RabbitMQ, False otherwise
     """
 
+    if pika is None:
+        return False
+
     try:
         with get_rabbitmq_conn():
             return True
@@ -110,6 +122,9 @@ def can_connect_to_kafka() -> bool:
     Returns:
         bool: True if the service can connect to Kafka, False otherwise
     """
+
+    if Consumer is None or Producer is None:
+        return False
 
     try:
         with get_kafka_conn():

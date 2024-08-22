@@ -999,4 +999,4 @@ rabbitmq = []
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.13"
-content-hash = "b89ca95f858f65cdde32d22e34ad50bca5cc373c019af72f8c5e4ba278092bef"
+content-hash = "98daf2f3c2c89cede72fea6d7a05fb4a9d4c49f6103c09c77829bf418ff41de0"

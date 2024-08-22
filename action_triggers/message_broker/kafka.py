@@ -2,12 +2,12 @@ import typing as _t
 
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
-from action_triggers.message_broker.exceptions import MissingDependenciesError
+from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
     from confluent_kafka import Producer  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
-    raise MissingDependenciesError("Kafka", "kafka", "confluent-kafka")
+    kafka = MissingImportWrapper("kafka")
 
 
 class KafkaConnection(ConnectionBase):
