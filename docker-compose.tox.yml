@@ -55,7 +55,6 @@ services:
       timeout: 5s
       retries: 5
 
-
   kafka:
     image: confluentinc/cp-kafka:7.4.4
     environment:
@@ -73,5 +72,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  
