@@ -5,7 +5,10 @@ import importlib
 
 class MissingImportWrapper:
     """A wrapper to indicate that an import is missing the next time it is
-    accessed.
+    accessed. Judging from the code, that is not at all the case. However, this
+    is primary used whenever a module is not found, but we do not want to raise
+    an exception immediately. Instead, we want to raise an exception when the
+    module is accessed.
     """
 
     def __init__(

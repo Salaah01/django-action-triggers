@@ -95,5 +95,3 @@ def replace_dict_values_with_results(
             new_dict[k] = v
 
     return new_dict
-
-
