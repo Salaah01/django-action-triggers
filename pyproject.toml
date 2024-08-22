@@ -8,6 +8,7 @@ license = "MIT"
 homepage = "https://github.com/Salaah01/django-action-triggers"
 repository = "https://github.com/Salaah01/django-action-triggers"
 documentation = "https://salaah01.github.io/django-action-triggers/"
+packages = [{ include = "action_triggers" }]
 
 [tool.ruff]
 line-length = 79
