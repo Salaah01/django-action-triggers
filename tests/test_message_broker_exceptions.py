@@ -5,11 +5,9 @@ from collections import defaultdict
 
 import pytest
 
-from action_triggers.message_broker.exceptions import (
+from action_triggers.message_broker.exceptions import (  # MissingDependenciesError,
     ConnectionValidationError,
-    # MissingDependenciesError,
 )
-
 
 # class TestMissingDependenciesError:
 #     """Tests for the `MissingDependenciesError` class."""
