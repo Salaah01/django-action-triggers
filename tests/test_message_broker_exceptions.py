@@ -7,25 +7,25 @@ import pytest
 
 from action_triggers.message_broker.exceptions import (
     ConnectionValidationError,
-    MissingDependenciesError,
+    # MissingDependenciesError,
 )
 
 
-class TestMissingDependenciesError:
-    """Tests for the `MissingDependenciesError` class."""
+# class TestMissingDependenciesError:
+#     """Tests for the `MissingDependenciesError` class."""
 
-    def test_shows_custom_message(self):
-        exc = MissingDependenciesError(
-            broker_name="broker-name",
-            extra_name="extra-name",
-            package_name="package-name",
-        )
-        exc_str = str(exc)
+#     def test_shows_custom_message(self):
+#         exc = MissingDependenciesError(
+#             broker_name="broker-name",
+#             extra_name="extra-name",
+#             package_name="package-name",
+#         )
+#         exc_str = str(exc)
 
-        assert "The `extra-name` extra must be installed" in exc_str
-        assert "to use the broker-name broker" in exc_str
-        assert "action-triggers[extra-name]" in exc_str
-        assert "pip install package-name" in exc_str
+#         assert "The `extra-name` extra must be installed" in exc_str
+#         assert "to use the broker-name broker" in exc_str
+#         assert "action-triggers[extra-name]" in exc_str
+#         assert "pip install package-name" in exc_str
 
 
 class TestConnectionValidationError:

@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Salaah Amin <salaah01@users.noreply.github.com>"]
 readme = "README.md"
+packages = [{ include = "action_triggers" }]
 
 [tool.ruff]
 line-length = 79
@@ -23,6 +24,7 @@ omit = ["action_triggers/migrations/*"]
 python = ">=3.8,<3.13"
 django = ">=3.2"
 djangorestframework = "^3.15.2"
+requests = "^2.32.3"
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main"]
