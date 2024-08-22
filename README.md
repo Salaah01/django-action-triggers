@@ -1,8 +1,8 @@
 
-# Django Action Triggers (In Development)
+# Django Action Triggers
 
 ## Table of Contents
-- [Django Action Triggers (In Development)](#django-action-triggers-in-development)
+- [Django Action Triggers](#django-action-triggers)
   - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Key Features](#key-features)
