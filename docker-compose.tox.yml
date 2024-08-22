@@ -1,0 +1,76 @@
+# A dedicated docker-comopose file for bringing up all the services for tox
+# to test against.
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14.13-alpine3.20
+    environment:
+      POSTGRES_DB: action_triggers
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5440:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql:
+    image: mysql:oraclelinux9
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: action_triggers
+      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:4.0.0-beta.5-management-alpine
+    ports:
+      - "5680:5672"
+      - "15680:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "echo > /dev/tcp/localhost/2181" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    ports:
+      - "9092:9092"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "echo > /dev/tcp/localhost/9092" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  
