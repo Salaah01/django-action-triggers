@@ -25,7 +25,8 @@ Django Action Triggers can be installed directly from PyPI using pip:
 
   pip install django-action-triggers
 
-## Optional: Install with Extras
+Optional: Install with Extras
+-----------------------------
 
 If you plan to use specific features (e.g., integration with messaging
 brokers), you can install the required dependencies at the same time:

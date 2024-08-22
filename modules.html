@@ -253,6 +253,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.webhooks.WebhookProcessor.process"><code class="docutils literal notranslate"><span class="pre">WebhookProcessor.process()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#action_triggers.utils.module_import.MissingImportWrapper"><code class="docutils literal notranslate"><span class="pre">MissingImportWrapper</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1514,6 +1515,18 @@ model.</p>
 <dd><p>Processes the webhook action.</p>
 </dd></dl>
 
+</dd></dl>
+
+<p id="module-action_triggers.utils.module_import">Utility functions for managing imports.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.utils.module_import.MissingImportWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.utils.module_import.</span></span><span class="sig-name descname"><span class="pre">MissingImportWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">import_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/utils/module_import.html#MissingImportWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.utils.module_import.MissingImportWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A wrapper to indicate that an import is missing the next time it is
+accessed. Judging from the code, that is not at all the case. However, this
+is primary used whenever a module is not found, but we do not want to raise
+an exception immediately. Instead, we want to raise an exception when the
+module is accessed.</p>
 </dd></dl>
 
 </section>
