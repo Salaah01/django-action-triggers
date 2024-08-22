@@ -1,5 +1,6 @@
 """Tests for `action_triggers.message_broker.base` module."""
 
+import os
 from types import SimpleNamespace
 
 import pytest
@@ -67,13 +68,20 @@ class TestBrokerBase:
             (
                 {},
                 {},
-                {"host": "localhost", "port": 5672},
+                {
+                    "host": "localhost",
+                    "port": os.getenv("RABBIT_MQ_PORT", 5672),
+                },
                 {"queue": "test_queue_1"},
             ),
             (
                 {"host": "localhost2", "name": "rabbitmq"},
                 {"queue": "test_queue_2", "exchange": "test_exchange"},
-                {"host": "localhost2", "port": 5672, "name": "rabbitmq"},
+                {
+                    "host": "localhost2",
+                    "port": os.getenv("RABBIT_MQ_PORT", 5672),
+                    "name": "rabbitmq",
+                },
                 {"queue": "test_queue_2", "exchange": "test_exchange"},
             ),
         ),
