@@ -494,13 +494,13 @@ colors = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "model-bakery"
-version = "1.19.4"
+version = "1.19.5"
 description = "Smart object creation facility for Django."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "model_bakery-1.19.4-py3-none-any.whl", hash = "sha256:9134a24a2cecc861460993c652dc62ab0a0cd73dd8c3581cd273a3b793fad078"},
-    {file = "model_bakery-1.19.4.tar.gz", hash = "sha256:7c18882cbe29cff80c4dad238243f93174eaf02aef7f805f0d44606c57271d44"},
+    {file = "model_bakery-1.19.5-py3-none-any.whl", hash = "sha256:09ecbbf124d32614339581b642c82ac4a73147442f598c7bad23eece24187e5c"},
+    {file = "model_bakery-1.19.5.tar.gz", hash = "sha256:37cece544a33f8899ed8f0488cd6a9d2b0b6925e7b478a4ff2786dece8c63745"},
 ]
 
 [package.dependencies]
