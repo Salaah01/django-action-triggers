@@ -1,6 +1,12 @@
 name: CI Pipeline
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+    pull_request:
+      branches:
+        - master
 
 jobs:
   setup:
@@ -11,15 +17,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Docker Compose
-        run: |
-          docker-compose -f docker-compose.tox.yml up -d
-        services:
-          docker:
-            image: docker:latest
-            options: --privileged
-        # This sleep allows all services to start properly and become healthy
-      - name: Wait for services to be healthy
-        run: sleep 30
+        run: docker-compose -f docker-compose.tox.yml up -d --wait
 
   test:
     needs: setup
