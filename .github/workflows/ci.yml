@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Docker Compose
-        run: docker-compose -f docker-compose.tox.yml up -d --wait
+        run: docker compose -f docker-compose.tox.yml up -d --wait
 
   test:
     needs: setup
