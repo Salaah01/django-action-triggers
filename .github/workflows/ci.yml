@@ -42,4 +42,4 @@ jobs:
           tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}-${{ matrix.db }}-${{ matrix.broker }}
 
       - name: Shutdown Docker Compose
-        run: docker-compose down
+        run: docker compose down
