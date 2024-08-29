@@ -103,3 +103,21 @@ class TestHandleAction:
             f"Error processing webhook {webhook.id} for config {config.id}"
             in caplog.records[0].message
         )
+
+    def test_skips_over_msg_broker_queues_with_errors(
+        self,
+        customer_webhook_post_save_signal,
+        caplog,
+    ):
+        config = customer_webhook_post_save_signal.config
+        msg_broker_queue = baker.make(
+            MessageBrokerQueue, config=config, conn_details={"host": "bad"}
+        )
+        baker.make(CustomerModel)
+
+        assert len(caplog.records) == 1
+        assert caplog.records[0].levelname == "ERROR"
+        assert (
+            f"Error processing message broker queue {msg_broker_queue.id} "
+            f"for config {config.id}" in caplog.records[0].message
+        )
