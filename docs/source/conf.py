@@ -31,9 +31,9 @@ copyright = "2024, Salaah01"
 author = "Salaah01"
 
 # The short X.Y version
-version = ""
+version = "0.2.0"
 # The full version, including alpha/beta/rc tags
-release = "0.1.1"
+release = "0.2.0"
 
 
 # -- General configuration ---------------------------------------------------
