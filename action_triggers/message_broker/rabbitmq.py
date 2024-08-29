@@ -13,13 +13,20 @@ except ImportError:  # pragma: no cover
 class RabbitMQConnection(ConnectionBase):
     """Connection class for RabbitMQ."""
 
-    def validate(self) -> None:
-        if not self.params.get("queue"):
+    def validate_queue_exists(self):
+        """Validate the the queue exists either in the base configuration or
+        the user provided parameters.
+        """
+
+        if not self.config.get("queue") and not self.params.get("queue"):
             self._errors.add_params_error(  # type: ignore[attr-defined]
                 "queue",
                 "Queue name must be provided.",
             )
-        self._errors.is_valid(raise_exception=True)
+
+    def validate(self) -> None:
+        self.validate_queue_exists()
+        super().validate()
 
     def connect(self):
         self.conn = pika.BlockingConnection(

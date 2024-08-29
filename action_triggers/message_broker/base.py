@@ -14,18 +14,28 @@ class ConnectionBase(ABC):
         connection.
     """
 
-    def __init__(self, conn_details: dict, params: dict):
+    def __init__(self, config: dict, conn_details: dict, params: dict):
+        self.config = config
         self.conn_details = conn_details
         self.params = params
         self._errors = Error()
         self.validate()
         self._conn: _t.Any = None
 
-    @abstractmethod
+    def __enter__(self):
+        self.connect()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
     def validate(self) -> None:
         """Validate the connection parameters. Raise an exception if
         invalid.
         """
+        self.validate_connection_details_not_overwritten()
+        self.validate_params_not_overwritten()
+        self._errors.is_valid(raise_exception=True)
 
     @abstractmethod
     def connect(self) -> None:
@@ -36,12 +46,33 @@ class ConnectionBase(ABC):
         if self._conn:
             self._conn.close()
 
-    def __enter__(self):
-        self.connect()
-        return self
+    def validate_connection_details_not_overwritten(self) -> None:
+        """Validate that the base connection details are not overwritten."""
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+        conn_details_from_settings = self.config.get("conn_details")
+        if not conn_details_from_settings:
+            return
+
+        for key, value in conn_details_from_settings.items():
+            if key in self.conn_details and self.conn_details[key] != value:
+                self._errors.add_connection_params_error(  # type: ignore[attr-defined]  # noqa: E501
+                    key,
+                    f"Connection details for {key} cannot be overwritten."
+                )
+
+    def validate_params_not_overwritten(self) -> None:
+        """Validate that the base parameters are not overwritten."""
+
+        params_from_settings = self.config.get("params")
+        if not params_from_settings:
+            return
+
+        for key, value in params_from_settings.items():
+            if key in self.params and self.params[key] != value:
+                self._errors.add_params_error(  # type: ignore[attr-defined]
+                    key,
+                    f"{key} cannot be overwritten."
+                )
 
 
 class BrokerBase(ABC):
@@ -78,7 +109,11 @@ class BrokerBase(ABC):
             }
         )
         self.kwargs = kwargs
-        self._conn = self.conn_class(self.conn_details, self.params)
+        self._conn = self.conn_class(
+            self.config,
+            self.conn_details,
+            self.params,
+        )
 
     def send_message(self, message: str) -> None:
         """Starts a connection with the message broker and sends a message.

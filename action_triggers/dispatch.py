@@ -38,4 +38,12 @@ def handle_action(config: Config, instance: Model) -> None:
             )
 
     for msg_broker_queue in config.message_broker_queues.all():
-        process_msg_broker_queue(msg_broker_queue, payload)
+        try:
+            process_msg_broker_queue(msg_broker_queue, payload)
+        except Exception as e:
+            logger.error(
+                "Error processing message broker queue %s for config %s: %s",
+                msg_broker_queue.id,
+                config.id,
+                e,
+            )

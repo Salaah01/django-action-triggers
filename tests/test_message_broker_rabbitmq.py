@@ -1,5 +1,6 @@
 """Tests for RabbitMQ message broker."""
 
+import action_triggers
 import json
 import socket
 
@@ -16,6 +17,7 @@ from action_triggers.message_broker.rabbitmq import (
     RabbitMQConnection,
 )
 from tests.utils import get_rabbitmq_conn
+from tests.conftest import config
 
 
 def conn_test() -> bool:
@@ -40,10 +42,10 @@ def conn_test() -> bool:
 class TestRabbitMQConnection:
     """Tests for the `RabbitMQConnection` class."""
 
-    def test_requires_queue(self):
-        """It should require a queue name."""
+    def test_raises_exception_if_queue_not_provided(self):
         with pytest.raises(ConnectionValidationError) as exc:
             RabbitMQConnection(
+                config={},
                 conn_details={},
                 params={},
             )
@@ -55,11 +57,18 @@ class TestRabbitMQConnection:
             }
         )
 
-    def test_valid_connection(self):
-        """It should not raise an exception when the connection is valid."""
+    @pytest.mark.parametrize(
+        "config,params",
+        (
+            ({"queue": "test"}, {}),
+            ({}, {"queue": "test"}),
+        ),
+    )
+    def test_valid_connection(self, config, params):
         conn = RabbitMQConnection(
+            config=config,
             conn_details={},
-            params={"queue": "test"},
+            params=params,
         )
         assert conn
 
