@@ -2,6 +2,21 @@
 Django Action Triggers Documentation
 ====================================
 
+.. image:: https://img.shields.io/badge/license-MIT-blue
+   :alt: License MIT
+
+.. image:: https://badge.fury.io/py/django-action-triggers.svg
+   :target: https://badge.fury.io/py/django-action-triggers
+
+.. image:: https://img.shields.io/pypi/pyversions/django-action-triggers
+   :alt: PyPI - Supported Python Versions
+
+.. image:: https://img.shields.io/badge/django-3.2%20%7C%204.2-blue
+   :alt: Supported Django Versions
+
+.. image:: https://codecov.io/github/Salaah01/django-action-triggers/graph/badge.svg?token=ROHNEE9D4X 
+   :target: https://codecov.io/github/Salaah01/django-action-triggers
+
 Welcome to the documentation for
 **Django Action Triggers (django-action-triggers)**, a flexible Django
 application that allows you to trigger actions based on changes in the
