@@ -98,10 +98,10 @@ ACTION_TRIGGERS = {
         },
     },
     "whitelisted_content_types": (
-        "action_triggers_test_app.customermodel",
-        "action_triggers_test_app.customerordermodel",
-        "action_triggers_test_app.m2mmodel",
-        "action_triggers_test_app.one2onemodel",
+        "tests.customermodel",
+        "tests.customerordermodel",
+        "tests.m2mmodel",
+        "tests.one2onemodel",
     ),
 }
 
