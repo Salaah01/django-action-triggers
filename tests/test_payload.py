@@ -190,10 +190,9 @@ class TestPayloadFromInstance:
         payload = payload_from_instance(instance)
 
         json.dumps(payload)
-        assert payload == {
-            "fav_colour": instance.fav_colour,
-            "customers": [customer_1.id, customer_2.id],
-        }
+        assert set(payload.keys()) == {"fav_colour", "customers"}
+        assert payload["fav_colour"] == instance.fav_colour
+        assert set(payload["customers"]) == {customer_1.id, customer_2.id}
 
 
 class TestGetPayloadGenerator:

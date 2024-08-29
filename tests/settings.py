@@ -107,7 +107,6 @@ ACTION_TRIGGERS = {
         "https?://localhost:[0-9]+/webhook/[0-9]+/?",
         "https://example.com/",
     ),
-    "whitelisted_msg_broker_queues": ("test_queue_1", "test_queue_2"),
 }
 
 ACTION_TRIGGER_SETTINGS = {
