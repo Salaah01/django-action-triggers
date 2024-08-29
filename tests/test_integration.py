@@ -4,9 +4,10 @@ from unittest.mock import patch
 
 import pytest
 import responses
+from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
 
-from action_triggers.registry import add_to_registry
 from tests.models import CustomerModel
 from tests.utils import (
     can_connect_to_kafka,
@@ -28,7 +29,6 @@ class TestIntegrationMessageBrokerRabbitMQ:
         self,
         customer_rabbitmq_post_save_signal,
     ):
-        add_to_registry(CustomerModel)
         baker.make(CustomerModel)
 
         with get_rabbitmq_conn() as conn:
@@ -48,7 +48,6 @@ class TestIntegrationMessageBrokerRabbitMQ:
         config.payload = "Hello World!"
         config.save()
 
-        add_to_registry(CustomerModel)
         baker.make(CustomerModel)
 
         with get_rabbitmq_conn() as conn:
@@ -59,6 +58,25 @@ class TestIntegrationMessageBrokerRabbitMQ:
             )
 
             assert body.decode() == '"Hello World!"'
+
+    def test_does_not_work_for_models_that_are_not_allowed(
+        self,
+        customer_rabbitmq_post_save_signal,
+    ):
+        config = customer_rabbitmq_post_save_signal.config
+        config.content_types.set([ContentType.objects.get_for_model(User)])
+        config.save()
+
+        baker.make(User)
+
+        with get_rabbitmq_conn() as conn:
+            channel = conn.channel()
+            method_frame, header_frame, body = channel.basic_get(
+                queue="test_queue_1",
+                auto_ack=True,
+            )
+
+            assert body is None
 
 
 @pytest.mark.skipif(
@@ -81,7 +99,6 @@ class TestIntegrationMessageBrokerKafka:
         mock_send_message_impl,
         customer_kafka_post_save_signal,
     ):
-        add_to_registry(CustomerModel)
         baker.make(CustomerModel)
         mock_send_message_impl.assert_called_once()
 
@@ -96,8 +113,6 @@ class TestIntegrationWebhook:
         self,
         customer_webhook_post_save_signal,
     ):
-        add_to_registry(CustomerModel)
-
         responses.add(
             responses.POST,
             "https://example.com/",
@@ -121,8 +136,6 @@ class TestIntegrationWebhook:
         config.payload = "Hello World!"
         config.save()
 
-        add_to_registry(CustomerModel)
-
         responses.add(
             responses.POST,
             "https://example.com/",
@@ -134,3 +147,22 @@ class TestIntegrationWebhook:
         assert len(responses.calls) == 1
         assert responses.calls[0].request.url == "https://example.com/"
         assert responses.calls[0].request.body == "Hello World!"
+
+    @responses.activate
+    def test_does_not_work_for_models_that_are_not_allowed(
+        self,
+        customer_webhook_post_save_signal,
+    ):
+        config = customer_webhook_post_save_signal.config
+        config.content_types.set([ContentType.objects.get_for_model(User)])
+        config.save()
+
+        responses.add(
+            responses.POST,
+            "https://example.com/",
+            json={"success": "True"},
+        )
+
+        baker.make(User)
+
+        assert len(responses.calls) == 0

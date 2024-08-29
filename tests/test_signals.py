@@ -8,7 +8,6 @@ from model_bakery import baker
 
 from action_triggers.enums import SignalChoices
 from action_triggers.models import Config, ConfigSignal
-from action_triggers.registry import add_to_registry
 from tests.models import CustomerModel, CustomerOrderModel
 
 
@@ -17,8 +16,6 @@ class TestSignal:
 
     def test_signal_callback_prints_message(self, caplog):
         caplog.set_level(logging.DEBUG)
-        add_to_registry(CustomerModel)
-        add_to_registry(CustomerOrderModel)
         config = baker.make(Config)
         config.content_types.add(
             ContentType.objects.get_for_model(CustomerModel)
@@ -30,8 +27,6 @@ class TestSignal:
 
     def test_action_does_not_run_for_inactive_message(self, caplog):
         caplog.set_level(logging.DEBUG)
-        add_to_registry(CustomerModel)
-        add_to_registry(CustomerOrderModel)
         config = baker.make(Config, active=False)
         config.content_types.add(
             ContentType.objects.get_for_model(CustomerModel)
@@ -65,7 +60,6 @@ class TestSignal:
         caplog,
     ):
         caplog.set_level(logging.DEBUG)
-        add_to_registry(CustomerModel)
         config = baker.make(Config)
         config.content_types.add(
             ContentType.objects.get_for_model(CustomerModel)

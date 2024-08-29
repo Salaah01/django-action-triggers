@@ -1,6 +1,5 @@
 """Tests for the `api.views` module."""
 
-import pytest
 from django.test import Client
 from django.urls import reverse
 
@@ -10,7 +9,6 @@ from tests.models import CustomerModel, CustomerOrderModel
 class TestConfigViewSet:
     """Tests for the `ConfigViewSet` class."""
 
-    @pytest.mark.django_db
     def test_list_returns_configs(self, full_loaded_config):
         client = Client()
         response = client.get(reverse("action_triggers:config-list"))

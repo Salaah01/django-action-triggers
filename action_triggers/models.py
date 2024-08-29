@@ -55,6 +55,13 @@ class ConfigQuerySet(models.QuerySet):
 class Config(models.Model):
     """Model to represent the action triggers configuration."""
 
+    def _content_type_limit_choices_to() -> dict:  # type: ignore[misc]
+        return {
+            "id__in": conf.get_content_type_choices().values_list(
+                "id", flat=True
+            )
+        }
+
     payload = models.JSONField(_("Payload"), blank=True, null=True)
     created_on = models.DateTimeField(_("Created on"), default=timezone.now)
     created_by = models.ForeignKey(
@@ -71,6 +78,7 @@ class Config(models.Model):
         related_name="configs",
         verbose_name=_("Models"),
         help_text=_("Models to trigger actions on."),
+        limit_choices_to=_content_type_limit_choices_to,
     )
 
     objects = ConfigQuerySet.as_manager()  # type: ignore

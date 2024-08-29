@@ -174,4 +174,8 @@ ACTION_TRIGGERS = {
             },
         },
     },
+    "whitelisted_content_types": (
+        "sample_app.customer",
+        "sample_app.product",
+    ),
 }
