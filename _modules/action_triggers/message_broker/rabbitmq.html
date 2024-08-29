@@ -100,15 +100,25 @@
 <span class="k">class</span> <span class="nc">RabbitMQConnection</span><span class="p">(</span><span class="n">ConnectionBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Connection class for RabbitMQ.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RabbitMQConnection.validate">
-<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;queue&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="RabbitMQConnection.validate_queue_exists">
+<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate_queue_exists">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_queue_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the the queue exists either in the base configuration or</span>
+<span class="sd">        the user provided parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;queue&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;queue&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_errors</span><span class="o">.</span><span class="n">add_params_error</span><span class="p">(</span>  <span class="c1"># type: ignore[attr-defined]</span>
                 <span class="s2">&quot;queue&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;Queue name must be provided.&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_errors</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">raise_exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RabbitMQConnection.validate">
+<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_queue_exists</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="RabbitMQConnection.connect">

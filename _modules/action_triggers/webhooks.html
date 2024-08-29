@@ -90,6 +90,7 @@
 <span class="kn">import</span> <span class="nn">requests</span>
 
 <span class="kn">from</span> <span class="nn">action_triggers.dynamic_loading</span> <span class="kn">import</span> <span class="n">replace_dict_values_with_results</span>
+<span class="kn">from</span> <span class="nn">action_triggers.exceptions</span> <span class="kn">import</span> <span class="n">DisallowedWebhookEndpointError</span>
 <span class="kn">from</span> <span class="nn">action_triggers.models</span> <span class="kn">import</span> <span class="n">Webhook</span>
 
 
@@ -99,9 +100,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process an action which involves sending a webhook.</span>
 
 <span class="sd">    :param webhook: The webhook configuration to process.</span>
-<span class="sd">    :type webhook: Webhook</span>
 <span class="sd">    :param payload: The payload to send with the webhook.</span>
-<span class="sd">    :type payload: Union[str, dict]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">webhook</span><span class="p">:</span> <span class="n">Webhook</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]):</span>
@@ -116,6 +115,9 @@
 <a class="viewcode-back" href="../../modules.html#action_triggers.webhooks.WebhookProcessor.process">[docs]</a>
     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Processes the webhook action.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">webhook</span><span class="o">.</span><span class="n">is_endpoint_whitelisted</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">DisallowedWebhookEndpointError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">webhook</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
 
         <span class="n">req_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_request_fn</span><span class="p">()</span>
         <span class="n">fn_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fn_kwargs</span><span class="p">()</span>
@@ -144,8 +146,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the keyword arguments to pass to the request function.</span>
 
 <span class="sd">        :return: The keyword arguments to pass to the request function.</span>
-<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">fn_kwargs</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">webhook</span><span class="o">.</span><span class="n">url</span><span class="p">}</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_headers</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">headers</span><span class="p">:</span>

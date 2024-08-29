@@ -21,6 +21,7 @@ within the `ACTION_TRIGGERS` dictionary. The key options include:
 - **brokers**: A dictionary of settings related to messaging brokers.
 - **webhooks**: A dictionary of settings related to webhooks.
 - **whitelisted_content_types**: A tuple of of content types that are allowed to be used in actions. Each content type should be in the format `app_label.model_name`.
+- **whitelisted_webhook_endpoint_patterns**: A tuple of regular expressions that define the allowed webhook endpoint patterns.
 
 In addition, there is a separate dictionary for behavioural settings:
 
@@ -41,7 +42,11 @@ A basic configuration for Django Action Triggers might look like this:
         "webhooks": {},
         "whitelisted_content_types": (
             "my_app.MyModel",
-        )
+        ),
+        "whitelisted_webhook_endpoint_patterns": (
+            "https?://localhost:[0-9]+/webhook/[0-9]+/?",
+            "https://example.com/",
+        ),
     }
 
 This configuration can be expanded with specific settings for brokers and

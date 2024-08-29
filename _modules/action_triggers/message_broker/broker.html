@@ -111,7 +111,7 @@
     <span class="k">return</span> <span class="n">broker_type_to_class_map</span><span class="p">[</span>
         <span class="n">_t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span>
             <span class="nb">str</span><span class="p">,</span>
-            <span class="n">settings</span><span class="o">.</span><span class="n">ACTION_TRIGGERS</span><span class="p">[</span><span class="s2">&quot;brokers&quot;</span><span class="p">][</span><span class="n">broker_name</span><span class="p">][</span><span class="s2">&quot;broker_type&quot;</span><span class="p">],</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ACTION_TRIGGERS</span><span class="p">[</span><span class="s2">&quot;brokers&quot;</span><span class="p">][</span><span class="n">broker_name</span><span class="p">][</span><span class="s2">&quot;broker_type&quot;</span><span class="p">],</span>  <span class="c1"># type: ignore[index]  # noqa E501</span>
         <span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="p">]</span></div>
 

@@ -67,6 +67,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.close"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.close()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.connect"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.connect()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate_connection_details_not_overwritten"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate_connection_details_not_overwritten()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate_params_not_overwritten"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate_params_not_overwritten()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.broker.get_broker_class"><code class="docutils literal notranslate"><span class="pre">get_broker_class()</span></code></a></li>
@@ -100,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection"><code class="docutils literal notranslate"><span class="pre">KafkaConnection</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.connect"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.connect()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.validate"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.validate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.validate_topic_exists"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.validate_topic_exists()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker"><code class="docutils literal notranslate"><span class="pre">RabbitMQBroker</span></code></a><ul>
@@ -110,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.connect()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.validate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate_queue_exists"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.validate_queue_exists()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#action_triggers.apps.ActionTriggersConfig"><code class="docutils literal notranslate"><span class="pre">ActionTriggersConfig</span></code></a><ul>
@@ -233,6 +237,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.headers"><code class="docutils literal notranslate"><span class="pre">Webhook.headers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.http_method"><code class="docutils literal notranslate"><span class="pre">Webhook.http_method</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.id"><code class="docutils literal notranslate"><span class="pre">Webhook.id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.is_endpoint_whitelisted"><code class="docutils literal notranslate"><span class="pre">Webhook.is_endpoint_whitelisted()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.objects"><code class="docutils literal notranslate"><span class="pre">Webhook.objects</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#action_triggers.models.Webhook.url"><code class="docutils literal notranslate"><span class="pre">Webhook.url</span></code></a></li>
 </ul>
@@ -321,7 +326,7 @@ connection.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.base.</span></span><span class="sig-name descname"><span class="pre">ConnectionBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.base.</span></span><span class="sig-name descname"><span class="pre">ConnectionBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Base class for establishing a connection to a message broker.</p>
 <dl class="field-list simple">
@@ -344,9 +349,21 @@ connection.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate" title="Link to this definition"></a></dt>
 <dd><p>Validate the connection parameters. Raise an exception if
 invalid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate_connection_details_not_overwritten">
+<span class="sig-name descname"><span class="pre">validate_connection_details_not_overwritten</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase.validate_connection_details_not_overwritten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate_connection_details_not_overwritten" title="Link to this definition"></a></dt>
+<dd><p>Validate that the base connection details are not overwritten.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate_params_not_overwritten">
+<span class="sig-name descname"><span class="pre">validate_params_not_overwritten</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/base.html#ConnectionBase.validate_params_not_overwritten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate_params_not_overwritten" title="Link to this definition"></a></dt>
+<dd><p>Validate that the base parameters are not overwritten.</p>
 </dd></dl>
 
 </dd></dl>
@@ -493,7 +510,7 @@ methods for adding errors to the fields of the <cite>Error</cite> class.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.kafka.</span></span><span class="sig-name descname"><span class="pre">KafkaConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/kafka.html#KafkaConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.kafka.</span></span><span class="sig-name descname"><span class="pre">KafkaConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/kafka.html#KafkaConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
 <p>Connection class for Kafka.</p>
 <dl class="py method">
@@ -507,6 +524,13 @@ methods for adding errors to the fields of the <cite>Error</cite> class.</p>
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/kafka.html#KafkaConnection.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection.validate" title="Link to this definition"></a></dt>
 <dd><p>Validate the connection parameters. Raise an exception if
 invalid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection.validate_topic_exists">
+<span class="sig-name descname"><span class="pre">validate_topic_exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/kafka.html#KafkaConnection.validate_topic_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection.validate_topic_exists" title="Link to this definition"></a></dt>
+<dd><p>Validate the the topic exists either in the base configuration or
+the user provided parameters.</p>
 </dd></dl>
 
 </dd></dl>
@@ -543,7 +567,7 @@ connection.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.rabbitmq.</span></span><span class="sig-name descname"><span class="pre">RabbitMQConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.rabbitmq.</span></span><span class="sig-name descname"><span class="pre">RabbitMQConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
 <p>Connection class for RabbitMQ.</p>
 <dl class="py method">
@@ -557,6 +581,13 @@ connection.</p></li>
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate" title="Link to this definition"></a></dt>
 <dd><p>Validate the connection parameters. Raise an exception if
 invalid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate_queue_exists">
+<span class="sig-name descname"><span class="pre">validate_queue_exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection.validate_queue_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate_queue_exists" title="Link to this definition"></a></dt>
+<dd><p>Validate the the queue exists either in the base configuration or
+the user provided parameters.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1292,6 +1323,17 @@ object the first time, the query is executed.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.models.Webhook.is_endpoint_whitelisted">
+<span class="sig-name descname"><span class="pre">is_endpoint_whitelisted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/action_triggers/models.html#Webhook.is_endpoint_whitelisted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.models.Webhook.is_endpoint_whitelisted" title="Link to this definition"></a></dt>
+<dd><p>Check if the webhook endpoint is whitelisted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the endpoint is whitelisted, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="action_triggers.models.Webhook.objects">
 <span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;django.db.models.manager.Manager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#action_triggers.models.Webhook.objects" title="Link to this definition"></a></dt>
@@ -1477,8 +1519,8 @@ model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>webhook</strong> (<a class="reference internal" href="#action_triggers.models.Webhook" title="action_triggers.models.Webhook"><em>Webhook</em></a>) – The webhook configuration to process.</p></li>
-<li><p><strong>payload</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>]</em>) – The payload to send with the webhook.</p></li>
+<li><p><strong>webhook</strong> – The webhook configuration to process.</p></li>
+<li><p><strong>payload</strong> – The payload to send with the webhook.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1489,9 +1531,6 @@ model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The keyword arguments to pass to the request function.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>

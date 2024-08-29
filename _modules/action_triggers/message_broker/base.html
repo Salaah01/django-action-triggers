@@ -101,20 +101,30 @@
 <span class="sd">        connection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn_details</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">conn_details</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span> <span class="o">=</span> <span class="n">conn_details</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_errors</span> <span class="o">=</span> <span class="n">Error</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
 <div class="viewcode-block" id="ConnectionBase.validate">
 <a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.base.ConnectionBase.validate">[docs]</a>
-    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the connection parameters. Raise an exception if</span>
 <span class="sd">        invalid.</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_connection_details_not_overwritten</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_params_not_overwritten</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_errors</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">raise_exception</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ConnectionBase.connect">
@@ -132,12 +142,37 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span>
+<div class="viewcode-block" id="ConnectionBase.validate_connection_details_not_overwritten">
+<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.base.ConnectionBase.validate_connection_details_not_overwritten">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_connection_details_not_overwritten</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that the base connection details are not overwritten.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="n">conn_details_from_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;conn_details&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">conn_details_from_settings</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">conn_details_from_settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_errors</span><span class="o">.</span><span class="n">add_connection_params_error</span><span class="p">(</span>  <span class="c1"># type: ignore[attr-defined]  # noqa: E501</span>
+                    <span class="n">key</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Connection details for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> cannot be overwritten.&quot;</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConnectionBase.validate_params_not_overwritten">
+<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.base.ConnectionBase.validate_params_not_overwritten">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_params_not_overwritten</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that the base parameters are not overwritten.&quot;&quot;&quot;</span>
+
+        <span class="n">params_from_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;params&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">params_from_settings</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params_from_settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_errors</span><span class="o">.</span><span class="n">add_params_error</span><span class="p">(</span>  <span class="c1"># type: ignore[attr-defined]</span>
+                    <span class="n">key</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> cannot be overwritten.&quot;</span>
+                <span class="p">)</span></div>
+</div>
 
 
 
@@ -163,21 +198,27 @@
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">broker_key</span> <span class="o">=</span> <span class="n">broker_key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">ACTION_TRIGGERS</span><span class="p">[</span><span class="s2">&quot;brokers&quot;</span><span class="p">][</span><span class="n">broker_key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">_t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">ACTION_TRIGGERS</span><span class="p">[</span><span class="s2">&quot;brokers&quot;</span><span class="p">])[</span>
+            <span class="n">broker_key</span>
+        <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span> <span class="o">=</span> <span class="n">replace_dict_values_with_results</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="o">**</span><span class="p">(</span><span class="n">_t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;conn_details&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="p">{}),</span>
                 <span class="o">**</span><span class="p">(</span><span class="n">conn_details</span> <span class="ow">or</span> <span class="p">{}),</span>
+                <span class="o">**</span><span class="p">(</span><span class="n">_t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;conn_details&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="p">{}),</span>
             <span class="p">}</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">replace_dict_values_with_results</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="o">**</span><span class="p">(</span><span class="n">_t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="p">{}),</span>
                 <span class="o">**</span><span class="p">(</span><span class="n">params</span> <span class="ow">or</span> <span class="p">{}),</span>
+                <span class="o">**</span><span class="p">(</span><span class="n">_t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="p">{}),</span>
             <span class="p">}</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn_class</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="BrokerBase.send_message">
 <a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.base.BrokerBase.send_message">[docs]</a>

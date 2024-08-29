@@ -83,8 +83,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for action_triggers.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">_t</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">_t</span>
 
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.contenttypes.models</span> <span class="kn">import</span> <span class="n">ContentType</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
@@ -222,7 +224,26 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="p">:</span>
             <span class="n">url_repr</span> <span class="o">+=</span> <span class="s2">&quot;...&quot;</span>
 
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(Webhook </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">) [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">http_method</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">url_repr</span><span class="si">}</span><span class="s2">&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(Webhook </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">) [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">http_method</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">url_repr</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="Webhook.is_endpoint_whitelisted">
+<a class="viewcode-back" href="../../modules.html#action_triggers.admin.Webhook.is_endpoint_whitelisted">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_endpoint_whitelisted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the webhook endpoint is whitelisted.</span>
+
+<span class="sd">        :return: True if the endpoint is whitelisted, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">patterns</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">ACTION_TRIGGERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;whitelisted_webhook_endpoint_patterns&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="s2">&quot;.*&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
 
 
 
