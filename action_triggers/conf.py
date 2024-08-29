@@ -1,7 +1,8 @@
+from functools import lru_cache
+
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import QuerySet
-from functools import lru_cache
 
 DB_TABLE_PREFIX = getattr(settings, "DB_TABLE_PREFIX", "action_triggers_")
 

@@ -1,10 +1,11 @@
 """Tests for the `conf` module."""
 
 import pytest
-from action_triggers.conf import get_content_type_choices
 from django.conf import settings
-from django.test import override_settings
 from django.contrib.contenttypes.models import ContentType
+from django.test import override_settings
+
+from action_triggers.conf import get_content_type_choices
 
 
 class TestGetContentTypeChoices:
