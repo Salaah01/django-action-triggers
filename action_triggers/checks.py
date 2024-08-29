@@ -30,7 +30,7 @@ def warning_whitelist_content_types_set(app_configs, **kwargs):
     :param kwargs: Additional keyword arguments.
     """
 
-    if not hasattr(settings, "ACTION_TRIGGERS"):
+    if getattr(settings, "ACTION_TRIGGERS", None) is None:
         return []
 
     if "whitelisted_content_types" not in settings.ACTION_TRIGGERS:

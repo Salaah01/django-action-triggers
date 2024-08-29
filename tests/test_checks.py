@@ -41,3 +41,12 @@ class TestWarningWhitelistContentTypesSet:
         result = warning_whitelist_content_types_set(app_configs=None)
 
         assert result == []
+
+    @override_settings(ACTION_TRIGGERS=None)
+    def test_if_no_action_triggers_do_nothing(self):
+        """Note: We are doing nothing here as the check for the action triggers
+        is done by another check.
+        """
+        result = warning_whitelist_content_types_set(app_configs=None)
+
+        assert result == []
