@@ -6,6 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
+from action_triggers.message_broker.exceptions import ConnectionValidationError
 
 
 class TestConnectionBase:
@@ -21,7 +22,7 @@ class TestConnectionBase:
             def connect(self):
                 pass
 
-        conn = TestConnection({}, {})
+        conn = TestConnection({}, {}, {})
 
         assert conn.i == 2
 
@@ -31,8 +32,8 @@ class TestConnectionBase:
             exited = False
             closed = False
 
-            def __init__(self, conn_details, params):
-                super().__init__(conn_details, params)
+            def __init__(self, config, conn_details, params):
+                super().__init__(config, conn_details, params)
                 self._conn = SimpleNamespace(
                     close=lambda: setattr(self, "closed", True)
                 )
@@ -47,11 +48,47 @@ class TestConnectionBase:
             def validate(self):
                 pass
 
-        with TestConnection({}, {}) as conn:
+        with TestConnection({}, {}, {}) as conn:
             assert conn.connected is True
 
         assert conn.exited is True
         assert conn.closed is True
+
+    def test_validate_connection_details_cannot_be_overwritten(self):
+        class TestConnection(ConnectionBase):
+            def connect(self):
+                pass
+
+        with pytest.raises(ConnectionValidationError) as exc:
+            TestConnection(
+                {"conn_details": {"host": "localhost"}},
+                {"host": "new_localhost"},
+                {},
+            )
+
+        assert exc.value.as_dict() == {
+            "connection_params": {
+                "host": ["Connection details for host cannot be overwritten."]
+            },
+            "params": {},
+        }
+
+    def test_validate_params_cannot_be_overwritten(self):
+        class TestConnection(ConnectionBase):
+            def connect(self):
+                pass
+
+        with pytest.raises(ConnectionValidationError) as exc:
+            TestConnection(
+                {"params": {"queue": "test_queue"}},
+                {},
+                {"queue": "new_queue"},
+            )
+
+        assert exc.value.as_dict() == {
+            "connection_params": {},
+            "params": {"queue": ["queue cannot be overwritten."]},
+        }
 
 
 class TestBrokerBase:
@@ -75,18 +112,18 @@ class TestBrokerBase:
                 {"queue": "test_queue_1"},
             ),
             (
-                {"host": "localhost2", "name": "rabbitmq"},
-                {"queue": "test_queue_2", "exchange": "test_exchange"},
+                {"host": "hijacked-host", "name": "rabbitmq"},
+                {"queue": "quirky-queue", "exchange": "test_exchange"},
                 {
-                    "host": "localhost2",
+                    "host": "localhost",
                     "port": os.getenv("RABBIT_MQ_PORT", 5672),
                     "name": "rabbitmq",
                 },
-                {"queue": "test_queue_2", "exchange": "test_exchange"},
+                {"queue": "test_queue_1", "exchange": "test_exchange"},
             ),
         ),
     )
-    def test_params_can_be_overridden(
+    def test_conn_detail_and_params_cannot_be_overridden(
         self,
         override_conn_details,
         override_params,

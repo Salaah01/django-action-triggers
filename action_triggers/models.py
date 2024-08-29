@@ -1,5 +1,7 @@
+import re
 import typing as _t
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -121,6 +123,22 @@ class Webhook(models.Model):
             url_repr += "..."
 
         return f"(Webhook {self.id}) [{self.http_method}] {url_repr}"
+
+    def is_endpoint_whitelisted(self) -> bool:
+        """Check if the webhook endpoint is whitelisted.
+
+        :return: True if the endpoint is whitelisted, False otherwise.
+        """
+
+        patterns = settings.ACTION_TRIGGERS.get(
+            "whitelisted_webhook_endpoint_patterns",
+            [".*"],
+        )
+        for pattern in patterns:
+            if re.match(pattern, self.url):
+                return True
+        else:
+            return False
 
 
 class MessageBrokerQueue(models.Model):

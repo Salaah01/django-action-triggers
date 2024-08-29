@@ -5,6 +5,7 @@ import typing as _t
 import requests
 
 from action_triggers.dynamic_loading import replace_dict_values_with_results
+from action_triggers.exceptions import DisallowedWebhookEndpointError
 from action_triggers.models import Webhook
 
 
@@ -12,9 +13,7 @@ class WebhookProcessor:
     """Process an action which involves sending a webhook.
 
     :param webhook: The webhook configuration to process.
-    :type webhook: Webhook
     :param payload: The payload to send with the webhook.
-    :type payload: Union[str, dict]
     """
 
     def __init__(self, webhook: Webhook, payload: _t.Union[str, dict]):
@@ -27,6 +26,9 @@ class WebhookProcessor:
 
     def process(self) -> requests.Response:
         """Processes the webhook action."""
+
+        if not self.webhook.is_endpoint_whitelisted():
+            raise DisallowedWebhookEndpointError(self.webhook.url)
 
         req_fn = self.get_request_fn()
         fn_kwargs = self.get_fn_kwargs()
@@ -49,8 +51,8 @@ class WebhookProcessor:
         """Returns the keyword arguments to pass to the request function.
 
         :return: The keyword arguments to pass to the request function.
-        :rtype: dict
         """
+
         fn_kwargs: _t.Dict[str, _t.Any] = {"url": self.webhook.url}
         headers = self.get_headers()
         if headers:

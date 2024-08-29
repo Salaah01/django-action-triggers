@@ -13,13 +13,19 @@ except ImportError:  # pragma: no cover
 class KafkaConnection(ConnectionBase):
     """Connection class for Kafka."""
 
-    def validate(self) -> None:
-        if not self.params.get("topic"):
+    def validate_topic_exists(self):
+        """Validate the the topic exists either in the base configuration or
+        the user provided parameters.
+        """
+        if not self.config.get("topic") and not self.params.get("topic"):
             self._errors.add_params_error(  # type: ignore[attr-defined]
                 "topic",
                 "Topic name must be provided.",
             )
-        self._errors.is_valid(raise_exception=True)
+
+    def validate(self) -> None:
+        self.validate_topic_exists()
+        super().validate()
 
     def connect(self):
         self.conn = Producer(**self.conn_details)

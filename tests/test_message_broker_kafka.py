@@ -11,12 +11,27 @@ from tests.utils import can_connect_to_kafka
 class TestKafkaConnection:
     """Tests for the `KafkaConnection` class."""
 
-    def test_requires_topic(self):
+    def test_raises_exception_if_no_topic_found(self):
         with pytest.raises(ConnectionValidationError):
             KafkaConnection(
+                config={},
                 conn_details={},
                 params={},
             )
+
+    @pytest.mark.parametrize(
+        "config,params",
+        (
+            ({"topic": "test_topic_1"}, {}),
+            ({}, {"topic": "test_topic_1"}),
+        ),
+    )
+    def test_passes_when_topic_exists(self, config, params):
+        KafkaConnection(
+            config=config,
+            conn_details={},
+            params=params,
+        )
 
 
 class TestKafkaBroker:

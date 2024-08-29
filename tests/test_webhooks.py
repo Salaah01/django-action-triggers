@@ -7,6 +7,7 @@ import requests
 import responses
 from model_bakery import baker
 
+from action_triggers.exceptions import DisallowedWebhookEndpointError
 from action_triggers.models import Webhook
 from action_triggers.webhooks import WebhookProcessor
 
@@ -101,3 +102,9 @@ class TestWebhookProcessor:
         processor = WebhookProcessor(webhook, {})
         processor()
         mock_process.assert_called_once()
+
+    def test_not_whitelisted_endpoint_raises_error(self, webhook):
+        webhook.url = "http://not-allowed.com/"
+        processor = WebhookProcessor(webhook, {})
+        with pytest.raises(DisallowedWebhookEndpointError):
+            processor.process()
