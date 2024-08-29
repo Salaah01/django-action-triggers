@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from action_triggers import models as action_triggers_models
+from action_triggers.forms import ConfigAdminForm
 
 
 class WebhookInline(admin.StackedInline):
@@ -36,6 +37,7 @@ class ConfigAdmin(admin.ModelAdmin):
     date_hierarchy = "created_on"
     autocomplete_fields = ("created_by",)
     inlines = (ConfigSignalInline, WebhookInline, MessageBrokerQueueInline)
+    form = ConfigAdminForm
 
 
 @admin.register(action_triggers_models.Webhook)

@@ -96,7 +96,13 @@ ACTION_TRIGGERS = {
                 "topic": "test_topic_2",
             },
         },
-    }
+    },
+    "whitelisted_models": (
+        "action_triggers_test_app.customermodel",
+        "action_triggers_test_app.customerordermodel",
+        "action_triggers_test_app.m2mmodel",
+        "action_triggers_test_app.one2onemodel",
+    ),
 }
 
 ACTION_TRIGGER_SETTINGS = {
