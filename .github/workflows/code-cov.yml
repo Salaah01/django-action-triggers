@@ -39,7 +39,7 @@ jobs:
           RABBIT_MQ_PORT: 5680
           KAFKA_CONN_DETAILS: '{"bootstrap.servers": "localhost:9092"}'
         run: |
-          pytest -vv --cov
+          make test-cov
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
