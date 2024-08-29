@@ -67,14 +67,14 @@ class BrokerBase(ABC):
         self.config = settings.ACTION_TRIGGERS["brokers"][broker_key]
         self.conn_details = replace_dict_values_with_results(
             {
-                **(_t.cast(dict, self.config["conn_details"]) or {}),
                 **(conn_details or {}),
+                **(_t.cast(dict, self.config["conn_details"]) or {}),
             }
         )
         self.params = replace_dict_values_with_results(
             {
-                **(_t.cast(dict, self.config["params"]) or {}),
                 **(params or {}),
+                **(_t.cast(dict, self.config["params"]) or {}),
             }
         )
         self.kwargs = kwargs

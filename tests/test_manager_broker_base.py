@@ -75,18 +75,18 @@ class TestBrokerBase:
                 {"queue": "test_queue_1"},
             ),
             (
-                {"host": "localhost2", "name": "rabbitmq"},
-                {"queue": "test_queue_2", "exchange": "test_exchange"},
+                {"host": "hijacked-host", "name": "rabbitmq"},
+                {"queue": "quirky-queue", "exchange": "test_exchange"},
                 {
-                    "host": "localhost2",
+                    "host": "localhost",
                     "port": os.getenv("RABBIT_MQ_PORT", 5672),
                     "name": "rabbitmq",
                 },
-                {"queue": "test_queue_2", "exchange": "test_exchange"},
+                {"queue": "test_queue_1", "exchange": "test_exchange"},
             ),
         ),
     )
-    def test_params_can_be_overridden(
+    def test_conn_detail_and_params_cannot_be_overridden(
         self,
         override_conn_details,
         override_params,
