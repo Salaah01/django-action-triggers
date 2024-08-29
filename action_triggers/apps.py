@@ -1,4 +1,5 @@
 from django.apps import AppConfig, apps
+from django.conf import settings
 
 
 class ActionTriggersConfig(AppConfig):
@@ -14,9 +15,20 @@ class ActionTriggersConfig(AppConfig):
     @staticmethod
     def _register_models():
         """Register the models with the registry."""
-        from .registry import add_to_registry
+        from action_triggers.registry import add_to_registry
 
-        for model in apps.get_models():
+        models = apps.get_models()
+        choices = set(
+            settings.ACTION_TRIGGERS.get("whitelisted_content_types", {})
+        )
+        if choices:
+            models = filter(
+                lambda model: f"{model._meta.app_label}.{model._meta.model_name}"  # noqa: E501
+                in choices,
+                models,
+            )
+
+        for model in models:
             add_to_registry(model)
 
     @staticmethod
