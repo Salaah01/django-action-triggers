@@ -29,11 +29,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install tox
+          pip install poetry
+          poetry install --no-root --all-extras
 
-      - name: Run tests with Tox
+      - name: Run tests
         run: |
-          tox -e py3.12-django42-postgres-rabbitmq
+          make test-cov
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
