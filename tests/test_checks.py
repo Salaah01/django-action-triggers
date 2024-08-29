@@ -1,10 +1,12 @@
 """Tests for the "checks" module."""
 
-from django.conf import settings
-from django.core.checks import Error, Tags, Warning
+from django.core.checks import Error, Warning
 from django.test import override_settings
-from action_triggers.checks import check_action_triggers_set
-from action_triggers.checks import warning_whitelist_content_types_set
+
+from action_triggers.checks import (
+    check_action_triggers_set,
+    warning_whitelist_content_types_set,
+)
 
 
 class TestCheckActionTriggersSet:

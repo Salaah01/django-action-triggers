@@ -1,5 +1,6 @@
 from django.apps import AppConfig, apps
 from django.conf import settings
+
 from action_triggers.checks import (
     check_action_triggers_set,
     warning_whitelist_content_types_set,
