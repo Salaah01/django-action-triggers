@@ -55,7 +55,7 @@ class ConfigQuerySet(models.QuerySet):
 class Config(models.Model):
     """Model to represent the action triggers configuration."""
 
-    def _content_type_limit_choices_to() -> dict[str, _t.Any]:
+    def _content_type_limit_choices_to() -> _t.Dict[str, _t.Any]:
         return {
             "id__in": conf.get_content_type_choices().values_list(
                 "id", flat=True
