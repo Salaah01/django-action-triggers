@@ -7,9 +7,9 @@ import requests
 import responses
 from model_bakery import baker
 
+from action_triggers.exceptions import DisallowedWebhookEndpointError
 from action_triggers.models import Webhook
 from action_triggers.webhooks import WebhookProcessor
-from action_triggers.exceptions import DisallowedWebhookEndpointError
 
 
 class TestWebhookProcessor:

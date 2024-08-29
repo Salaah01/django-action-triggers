@@ -1,6 +1,5 @@
 """Tests for RabbitMQ message broker."""
 
-import action_triggers
 import json
 import socket
 
@@ -17,7 +16,6 @@ from action_triggers.message_broker.rabbitmq import (
     RabbitMQConnection,
 )
 from tests.utils import get_rabbitmq_conn
-from tests.conftest import config
 
 
 def conn_test() -> bool:
