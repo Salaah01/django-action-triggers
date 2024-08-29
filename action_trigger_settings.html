@@ -118,6 +118,7 @@ within the <cite>ACTION_TRIGGERS</cite> dictionary. The key options include:</p>
 <ul class="simple">
 <li><p><strong>brokers</strong>: A dictionary of settings related to messaging brokers.</p></li>
 <li><p><strong>webhooks</strong>: A dictionary of settings related to webhooks.</p></li>
+<li><p><strong>whitelisted_content_types</strong>: A tuple of of content types that are allowed to be used in actions. Each content type should be in the format <cite>app_label.model_name</cite>.</p></li>
 </ul>
 <p>In addition, there is a separate dictionary for behavioural settings:</p>
 <ul class="simple">
@@ -130,7 +131,10 @@ operates within your application.</p>
 <p>A basic configuration for Django Action Triggers might look like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_TRIGGERS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;brokers&quot;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="s2">&quot;webhooks&quot;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="s2">&quot;webhooks&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">&quot;whitelisted_content_types&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;my_app.MyModel&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
 </div>

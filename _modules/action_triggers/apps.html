@@ -84,6 +84,12 @@
              
   <h1>Source code for action_triggers.apps</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">django.apps</span> <span class="kn">import</span> <span class="n">AppConfig</span><span class="p">,</span> <span class="n">apps</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="kn">from</span> <span class="nn">action_triggers.checks</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">check_action_triggers_set</span><span class="p">,</span>
+    <span class="n">warning_whitelist_content_types_set</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="ActionTriggersConfig">
@@ -97,6 +103,9 @@
     <span class="k">def</span> <span class="nf">ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Register the models with the registry.&quot;&quot;&quot;</span>
 
+        <span class="n">check_action_triggers_set</span><span class="p">(</span><span class="n">app_configs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">warning_whitelist_content_types_set</span><span class="p">(</span><span class="n">app_configs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_register_models</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_setup_signals</span><span class="p">()</span></div>
 
@@ -104,9 +113,20 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_register_models</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Register the models with the registry.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">.registry</span> <span class="kn">import</span> <span class="n">add_to_registry</span>
+        <span class="kn">from</span> <span class="nn">action_triggers.registry</span> <span class="kn">import</span> <span class="n">add_to_registry</span>
 
-        <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">apps</span><span class="o">.</span><span class="n">get_models</span><span class="p">():</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="n">apps</span><span class="o">.</span><span class="n">get_models</span><span class="p">()</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ACTION_TRIGGERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;whitelisted_content_types&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">choices</span><span class="p">:</span>
+            <span class="n">models</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">model</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># noqa: E501</span>
+                <span class="ow">in</span> <span class="n">choices</span><span class="p">,</span>
+                <span class="n">models</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
             <span class="n">add_to_registry</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
