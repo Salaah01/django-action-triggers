@@ -1,0 +1,47 @@
+name: Run tests and upload coverage
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Run tests and collect coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Compose
+        run: docker compose -f docker-compose.tox.yml up -d --wait
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-root --all-extras
+
+      - name: Run tests
+        env:
+          RABBIT_MQ_HOST: localhost
+          RABBIT_MQ_PORT: 5680
+          KAFKA_CONN_DETAILS: '{"bootstrap.servers": "localhost:9092"}'
+        run: |
+          make test-cov
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
