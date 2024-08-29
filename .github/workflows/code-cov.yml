@@ -31,11 +31,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
           poetry config virtualenvs.create false
-          poetry install --no-root --all-extras 
+          poetry install --no-root --all-extras
 
       - name: Run tests
+        env:
+          RABBIT_MQ_HOST: localhost
+          RABBIT_MQ_PORT: 5680
+          KAFKA_CONN_DETAILS: {"bootstrap.servers": "localhost:9092"}
         run: |
-          pytest --cov
+          pytest -vv --cov
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
