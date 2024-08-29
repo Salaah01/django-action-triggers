@@ -97,7 +97,7 @@ ACTION_TRIGGERS = {
             },
         },
     },
-    "whitelisted_models": (
+    "whitelisted_content_types": (
         "action_triggers_test_app.customermodel",
         "action_triggers_test_app.customerordermodel",
         "action_triggers_test_app.m2mmodel",

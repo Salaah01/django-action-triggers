@@ -10,13 +10,13 @@ DB_TABLE_PREFIX = getattr(settings, "DB_TABLE_PREFIX", "action_triggers_")
 @lru_cache
 def get_content_type_choices() -> QuerySet[ContentType]:
     """Return the content types available for the configuration. This is
-    driven by `settings.ACTION_TRIGGERS.whitelisted_models` where the user
-    can specify a set of models (content_type app_label.model) that they want
-    to be able to configure action triggers for.
+    driven by `settings.ACTION_TRIGGERS.whitelisted_content_types` where the
+    user can specify a set of models (content_type app_label.model) that they
+    want to be able to configure action triggers for.
 
     :return: A queryset of content types
     """
-    choices = settings.ACTION_TRIGGERS.get("whitelisted_models", ())
+    choices = settings.ACTION_TRIGGERS.get("whitelisted_content_types", ())
     if not choices:
         return ContentType.objects.all()
 
@@ -26,7 +26,7 @@ def get_content_type_choices() -> QuerySet[ContentType]:
             app_label, model = choice.split(".")
         except ValueError:
             raise ValueError(
-                f"Invalid option provided for whitelisted_models: {choice}"
+                f"Invalid option provided for whitelisted_content_types: {choice}"
                 "Expected format is app_label.model"
             )
 

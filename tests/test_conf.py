@@ -21,17 +21,17 @@ class TestGetContentTypeChoices:
         assert ct_choices.count() == 4
         expected = {
             tuple(opt.split("."))
-            for opt in settings.ACTION_TRIGGERS["whitelisted_models"]
+            for opt in settings.ACTION_TRIGGERS["whitelisted_content_types"]
         }
         assert set(ct_choices.values_list("app_label", "model")) == expected
 
-    @override_settings(ACTION_TRIGGERS={"whitelisted_models": ()})
-    def test_gets_all_content_types_if_no_whitelisted_models(self):
+    @override_settings(ACTION_TRIGGERS={"whitelisted_content_types": ()})
+    def test_gets_all_content_types_if_no_whitelisted_content_types(self):
         ct_choices = get_content_type_choices()
 
         assert ct_choices.count() == ContentType.objects.all().count()
 
-    @override_settings(ACTION_TRIGGERS={"whitelisted_models": ("foo.bar",)})
+    @override_settings(ACTION_TRIGGERS={"whitelisted_content_types": ("foo.bar",)})
     def test_meaningful_error_if_invalid_model_specified(self):
         with pytest.raises(ContentType.DoesNotExist) as exc:
             get_content_type_choices()
@@ -40,12 +40,12 @@ class TestGetContentTypeChoices:
             exc.value
         )
 
-    @override_settings(ACTION_TRIGGERS={"whitelisted_models": ("foo",)})
+    @override_settings(ACTION_TRIGGERS={"whitelisted_content_types": ("foo",)})
     def test_meaningful_error_if_invalid_model_specified_format(self):
         with pytest.raises(ValueError) as exc:
             get_content_type_choices()
 
-        assert "Invalid option provided for whitelisted_models: foo" in str(
+        assert "Invalid option provided for whitelisted_content_types: foo" in str(
             exc.value
         )
         assert "Expected format is app_label.model" in str(exc.value)
