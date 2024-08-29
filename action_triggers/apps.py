@@ -1,5 +1,9 @@
 from django.apps import AppConfig, apps
 from django.conf import settings
+from action_triggers.checks import (
+    check_action_triggers_set,
+    warning_whitelist_content_types_set,
+)
 
 
 class ActionTriggersConfig(AppConfig):
@@ -8,6 +12,9 @@ class ActionTriggersConfig(AppConfig):
 
     def ready(self):
         """Register the models with the registry."""
+
+        check_action_triggers_set(app_configs=None)
+        warning_whitelist_content_types_set(app_configs=None)
 
         self._register_models()
         self._setup_signals()
