@@ -24,6 +24,6 @@ def get_broker_class(broker_name: str) -> _t.Type[BrokerBase]:
     return broker_type_to_class_map[
         _t.cast(
             str,
-            settings.ACTION_TRIGGERS["brokers"][broker_name]["broker_type"],
+            settings.ACTION_TRIGGERS["brokers"][broker_name]["broker_type"],  # type: ignore[index]  # noqa E501
         ).upper()
     ]

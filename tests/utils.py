@@ -27,7 +27,7 @@ def get_rabbitmq_conn(key: str = "rabbitmq_1"):
 
     return pika.BlockingConnection(
         pika.ConnectionParameters(
-            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"]
+            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"]  # type: ignore[index]  # noqa E501
         )
     )
 
@@ -49,7 +49,7 @@ def get_kafka_conn(key: str = "kafka_1"):
             "enable.auto.commit": False,
             "auto.offset.reset": "earliest",
             "group.id": "test_group_1",
-            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[dict-item]  # noqa E501
+            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
         }
     )
 
@@ -91,7 +91,7 @@ def get_kafka_producer(key: str = "kafka_1"):
     """
 
     producer = Producer(
-        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],
+        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
     )
 
     yield producer

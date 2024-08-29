@@ -56,8 +56,7 @@ class ConnectionBase(ABC):
         for key, value in conn_details_from_settings.items():
             if key in self.conn_details and self.conn_details[key] != value:
                 self._errors.add_connection_params_error(  # type: ignore[attr-defined]  # noqa: E501
-                    key,
-                    f"Connection details for {key} cannot be overwritten."
+                    key, f"Connection details for {key} cannot be overwritten."
                 )
 
     def validate_params_not_overwritten(self) -> None:
@@ -70,8 +69,7 @@ class ConnectionBase(ABC):
         for key, value in params_from_settings.items():
             if key in self.params and self.params[key] != value:
                 self._errors.add_params_error(  # type: ignore[attr-defined]
-                    key,
-                    f"{key} cannot be overwritten."
+                    key, f"{key} cannot be overwritten."
                 )
 
 
@@ -95,7 +93,9 @@ class BrokerBase(ABC):
         **kwargs,
     ):
         self.broker_key = broker_key
-        self.config = settings.ACTION_TRIGGERS["brokers"][broker_key]
+        self.config = _t.cast(dict, settings.ACTION_TRIGGERS["brokers"])[
+            broker_key
+        ]
         self.conn_details = replace_dict_values_with_results(
             {
                 **(conn_details or {}),

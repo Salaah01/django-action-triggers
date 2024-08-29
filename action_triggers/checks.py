@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.core.checks import Error, Tags, Warning, register
 
-
 __all__ = [
     "check_action_triggers_set",
     "warning_whitelist_content_types_set",
