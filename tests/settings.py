@@ -103,6 +103,10 @@ ACTION_TRIGGERS = {
         "tests.m2mmodel",
         "tests.one2onemodel",
     ),
+    "whitelisted_webhook_endpoint_patterns": (
+        "https?://localhost:[0-9]+/webhook/[0-9]+/?",
+        "https://example.com/",
+    ),
 }
 
 ACTION_TRIGGER_SETTINGS = {

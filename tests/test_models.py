@@ -83,6 +83,19 @@ class TestWebhook:
     def test_str_returns_a_string_representation_of_the_instance(self):
         assert isinstance(str(baker.make(Webhook)), str)
 
+    @pytest.mark.parametrize(
+        "url,expected",
+        [
+            ("http://localhost:8000/webhook/1/", True),
+            ("https://localhost:9090/webhook/2", True),
+            ("https://example.com/", True),
+            ("http://not-allowed.com/", False),
+        ],
+    )
+    def test_is_endpoint_whitelisted_returns_correct_bool(self, url, expected):
+        webhook = baker.make(Webhook, url=url)
+        assert webhook.is_endpoint_whitelisted() is expected
+
 
 class TestMessageBrokerQueue:
     """Tests for the `MessageBrokerQueue` model."""

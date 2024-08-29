@@ -87,3 +87,19 @@ class TestHandleAction:
             in msg_broker_queues
         )
         assert mock_process_webhook.call_count == 0
+
+    def test_skips_over_webhooks_with_errors(
+        self,
+        customer_webhook_post_save_signal,
+        caplog,
+    ):
+        config = customer_webhook_post_save_signal.config
+        webhook = baker.make(Webhook, config=config, url="https://bad-url.com")
+        baker.make(CustomerModel)
+
+        assert len(caplog.records) == 1
+        assert caplog.records[0].levelname == "ERROR"
+        assert (
+            f"Error processing webhook {webhook.id} for config {config.id}"
+            in caplog.records[0].message
+        )
