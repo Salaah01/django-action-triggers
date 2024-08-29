@@ -5,6 +5,7 @@ from django.test import override_settings
 
 from action_triggers.checks import (
     check_action_triggers_set,
+    check_broker_types_are_valid,
     warning_whitelist_content_types_set,
     warning_whitelisted_webhook_endpoint_patterns_not_provided,
 )
@@ -25,6 +26,72 @@ class TestCheckActionTriggersSet:
 
     def test_set_action_triggers_no_error(self):
         result = check_action_triggers_set(app_configs=None)
+
+        assert result == []
+
+
+class TestCheckBrokerTypesAreValid:
+    """Tests for the `check_broker_types_are_valid` function."""
+
+    @override_settings(ACTION_TRIGGERS=None)
+    def test_unset_action_triggers_do_nothing(self):
+        result = check_broker_types_are_valid(app_configs=None)
+
+        assert result == []
+
+    @override_settings(
+        ACTION_TRIGGERS={
+            "brokers": {
+                "broker_1": {"broker_type": "invalid"},
+                "broker_2": {"broker_type": "kafka"},
+            }
+        }
+    )
+    def test_invalid_broker_type_shows_error(self):
+        result = check_broker_types_are_valid(app_configs=None)
+
+        assert len(result) == 1
+        assert isinstance(result[0], Error)
+        assert result[0].id == "action_triggers.E003"
+        assert result[0].msg == (
+            "Invalid `broker_type` provided for broker broker_1: invalid. "
+            "Valid broker types are: ['rabbitmq', 'kafka']"
+        )
+        assert (
+            result[0].hint
+            == "Use valid broker types in ACTION_TRIGGERS['brokers'][broker_1]"
+        )
+
+    @override_settings(
+        ACTION_TRIGGERS={
+            "brokers": {
+                "broker_1": {},
+                "broker_2": {"broker_type": "kafka"},
+            }
+        }
+    )
+    def test_missing_broker_type_shows_error(self):
+        result = check_broker_types_are_valid(app_configs=None)
+
+        assert len(result) == 1
+        assert isinstance(result[0], Error)
+        assert result[0].id == "action_triggers.E002"
+        assert result[0].msg == "`broker_type` not set for broker broker_1"
+        assert (
+            result[0].hint
+            == "Set `broker_type` in ACTION_TRIGGERS['brokers'][broker_1]"
+        )
+
+    @override_settings(
+        ACTION_TRIGGERS={
+            "brokers": {
+                "broker_1": {"broker_type": "rabbitmq"},
+                "broker_2": {"broker_type": "kafka"},
+            }
+        }
+    )
+    def test_valid_broker_types_no_error(self):
+        result = check_broker_types_are_valid(app_configs=None)
 
         assert result == []
 

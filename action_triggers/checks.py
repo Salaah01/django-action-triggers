@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.core.checks import Error, Tags, Warning, register
 
+from action_triggers.message_broker.enums import BrokerType
+
 __all__ = [
     "check_action_triggers_set",
+    "check_broker_types_are_valid",
     "warning_whitelist_content_types_set",
     "warning_whitelisted_webhook_endpoint_patterns_not_provided",
 ]
@@ -24,6 +27,61 @@ def check_action_triggers_set(app_configs, **kwargs):
             )
         ]
     return []
+
+
+@register(Tags.compatibility)
+def check_broker_types_are_valid(app_configs, **kwargs):
+    """Test that the `broker_type`s provied in `ACTION_TRIGGERS.brorkers` are
+    valid.
+
+    :param app_config: The app configuration.
+    :param kwargs: Additional keyword arguments.
+    """
+    if getattr(settings, "ACTION_TRIGGERS", None) is None:
+        return []
+
+    valid_broker_types = [
+        broker_type.value.lower() for broker_type in BrokerType
+    ]
+
+    errors = []
+    invalid_msg = (
+        "Invalid `broker_type` provided for broker {broker_key}: "
+        "{broker_type}. Valid broker types are: {valid_broker_types}"
+    )
+    invalid_hint = (
+        "Use valid broker types in ACTION_TRIGGERS['brokers'][{broker_key}]"
+    )
+    missing_msg = "`broker_type` not set for broker {broker_key}"
+    missing_hint = (
+        "Set `broker_type` in ACTION_TRIGGERS['brokers'][{broker_key}]"
+    )
+
+    brokers = settings.ACTION_TRIGGERS.get("brokers", {})
+
+    for broker_key, broker_settings in brokers.items():
+        broker_type = broker_settings.get("broker_type")
+        if broker_type is None:
+            errors.append(
+                Error(
+                    missing_msg.format(broker_key=broker_key),
+                    hint=missing_hint.format(broker_key=broker_key),
+                    id="action_triggers.E002",
+                )
+            )
+        elif broker_type.lower() not in valid_broker_types:
+            errors.append(
+                Error(
+                    invalid_msg.format(
+                        broker_key=broker_key,
+                        broker_type=broker_type,
+                        valid_broker_types=valid_broker_types,
+                    ),
+                    hint=invalid_hint.format(broker_key=broker_key),
+                    id="action_triggers.E003",
+                )
+            )
+    return errors
 
 
 @register(Tags.security)
