@@ -22,12 +22,12 @@ class ConnectionBase(ABC):
         self.validate()
         self._conn: _t.Any = None
 
-    def __enter__(self):
-        self.connect()
+    async def __aenter__(self):
+        await self.connect()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
 
     def validate(self) -> None:
         """Validate the connection parameters. Raise an exception if
@@ -38,10 +38,10 @@ class ConnectionBase(ABC):
         self._errors.is_valid(raise_exception=True)
 
     @abstractmethod
-    def connect(self) -> None:
+    async def connect(self) -> None:
         """Establish a connection to the message broker."""
 
-    def close(self) -> None:
+    async def close(self) -> None:
         """Close the connection to the message broker."""
         if self._conn:
             self._conn.close()
@@ -115,17 +115,17 @@ class BrokerBase(ABC):
             self.params,
         )
 
-    def send_message(self, message: str) -> None:
+    async def send_message(self, message: str) -> None:
         """Starts a connection with the message broker and sends a message.
 
         :param message: The message to send to the message broker.
         """
 
-        with self._conn as conn:
-            self._send_message_impl(conn, message)
+        async with self._conn as conn:
+            await self._send_message_impl(conn, message)
 
     @abstractmethod
-    def _send_message_impl(self, conn: _t.Any, message: str) -> None:
+    async def _send_message_impl(self, conn: _t.Any, message: str) -> None:
         """Implementation of sending a message to the message broken given an
         established connection.
 

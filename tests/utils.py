@@ -1,16 +1,14 @@
-from contextlib import contextmanager
+from contextlib import contextmanager, asynccontextmanager
+import asyncio
 
 try:
     import pika  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
     pika = None
 try:
-    from confluent_kafka import (  # type: ignore[import-untyped]
-        Consumer,
-        Producer,
-    )
+    from aiokafka import AIOKafkaConsumer, AIOKafkaProducer  # type: ignore[import]  # noqa E501
 except ImportError:  # pragma: no cover
-    Consumer = Producer = None
+    AIOKafkaConsumer = AIOKafkaProducer = None
 from django.conf import settings
 
 
@@ -32,8 +30,8 @@ def get_rabbitmq_conn(key: str = "rabbitmq_1"):
     )
 
 
-@contextmanager
-def get_kafka_conn(key: str = "kafka_1"):
+@asynccontextmanager
+async def get_kafka_conn(key: str = "kafka_1"):
     """Get a connection to a Kafka broker.
 
     Args:
@@ -44,18 +42,18 @@ def get_kafka_conn(key: str = "kafka_1"):
         Consumer: The connection to the broker
     """
 
-    conn = Consumer(
-        {
-            "enable.auto.commit": False,
-            "auto.offset.reset": "earliest",
-            "group.id": "test_group_1",
-            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
-        }
+    consumer = AIOKafkaConsumer(
+        enable_auto_commit=False,
+        auto_offset_reset="earliest",
+        group_id="test_group_1",
+        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
     )
 
-    yield conn
+    await consumer.start()
 
-    conn.close()
+    yield consumer
+
+    await consumer.stop()
 
 
 @contextmanager
@@ -79,7 +77,7 @@ def get_kafka_consumer(key: str = "kafka_1"):
 
 
 @contextmanager
-def get_kafka_producer(key: str = "kafka_1"):
+async def get_kafka_producer(key: str = "kafka_1"):
     """Get a Kafka producer.
 
     Args:
@@ -90,13 +88,13 @@ def get_kafka_producer(key: str = "kafka_1"):
         Producer: The Kafka producer
     """
 
-    producer = Producer(
+    producer = AIOKafkaProducer(
         **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
     )
-
+    await producer.start()
     yield producer
 
-    producer.close()
+    await producer.close()
 
 
 def can_connect_to_rabbitmq() -> bool:
@@ -122,12 +120,14 @@ def can_connect_to_kafka() -> bool:
     Returns:
         bool: True if the service can connect to Kafka, False otherwise
     """
-
-    if Consumer is None or Producer is None:
+    if AIOKafkaConsumer is None or AIOKafkaProducer is None:
         return False
 
-    try:
-        with get_kafka_conn():
-            return True
-    except Exception:
-        return False
+    async def _can_connect_to_kafka():
+        try:
+            async with get_kafka_conn():
+                return True
+        except Exception:
+            return False
+
+    return asyncio.run(_can_connect_to_kafka())

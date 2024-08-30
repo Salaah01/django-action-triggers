@@ -60,10 +60,15 @@ aioresponses = "^0.7.6"
 [tool.poetry.group.webhooks.dependencies]
 aiohttp = "^3.10.5"
 
+
+[tool.poetry.group.kafka.dependencies]
+aiokafka = "^0.11.0"
+
 [tool.poetry.extras]
 postgres = ["psycopg2"]
 rabbitmq = ["pika"]
-kafka = ["confluent-kafka"]
+kafka = ["aiokafka"]
+webhooks = ["aiohttp"]
 
 [build-system]
 requires = ["poetry-core"]
