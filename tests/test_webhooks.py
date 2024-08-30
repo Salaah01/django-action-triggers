@@ -1,11 +1,11 @@
 """Tests for the `webhooks` module."""
 
 from unittest.mock import patch, AsyncMock
-
 from asgiref.sync import sync_to_async
 import pytest
 import aiohttp
 import responses
+from aioresponses import aioresponses
 from model_bakery import baker
 
 
@@ -95,22 +95,27 @@ class TestWebhookProcessor:
         processor = WebhookProcessor(webhook_with_headers, {})
         assert processor.get_headers() == webhook_with_headers.headers
 
-    @responses.activate
-    def test_process_sends_webhook_request(self, webhook):
-        responses.add(responses.POST, webhook.url, status=200)
+    @pytest.mark.asyncio
+    async def test_process_sends_webhook_request(self, webhook):
         processor = WebhookProcessor(webhook, {"foo": "bar"})
-        processor.process()
-        assert len(responses.calls) == 1
-        assert responses.calls[0].request.url == webhook.url
 
-    @patch.object(WebhookProcessor, "process")
-    def test_call_calls_process(self, mock_process, webhook):
+        with aioresponses() as mocked:
+            mocked.post(webhook.url, payload={"foo": "bar"})
+
+            await processor()
+            mocked.assert_called_once()
+            assert str(mocked._responses[0].url) == webhook.url
+
+    @pytest.mark.asyncio
+    @patch.object(WebhookProcessor, "process", new_callable=AsyncMock)
+    async def test_call_calls_process(self, mock_process, webhook):
         processor = WebhookProcessor(webhook, {})
-        processor()
+        await processor()
         mock_process.assert_called_once()
 
-    def test_not_whitelisted_endpoint_raises_error(self, webhook):
+    @pytest.mark.asyncio
+    async def test_not_whitelisted_endpoint_raises_error(self, webhook):
         webhook.url = "http://not-allowed.com/"
         processor = WebhookProcessor(webhook, {})
         with pytest.raises(DisallowedWebhookEndpointError):
-            processor.process()
+            await processor.process()

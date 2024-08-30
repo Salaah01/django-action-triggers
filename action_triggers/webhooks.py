@@ -27,7 +27,6 @@ class WebhookProcessor:
     async def process(self) -> aiohttp.ClientResponse:
         """Processes the webhook action."""
 
-
         if not self.webhook.is_endpoint_whitelisted():
             raise DisallowedWebhookEndpointError(self.webhook.url)
 
