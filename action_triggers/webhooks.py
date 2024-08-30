@@ -2,7 +2,7 @@
 
 import typing as _t
 
-import requests
+import aiohttp
 
 from action_triggers.dynamic_loading import replace_dict_values_with_results
 from action_triggers.exceptions import DisallowedWebhookEndpointError
@@ -19,33 +19,38 @@ class WebhookProcessor:
     def __init__(self, webhook: Webhook, payload: _t.Union[str, dict]):
         self.webhook = webhook
         self.payload = payload
-        self.response: _t.Optional[requests.Response] = None
+        self.response: _t.Optional[aiohttp.ClientResponse] = None
 
-    def __call__(self) -> requests.Response:
-        return self.process()
+    async def __call__(self) -> aiohttp.ClientResponse:
+        return await self.process()
 
-    def process(self) -> requests.Response:
+    async def process(self) -> aiohttp.ClientResponse:
         """Processes the webhook action."""
+
 
         if not self.webhook.is_endpoint_whitelisted():
             raise DisallowedWebhookEndpointError(self.webhook.url)
 
-        req_fn = self.get_request_fn()
         fn_kwargs = self.get_fn_kwargs()
 
-        self.response = req_fn(**fn_kwargs)
-        self.response.raise_for_status()
+        async with aiohttp.ClientSession() as session:
+            req_fn = self.get_request_fn(session)
+            async with req_fn(**fn_kwargs) as response:
+                self.response = response
+                self.response.raise_for_status()
 
-        return self.response
+                return self.response
 
-    def get_request_fn(self) -> _t.Callable[..., requests.Response]:
-        """Returns the request function to use for the webhook.
+    def get_request_fn(
+        self,
+        session: aiohttp.ClientSession,
+    ) -> _t.Callable[..., aiohttp.ClientResponse]:
+        """Returns the function to use for the webhook.
 
         :raises AttributeError: If the HTTP method is not supported.
         :return: The request function to use for the webhook.
         """
-
-        return getattr(requests, self.webhook.http_method.lower())
+        return getattr(session, self.webhook.http_method.lower())
 
     def get_fn_kwargs(self) -> dict:
         """Returns the keyword arguments to pass to the request function.

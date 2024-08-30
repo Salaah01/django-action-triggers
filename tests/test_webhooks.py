@@ -1,11 +1,13 @@
 """Tests for the `webhooks` module."""
 
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
 
+from asgiref.sync import sync_to_async
 import pytest
-import requests
+import aiohttp
 import responses
 from model_bakery import baker
+
 
 from action_triggers.exceptions import DisallowedWebhookEndpointError
 from action_triggers.models import Webhook
@@ -18,21 +20,25 @@ class TestWebhookProcessor:
     @pytest.mark.parametrize(
         "http_method,expected",
         (
-            ("GET", requests.get),
-            ("POST", requests.post),
-            ("PUT", requests.put),
-            ("PATCH", requests.patch),
-            ("DELETE", requests.delete),
+            ("GET", aiohttp.ClientSession.get),
+            ("POST", aiohttp.ClientSession.post),
+            ("PUT", aiohttp.ClientSession.put),
+            ("PATCH", aiohttp.ClientSession.patch),
+            ("DELETE", aiohttp.ClientSession.delete),
         ),
     )
-    def test_get_request_fn_returns_correct_function(
+    @pytest.mark.asyncio
+    async def test_get_request_fn_returns_correct_function(
         self,
         http_method,
         expected,
+        webhook,
     ):
-        webhook = baker.make(Webhook, http_method=http_method)
+        webhook.http_method = http_method
         processor = WebhookProcessor(webhook, {})
-        assert processor.get_request_fn() is expected
+        async with aiohttp.ClientSession() as session:
+            result = processor.get_request_fn(session)
+            assert result.__code__ is expected.__code__
 
     def test_get_fn_kwargs_returns_correct_data_for_json_req(self, webhook):
         processor = WebhookProcessor(webhook, {"foo": "bar"})
