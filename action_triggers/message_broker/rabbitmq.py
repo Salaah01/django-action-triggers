@@ -5,9 +5,9 @@ from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
-    import pika  # type: ignore[import-untyped]
+    import aio_pika  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
-    pika = MissingImportWrapper("pika")
+    aio_pika = MissingImportWrapper("aio_pika")
 
 
 class RabbitMQConnection(ConnectionBase):
@@ -28,10 +28,15 @@ class RabbitMQConnection(ConnectionBase):
         self.validate_queue_exists()
         super().validate()
 
-    def connect(self):
-        self.conn = pika.BlockingConnection(
-            pika.ConnectionParameters(**self.conn_details)
+    async def connect(self) -> None:
+        self.conn = await aio_pika.connect_robust(
+            **self.conn_details,
         )
+
+    async def close(self) -> None:
+        if self.conn:
+            await self.conn.close()
+        self.conn = None
 
 
 class RabbitMQBroker(BrokerBase):
@@ -59,17 +64,16 @@ class RabbitMQBroker(BrokerBase):
         self.queue = self.params.get("queue")
         self.exchange = self.params.get("exchange", "")
 
-    def _send_message_impl(self, conn: _t.Any, message: str) -> None:
+    async def _send_message_impl(self, conn: _t.Any, message: str) -> None:
         """Send a message to the RabbitMQ broker.
 
         :param conn: The connection to the broker.
         :param message: The message to send.
         """
 
-        channel = conn.conn.channel()
-        channel.queue_declare(queue=self.queue)
-        channel.basic_publish(
-            exchange=self.exchange,
-            routing_key=self.queue,
-            body=message.encode("utf-8"),
-        )
+        async with conn.conn as connection:
+            async with connection.channel() as channel:
+                await channel.default_exchange.publish(
+                    aio_pika.Message(body=message.encode()),
+                    routing_key=self.queue,
+                )

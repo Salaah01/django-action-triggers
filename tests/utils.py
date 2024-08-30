@@ -1,10 +1,10 @@
-from contextlib import contextmanager, asynccontextmanager
+from contextlib import asynccontextmanager
 import asyncio
 
 try:
-    import pika  # type: ignore[import-untyped]
+    import aio_pika  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
-    pika = None
+    aio_pika = None
 try:
     from aiokafka import AIOKafkaConsumer, AIOKafkaProducer  # type: ignore[import]  # noqa E501
 except ImportError:  # pragma: no cover
@@ -12,7 +12,7 @@ except ImportError:  # pragma: no cover
 from django.conf import settings
 
 
-def get_rabbitmq_conn(key: str = "rabbitmq_1"):
+async def get_rabbitmq_conn(key: str = "rabbitmq_1"):
     """Get a connection to a RabbitMQ broker.
 
     Args:
@@ -20,13 +20,11 @@ def get_rabbitmq_conn(key: str = "rabbitmq_1"):
             Defaults to "rabbitmq_1".
 
     Returns:
-        pika.BlockingConnection: The connection to the broker
+        Connection: The connection to the broker
     """
 
-    return pika.BlockingConnection(
-        pika.ConnectionParameters(
-            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"]  # type: ignore[index]  # noqa E501
-        )
+    return await aio_pika.connect_robust(
+        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
     )
 
 
@@ -56,8 +54,8 @@ async def get_kafka_conn(key: str = "kafka_1"):
     await consumer.stop()
 
 
-@contextmanager
-def get_kafka_consumer(key: str = "kafka_1"):
+@asynccontextmanager
+async def get_kafka_consumer(key: str = "kafka_1"):
     """Consume a message from a Kafka broker.
 
     Args:
@@ -76,7 +74,7 @@ def get_kafka_consumer(key: str = "kafka_1"):
         yield conn
 
 
-@contextmanager
+@asynccontextmanager
 async def get_kafka_producer(key: str = "kafka_1"):
     """Get a Kafka producer.
 
@@ -104,14 +102,15 @@ def can_connect_to_rabbitmq() -> bool:
         bool: True if the service can connect to RabbitMQ, False otherwise
     """
 
-    if pika is None:
+    if aio_pika is None:
         return False
 
-    try:
-        with get_rabbitmq_conn():
-            return True
-    except pika.exceptions.ProbableAuthenticationError:
-        return False
+    async def _can_connect_to_rabbitmq():
+        try:
+            async with get_rabbitmq_conn():
+                return True
+        except Exception:
+            return False
 
 
 def can_connect_to_kafka() -> bool:

@@ -20,7 +20,7 @@ class ConnectionBase(ABC):
         self.params = params
         self._errors = Error()
         self.validate()
-        self._conn: _t.Any = None
+        self.conn: _t.Any = None
 
     async def __aenter__(self):
         await self.connect()
@@ -41,10 +41,9 @@ class ConnectionBase(ABC):
     async def connect(self) -> None:
         """Establish a connection to the message broker."""
 
+    @abstractmethod
     async def close(self) -> None:
         """Close the connection to the message broker."""
-        if self._conn:
-            self._conn.close()
 
     def validate_connection_details_not_overwritten(self) -> None:
         """Validate that the base connection details are not overwritten."""

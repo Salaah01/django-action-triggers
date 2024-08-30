@@ -64,9 +64,13 @@ aiohttp = "^3.10.5"
 [tool.poetry.group.kafka.dependencies]
 aiokafka = "^0.11.0"
 
+
+[tool.poetry.group.rabbitmq.dependencies]
+aio-pika = "^9.4.3"
+
 [tool.poetry.extras]
 postgres = ["psycopg2"]
-rabbitmq = ["pika"]
+rabbitmq = ["aio-pika"]
 kafka = ["aiokafka"]
 webhooks = ["aiohttp"]
 
