@@ -7,7 +7,7 @@ import pytest
 try:
     from aio_pika.exceptions import QueueEmpty
 except ImportError:
-    QueueEmpty = Exception  # type: ignore[misc,assignment]
+    pass
 from aioresponses import aioresponses
 from asgiref.sync import sync_to_async
 from django.contrib.auth.models import User
@@ -39,12 +39,7 @@ class TestIntegrationMessageBrokerRabbitMQ:
                 channel = await conn.channel()
                 await channel.set_qos(prefetch_count=1)
                 queue = await channel.declare_queue("test_queue_1")
-                while True:
-                    try:
-                        message = await queue.get()
-                        await message.ack()
-                    except QueueEmpty:
-                        break
+                await queue.purge()
 
         asyncio.run(purge_messages())
 

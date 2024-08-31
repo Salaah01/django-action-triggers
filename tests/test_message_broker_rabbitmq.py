@@ -1,5 +1,6 @@
 """Tests for RabbitMQ message broker."""
 
+import asyncio
 import json
 
 try:
@@ -50,7 +51,6 @@ class TestRabbitMQConnection:
         )
         assert conn
 
-    
     @pytest.mark.skipif(
         not can_connect_to_rabbitmq(), reason="RabbitMQ is not running."
     )
@@ -72,6 +72,17 @@ class TestRabbitMQConnection:
 class TestRabbitMQBroker:
     """Tests for the `RabbitMQBroker` class."""
 
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self):
+        async def purge_messages():
+            async with get_rabbitmq_conn() as conn:
+                channel = await conn.channel()
+                await channel.set_qos(prefetch_count=1)
+                queue = await channel.declare_queue("test_queue_1")
+                await queue.purge()
+
+        asyncio.run(purge_messages())
+
     @pytest.mark.skipif(
         not can_connect_to_rabbitmq(), reason="RabbitMQ is not running."
     )
@@ -91,9 +102,5 @@ class TestRabbitMQBroker:
                 channel = await connection.channel()
                 await channel.set_qos(prefetch_count=1)
                 queue = await channel.declare_queue("test_queue_1")
-
-                async with queue.iterator() as queue_iter:
-                    async for message in queue_iter:
-                        async with message.process():
-                            assert message.body == b"new message"
-                            break
+                message = await queue.get()
+                assert message.body == b"new message"
