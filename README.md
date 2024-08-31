@@ -10,18 +10,19 @@
   - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Key Features](#key-features)
+  - [Documentation](#documentation)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Example Scenarios](#example-scenarios)
     - [Example 1: Webhook Trigger on User Creation/Update/Deletion](#example-1-webhook-trigger-on-user-creationupdatedeletion)
     - [Example 2: Webhooks and Message Queues on Product and Sale Creation/Update](#example-2-webhooks-and-message-queues-on-product-and-sale-creationupdate)
-  - [Documentation](#documentation)
+  - [Don't See What You're Looking For?](#dont-see-what-youre-looking-for)
   - [License](#license)
 
 
 ## Description
 
-**Django Action Triggers** is a Django application that allows you to trigger actions based on changes in your database. These actions can include sending a request to a webhook or adding a message to a message broker such as Kafka or RabbitMQ.
+**Django Action Triggers** is a Django application that allows you to asynchronously trigger actions based on changes in your database. These actions can include sending a request to a webhook or adding a message to a message broker such as Kafka or RabbitMQ.
 
 This application is highly flexible and can be configured via code or through the Django admin interface.
 
@@ -32,6 +33,10 @@ This application is highly flexible and can be configured via code or through th
 - **Message Broker Integration**: Send messages to messaging brokers like Kafka and RabbitMQ.
 - **Extensible**: Easily extend to support custom triggers and actions.
 - **Secure Dynamic Configuration**: Dynamically set values at runtime for secure and flexible configuration.
+
+## Documentation
+
+For detailed documentation, including setup, configuration options, API specifications, and more examples, please refer to the [official documentation](https://salaah01.github.io/django-action-triggers/).
 
 ## Installation
 
@@ -154,11 +159,11 @@ Trigger multiple webhooks and add messages to queues when `Product` or `Sale` mo
 }
 ```
 
-## Documentation
+## Don't See What You're Looking For?
 
-For detailed documentation, including setup, configuration options, API specifications, and more examples, please refer to the [official documentation](https://salaah01.github.io/django-action-triggers/).
-
+If you have any feature requests or issues, please submit them to the [GitHub repository](https://github.com/Salaah01/django-action-triggers/issues). This also helps us prioritise new features and bug fixes.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License - see [LICENSE](./LICENSE) file for details.
+

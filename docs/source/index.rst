@@ -59,6 +59,8 @@ This documentation is organised into the following sections:
    dynamic_loading
    webhooks
    message_brokers
+   testing
+   features_and_bugs
 
 Message Broker Integrations
 ===========================
