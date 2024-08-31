@@ -43,6 +43,12 @@ brokers), you can install the required dependencies at the same time:
 
     pip install django-action-triggers[rabbitmq]
 
+- To install with support for webhooks:
+
+  .. code-block:: bash
+
+    pip install django-action-triggers[webhooks]
+
 Alternatively, you can install all extras:
 
 .. code-block:: bash
