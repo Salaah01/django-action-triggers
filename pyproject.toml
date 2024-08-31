@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "django-action-triggers"
 version = "0.2.0"
-description = "A Django application that triggers actions based on database changes. Supports webhook integration, message brokers (Kafka, RabbitMQ), and flexible configurations."
+description = "A Django application that asynchronously triggers actions based on database changes. Supports webhook integration, message brokers (Kafka, RabbitMQ), and flexible configurations."
 authors = ["Salaah Amin <salaah01@users.noreply.github.com>"]
 readme = "README.md"
 license = "MIT"
@@ -28,7 +28,6 @@ omit = ["action_triggers/migrations/*"]
 python = ">=3.8,<3.13"
 django = ">=3.2"
 djangorestframework = "^3.15.2"
-requests = "^2.32.3"
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main"]
@@ -46,19 +45,30 @@ pytest-cov = "^5.0.0"
 coverage = "^7.6.1"
 django-coverage-plugin = "^3.1.0"
 model-bakery = "^1.19.1"
-responses = "^0.25.3"
 mypy = "^1.11.1"
 django-stubs = "^5.0.4"
-types-requests = "^2.32.0.20240712"
-pika = ">=1.0.0"
 psycopg2 = "^2.9.9"
 pytest-asyncio = "^0.23.8"
-confluent-kafka = "^2.5.0"
+aioresponses = "^0.7.6"
+pytest-django = "^4.8.0"
+
+
+[tool.poetry.group.webhooks.dependencies]
+aiohttp = "^3.10.5"
+
+
+[tool.poetry.group.kafka.dependencies]
+aiokafka = "^0.11.0"
+
+
+[tool.poetry.group.rabbitmq.dependencies]
+aio-pika = "^9.4.3"
 
 [tool.poetry.extras]
 postgres = ["psycopg2"]
-rabbitmq = ["pika"]
-kafka = ["confluent-kafka"]
+rabbitmq = ["aio-pika"]
+kafka = ["aiokafka"]
+webhooks = ["aiohttp"]
 
 [build-system]
 requires = ["poetry-core"]

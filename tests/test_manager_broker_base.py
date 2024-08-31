@@ -9,6 +9,23 @@ from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 
 
+class MockConnection(ConnectionBase):
+    async def connect(self):
+        pass
+
+    async def close(self):
+        pass
+
+
+class MockBroker(BrokerBase):
+    conn_class = MockConnection
+    sent_message = None
+
+    async def _send_message_impl(self, conn, message):
+        self.sent_message = message
+
+
+@pytest.mark.django_db
 class TestConnectionBase:
     """Tests for the `ConnectionBase` class."""
 
@@ -19,17 +36,20 @@ class TestConnectionBase:
             def validate(self):
                 self.i += 1
 
-            def connect(self):
+            async def connect(self):
+                pass
+
+            async def close(self):
                 pass
 
         conn = TestConnection({}, {}, {})
 
         assert conn.i == 2
 
-    def test_can_be_used_as_a_context_manager(self):
+    @pytest.mark.asyncio
+    async def test_can_be_used_as_a_context_manager(self):
         class TestConnection(ConnectionBase):
             connected = False
-            exited = False
             closed = False
 
             def __init__(self, config, conn_details, params):
@@ -38,29 +58,23 @@ class TestConnectionBase:
                     close=lambda: setattr(self, "closed", True)
                 )
 
-            def connect(self):
+            async def connect(self):
                 self.connected = True
 
-            def close(self):
-                super().close()
-                self.exited = True
+            async def close(self):
+                self.closed = True
 
             def validate(self):
                 pass
 
-        with TestConnection({}, {}, {}) as conn:
+        async with TestConnection({}, {}, {}) as conn:
             assert conn.connected is True
 
-        assert conn.exited is True
         assert conn.closed is True
 
     def test_validate_connection_details_cannot_be_overwritten(self):
-        class TestConnection(ConnectionBase):
-            def connect(self):
-                pass
-
         with pytest.raises(ConnectionValidationError) as exc:
-            TestConnection(
+            MockConnection(
                 {"conn_details": {"host": "localhost"}},
                 {"host": "new_localhost"},
                 {},
@@ -74,12 +88,8 @@ class TestConnectionBase:
         }
 
     def test_validate_params_cannot_be_overwritten(self):
-        class TestConnection(ConnectionBase):
-            def connect(self):
-                pass
-
         with pytest.raises(ConnectionValidationError) as exc:
-            TestConnection(
+            MockConnection(
                 {"params": {"queue": "test_queue"}},
                 {},
                 {"queue": "new_queue"},
@@ -91,6 +101,7 @@ class TestConnectionBase:
         }
 
 
+@pytest.mark.django_db
 class TestBrokerBase:
     """Tests for the `BrokerBase` class."""
 
@@ -130,20 +141,7 @@ class TestBrokerBase:
         expected_conn_details,
         expected_params,
     ):
-        class MockConnection(ConnectionBase):
-            def validate(self):
-                pass
-
-            def connect(self):
-                pass
-
-        class NockBroker(BrokerBase):
-            conn_class = MockConnection
-
-            def _send_message_impl(self, conn, message):
-                pass
-
-        broker = NockBroker(
+        broker = MockBroker(
             "rabbitmq_1",
             override_conn_details,
             override_params,
@@ -152,22 +150,33 @@ class TestBrokerBase:
         assert broker.conn_details == expected_conn_details
         assert broker.params == expected_params
 
-    def test_send_message_calls_send_msg_impl(self):
-        class MockConnection(ConnectionBase):
-            def validate(self):
-                pass
-
-            def connect(self):
-                pass
-
-        class NockBroker(BrokerBase):
-            conn_class = MockConnection
-            sent_message = None
-
-            def _send_message_impl(self, conn, message):
-                self.sent_message = message
-
-        broker = NockBroker("rabbitmq_1", {}, {})
-        broker.send_message("test_message")
+    @pytest.mark.asyncio
+    async def test_send_message_calls_send_msg_impl(self):
+        broker = MockBroker("rabbitmq_1", {}, {})
+        await broker.send_message("test_message")
 
         assert broker.sent_message == "test_message"
+
+    def test_init_conn_details_dynamically_updated(self):
+        conn_details = {
+            "host": "localhost",
+            "port": 5672,
+            "username": "guest",
+            "api": "Bearer: {{ tests.test_dynamic_loading.get_api_token }}",
+        }
+        broker = MockBroker("kafka_1", conn_details, {})
+
+        assert broker.conn_details["host"] == "localhost"
+        assert broker.conn_details["port"] == 5672
+        assert broker.conn_details["username"] == "guest"
+        assert broker.conn_details["api"] == "Bearer: test_token"
+
+    def test_init_param_dynamically_updated(self):
+        params = {
+            "queue": "test_queue",
+            "api": "Bearer: {{ tests.test_dynamic_loading.get_api_token }}",
+        }
+        broker = MockBroker("kafka_1", {}, params)
+
+        assert broker.params["queue"] == "test_queue"
+        assert broker.params["api"] == "Bearer: test_token"

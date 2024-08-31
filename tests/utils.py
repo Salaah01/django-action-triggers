@@ -1,20 +1,23 @@
-from contextlib import contextmanager
+import asyncio
+from contextlib import asynccontextmanager
+from copy import deepcopy
 
 try:
-    import pika  # type: ignore[import-untyped]
+    import aio_pika  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
-    pika = None
+    aio_pika = None  # type: ignore[assignment]
 try:
-    from confluent_kafka import (  # type: ignore[import-untyped]
-        Consumer,
-        Producer,
+    from aiokafka import (  # type: ignore[import]  # noqa E501
+        AIOKafkaConsumer,
+        AIOKafkaProducer,
     )
 except ImportError:  # pragma: no cover
-    Consumer = Producer = None
+    AIOKafkaConsumer = AIOKafkaProducer = None
 from django.conf import settings
 
 
-def get_rabbitmq_conn(key: str = "rabbitmq_1"):
+@asynccontextmanager
+async def get_rabbitmq_conn(key: str = "rabbitmq_1"):
     """Get a connection to a RabbitMQ broker.
 
     Args:
@@ -22,44 +25,20 @@ def get_rabbitmq_conn(key: str = "rabbitmq_1"):
             Defaults to "rabbitmq_1".
 
     Returns:
-        pika.BlockingConnection: The connection to the broker
+        Connection: The connection to the broker
     """
 
-    return pika.BlockingConnection(
-        pika.ConnectionParameters(
-            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"]  # type: ignore[index]  # noqa E501
-        )
+    conn_details = deepcopy(
+        settings.ACTION_TRIGGERS["brokers"][key]["conn_details"]  # type: ignore[index]  # noqa E501
     )
-
-
-@contextmanager
-def get_kafka_conn(key: str = "kafka_1"):
-    """Get a connection to a Kafka broker.
-
-    Args:
-        key (str, optional): The key of the broker in the settings.
-            Defaults to "kafka_1".
-
-    Yields:
-        Consumer: The connection to the broker
-    """
-
-    conn = Consumer(
-        {
-            "enable.auto.commit": False,
-            "auto.offset.reset": "earliest",
-            "group.id": "test_group_1",
-            **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
-        }
-    )
-
+    conn_details["port"] = int(conn_details["port"])
+    conn = await aio_pika.connect_robust(**conn_details)
     yield conn
+    await conn.close()
 
-    conn.close()
 
-
-@contextmanager
-def get_kafka_consumer(key: str = "kafka_1"):
+@asynccontextmanager
+async def get_kafka_consumer(key: str = "kafka_1"):
     """Consume a message from a Kafka broker.
 
     Args:
@@ -70,16 +49,18 @@ def get_kafka_consumer(key: str = "kafka_1"):
         Consumer: The Kafka consumer
     """
 
-    with get_kafka_conn(key) as conn:
-        conn.subscribe(
-            settings.ACTION_TRIGGERS["brokers"][key]["params"]["topic"],  # type: ignore[index]  # noqa E501
-        )
+    consumer = AIOKafkaConsumer(
+        settings.ACTION_TRIGGERS["brokers"][key]["params"]["topic"],  # type: ignore[index]  # noqa E501
+        enable_auto_commit=True,
+        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
+    )
+    await consumer.start()
+    yield consumer
+    await consumer.stop()
 
-        yield conn
 
-
-@contextmanager
-def get_kafka_producer(key: str = "kafka_1"):
+@asynccontextmanager
+async def get_kafka_producer(key: str = "kafka_1"):
     """Get a Kafka producer.
 
     Args:
@@ -90,13 +71,32 @@ def get_kafka_producer(key: str = "kafka_1"):
         Producer: The Kafka producer
     """
 
-    producer = Producer(
+    producer = AIOKafkaProducer(
         **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
     )
-
+    await producer.start()
     yield producer
 
-    producer.close()
+    await producer.close()
+
+
+# @asynccontextmanager
+# async def get_rabbitmq_message(connection: AbstractRobustConnection, queue: str) -> Message:
+#     """Get a message from a RabbitMQ queue.
+
+#     Args:
+#         connection (AbstractRobustConnection): The connection to the RabbitMQ broker.
+#         queue (str): The name of the queue to consume from.
+
+#     Returns:
+#         Message: The message from the queue
+#     """
+
+#     channel = await connection.channel()
+#     queue = await channel.declare_queue(queue)
+#     message = await queue.get()
+#     yield message
+#     await message.ack()
 
 
 def can_connect_to_rabbitmq() -> bool:
@@ -106,14 +106,17 @@ def can_connect_to_rabbitmq() -> bool:
         bool: True if the service can connect to RabbitMQ, False otherwise
     """
 
-    if pika is None:
+    if aio_pika is None:
         return False
 
-    try:
-        with get_rabbitmq_conn():
-            return True
-    except pika.exceptions.ProbableAuthenticationError:
-        return False
+    async def _can_connect_to_rabbitmq():
+        try:
+            async with get_rabbitmq_conn():
+                return True
+        except Exception:
+            return False
+
+    return asyncio.run(_can_connect_to_rabbitmq())
 
 
 def can_connect_to_kafka() -> bool:
@@ -122,12 +125,14 @@ def can_connect_to_kafka() -> bool:
     Returns:
         bool: True if the service can connect to Kafka, False otherwise
     """
-
-    if Consumer is None or Producer is None:
+    if AIOKafkaConsumer is None or AIOKafkaProducer is None:
         return False
 
-    try:
-        with get_kafka_conn():
-            return True
-    except Exception:
-        return False
+    async def _can_connect_to_kafka():
+        try:
+            async with get_kafka_consumer():
+                return True
+        except Exception:
+            return False
+
+    return asyncio.run(_can_connect_to_kafka())

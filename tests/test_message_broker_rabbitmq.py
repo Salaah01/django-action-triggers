@@ -1,12 +1,12 @@
 """Tests for RabbitMQ message broker."""
 
+import asyncio
 import json
-import socket
 
 try:
-    import pika  # type: ignore[import-untyped]
+    import aio_pika  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
-    pika = None
+    aio_pika = None  # type: ignore[assignment]
 import pytest
 from django.conf import settings
 
@@ -15,26 +15,7 @@ from action_triggers.message_broker.rabbitmq import (
     RabbitMQBroker,
     RabbitMQConnection,
 )
-from tests.utils import get_rabbitmq_conn
-
-
-def conn_test() -> bool:
-    """Verify that a connection can be made to RabbitMQ."""
-    if pika is None:
-        return False
-
-    try:
-        get_rabbitmq_conn()
-        return True
-    except socket.gaierror as e:
-        if str(e) in {
-            "[Errno -2] Name or service not known",
-            "[Errno -3] Temporary failure in name resolution",
-        }:
-            return False
-        raise
-    except pika.exceptions.ProbableAuthenticationError:
-        return False
+from tests.utils import can_connect_to_rabbitmq, get_rabbitmq_conn
 
 
 class TestRabbitMQConnection:
@@ -70,32 +51,56 @@ class TestRabbitMQConnection:
         )
         assert conn
 
+    @pytest.mark.skipif(
+        not can_connect_to_rabbitmq(), reason="RabbitMQ is not running."
+    )
+    @pytest.mark.asyncio
+    async def test_connection_and_close_mechanism(self):
+        conn = RabbitMQConnection(
+            config={"queue": "test_queue_1"},
+            conn_details=settings.ACTION_TRIGGERS["brokers"]["rabbitmq_1"][
+                "conn_details"
+            ],
+            params={},
+        )
+        await conn.connect()
+        assert conn.conn is not None
+        await conn.close()
+        assert conn.conn is None
+
 
 class TestRabbitMQBroker:
     """Tests for the `RabbitMQBroker` class."""
 
-    @pytest.mark.skipif(not conn_test(), reason="RabbitMQ is not running.")
-    def test_message_can_be_sent(self):
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self):
+        async def purge_messages():
+            async with get_rabbitmq_conn() as conn:
+                channel = await conn.channel()
+                await channel.set_qos(prefetch_count=1)
+                queue = await channel.declare_queue("test_queue_1")
+                await queue.purge()
+
+        asyncio.run(purge_messages())
+
+    @pytest.mark.skipif(
+        not can_connect_to_rabbitmq(), reason="RabbitMQ is not running."
+    )
+    @pytest.mark.asyncio
+    async def test_message_can_be_sent(self):
         """It should be able to send a message to RabbitMQ."""
 
-        conn_param = pika.ConnectionParameters(
-            **settings.ACTION_TRIGGERS["brokers"]["rabbitmq_1"]["conn_details"]
-        )
-
-        with pika.BlockingConnection(conn_param) as conn:
+        async with get_rabbitmq_conn() as connection:
             broker = RabbitMQBroker(
                 broker_key="rabbitmq_1",
                 conn_params={},
                 params={"queue": "test_queue_1"},
             )
-            broker.send_message("new message")
+            await broker.send_message("new message")
 
-        with pika.BlockingConnection(conn_param) as conn:
-            channel = conn.channel()
-            channel.queue_declare(queue="test_queue_1")
-            method_frame, header_frame, body = channel.basic_get(
-                queue="test_queue_1",
-                auto_ack=True,
-            )
-
-            assert body == b"new message"
+            async with connection:
+                channel = await connection.channel()
+                await channel.set_qos(prefetch_count=1)
+                queue = await channel.declare_queue("test_queue_1")
+                message = await queue.get()
+                assert message.body == b"new message"

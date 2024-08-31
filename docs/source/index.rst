@@ -19,8 +19,8 @@ Django Action Triggers Documentation
 
 Welcome to the documentation for
 **Django Action Triggers (django-action-triggers)**, a flexible Django
-application that allows you to trigger actions based on changes in the
-database.
+application that allows you to asynchronously trigger actions based on changes
+in the database.
 
 Overview
 ========

@@ -21,6 +21,7 @@ from tests.models import (
 )
 
 
+@pytest.mark.django_db
 class TestParsePayload:
     """Tests for the `parse_payload` function."""
 
@@ -161,6 +162,7 @@ class TestParsePayload:
         }
 
 
+@pytest.mark.django_db
 class TestPayloadFromInstance:
     """Tests for the `payload_from_instance` function."""
 
@@ -195,6 +197,7 @@ class TestPayloadFromInstance:
         assert set(payload["customers"]) == {customer_1.id, customer_2.id}
 
 
+@pytest.mark.django_db
 class TestGetPayloadGenerator:
     """Tests for the `get_payload_generator` function."""
 

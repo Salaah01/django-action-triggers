@@ -1,14 +1,12 @@
 """Tests for the `webhooks` module."""
 
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
+import aiohttp
 import pytest
-import requests
-import responses
-from model_bakery import baker
+from aioresponses import aioresponses
 
 from action_triggers.exceptions import DisallowedWebhookEndpointError
-from action_triggers.models import Webhook
 from action_triggers.webhooks import WebhookProcessor
 
 
@@ -18,21 +16,25 @@ class TestWebhookProcessor:
     @pytest.mark.parametrize(
         "http_method,expected",
         (
-            ("GET", requests.get),
-            ("POST", requests.post),
-            ("PUT", requests.put),
-            ("PATCH", requests.patch),
-            ("DELETE", requests.delete),
+            ("GET", aiohttp.ClientSession.get),
+            ("POST", aiohttp.ClientSession.post),
+            ("PUT", aiohttp.ClientSession.put),
+            ("PATCH", aiohttp.ClientSession.patch),
+            ("DELETE", aiohttp.ClientSession.delete),
         ),
     )
-    def test_get_request_fn_returns_correct_function(
+    @pytest.mark.asyncio
+    async def test_get_request_fn_returns_correct_function(
         self,
         http_method,
         expected,
+        webhook,
     ):
-        webhook = baker.make(Webhook, http_method=http_method)
+        webhook.http_method = http_method
         processor = WebhookProcessor(webhook, {})
-        assert processor.get_request_fn() is expected
+        async with aiohttp.ClientSession() as session:
+            result = processor.get_request_fn(session)
+            assert result.__code__ is expected.__code__
 
     def test_get_fn_kwargs_returns_correct_data_for_json_req(self, webhook):
         processor = WebhookProcessor(webhook, {"foo": "bar"})
@@ -89,22 +91,27 @@ class TestWebhookProcessor:
         processor = WebhookProcessor(webhook_with_headers, {})
         assert processor.get_headers() == webhook_with_headers.headers
 
-    @responses.activate
-    def test_process_sends_webhook_request(self, webhook):
-        responses.add(responses.POST, webhook.url, status=200)
+    @pytest.mark.asyncio
+    async def test_process_sends_webhook_request(self, webhook):
         processor = WebhookProcessor(webhook, {"foo": "bar"})
-        processor.process()
-        assert len(responses.calls) == 1
-        assert responses.calls[0].request.url == webhook.url
 
-    @patch.object(WebhookProcessor, "process")
-    def test_call_calls_process(self, mock_process, webhook):
+        with aioresponses() as mocked:
+            mocked.post(webhook.url, payload={"foo": "bar"})
+
+            await processor()
+            mocked.assert_called_once()
+            assert str(mocked._responses[0].url) == webhook.url
+
+    @pytest.mark.asyncio
+    @patch.object(WebhookProcessor, "process", new_callable=AsyncMock)
+    async def test_call_calls_process(self, mock_process, webhook):
         processor = WebhookProcessor(webhook, {})
-        processor()
+        await processor()
         mock_process.assert_called_once()
 
-    def test_not_whitelisted_endpoint_raises_error(self, webhook):
+    @pytest.mark.asyncio
+    async def test_not_whitelisted_endpoint_raises_error(self, webhook):
         webhook.url = "http://not-allowed.com/"
         processor = WebhookProcessor(webhook, {})
         with pytest.raises(DisallowedWebhookEndpointError):
-            processor.process()
+            await processor.process()

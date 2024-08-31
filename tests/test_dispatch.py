@@ -1,9 +1,9 @@
 """Tests for the `dispatch` module."""
 
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
-import responses
+from aioresponses import aioresponses
 from model_bakery import baker
 
 from action_triggers.dispatch import handle_action
@@ -16,17 +16,20 @@ from tests.models import (
 )
 
 
+@pytest.mark.django_db
 class TestHandleAction:
     """Tests for the `handle_action` function."""
 
-    @patch("action_triggers.dispatch.WebhookProcessor")
-    @patch("action_triggers.dispatch.process_msg_broker_queue")
+    @patch("action_triggers.dispatch.process_webhook", new_callable=AsyncMock)
+    @patch(
+        "action_triggers.dispatch.process_msg_broker_queue",
+        new_callable=AsyncMock,
+    )
     @pytest.mark.parametrize(
         "model_class",
         (CustomerModel, CustomerOrderModel, M2MModel, One2OneModel),
     )
     @pytest.mark.parametrize("config_payload", (None, {"foo": "bar"}))
-    @responses.activate
     def test_for_all_webhooks_webhook_handler_called(
         self,
         mock_process_msg_broker_queue,
@@ -34,25 +37,26 @@ class TestHandleAction:
         model_class,
         config_payload,
     ):
-        responses.add(responses.POST, "http://example.com", status=200)
+        with aioresponses() as mocked:
+            mocked.post("http://example.com", status=200)
 
-        config = baker.make(Config, payload=config_payload)
-        webhooks = baker.make(
-            Webhook,
-            http_method="POST",
-            url="http://example.com",
-            config=config,
-            _quantity=2,
-        )
-        baker.make(Webhook)
+            config = baker.make(Config, payload=config_payload)
+            webhooks = baker.make(
+                Webhook,
+                http_method="POST",
+                url="http://example.com",
+                config=config,
+                _quantity=2,
+            )
+            baker.make(Webhook)
 
-        model_instance = baker.make(model_class)
-        handle_action(config, model_instance)
+            model_instance = baker.make(model_class)
+            handle_action(config, model_instance)
 
-        assert mock_process_webhook.call_count == 2
-        assert mock_process_webhook.call_args_list[0][0][0] in webhooks
-        assert mock_process_webhook.call_args_list[1][0][0] in webhooks
-        assert mock_process_msg_broker_queue.call_count == 0
+            assert mock_process_webhook.call_count == 2
+            assert mock_process_webhook.call_args_list[0][0][1] in webhooks
+            assert mock_process_webhook.call_args_list[1][0][1] in webhooks
+            assert mock_process_msg_broker_queue.call_count == 0
 
     @patch("action_triggers.dispatch.WebhookProcessor")
     @patch("action_triggers.dispatch.process_msg_broker_queue")

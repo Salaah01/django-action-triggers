@@ -1,5 +1,6 @@
 """Tests for the `api.serializers` module."""
 
+import pytest
 from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
 
@@ -13,6 +14,7 @@ from action_triggers.models import (
 from tests.models import CustomerModel, CustomerOrderModel, M2MModel
 
 
+@pytest.mark.django_db
 class TestConfigSerializer:
     """Tests for the `ConfigSerializer` class."""
 

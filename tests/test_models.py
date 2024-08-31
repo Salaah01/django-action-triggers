@@ -14,6 +14,7 @@ from action_triggers.models import (
 from tests.models import CustomerModel, CustomerOrderModel
 
 
+@pytest.mark.django_db
 class TestConfigQuerySet:
     """Tests for the `ConfigQuerySet` custom queryset."""
 
@@ -70,6 +71,7 @@ class TestConfigQuerySet:
         assert Config.objects.for_model(customer_order).count() == 0
 
 
+@pytest.mark.django_db
 class TestConfig:
     """Tests for the `Config` model."""
 
@@ -77,6 +79,7 @@ class TestConfig:
         assert isinstance(str(baker.make(Config)), str)
 
 
+@pytest.mark.django_db
 class TestWebhook:
     """Tests for the `Webhook` model."""
 
@@ -97,6 +100,7 @@ class TestWebhook:
         assert webhook.is_endpoint_whitelisted() is expected
 
 
+@pytest.mark.django_db
 class TestMessageBrokerQueue:
     """Tests for the `MessageBrokerQueue` model."""
 
@@ -104,6 +108,7 @@ class TestMessageBrokerQueue:
         assert isinstance(str(baker.make(MessageBrokerQueue)), str)
 
 
+@pytest.mark.django_db
 class TestConfigSignal:
     """Tests for the `ConfigSignal` model."""
 
