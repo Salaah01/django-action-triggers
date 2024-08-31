@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker Compose
         run: docker compose -f docker-compose.tox.yml up -d --wait
@@ -24,17 +24,24 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        django-version: [32, 42]
+        django-version: [32, 42, 51]
         db: [postgres, mysql, sqlite]
         broker: [rabbitmq, kafka]
+        exclude:
+          # Django 5.1 does not support Python <3.10
+          - python-version: "3.8"
+            django-version: 51
+          - python-version: "3.9"
+            django-version: 51
+
     env:
       DJANGO_SETTINGS_MODULE: tests.settings
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -53,10 +60,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
