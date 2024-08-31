@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>action_triggers.dispatch &mdash; django-action-triggers 0.2.0 documentation</title>
+  <title>action_triggers.dispatch &mdash; django-action-triggers 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=938c9ccc"></script>
+        <script src="../../_static/documentation_options.js?v=e259d695"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -34,7 +34,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.2.0
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -52,6 +52,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../webhooks.html">Webhooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../message_brokers/kafka.html">Kafka</a></li>
@@ -88,16 +90,46 @@
   <h1>Source code for action_triggers.dispatch</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Handles the dispatching of actions to the appropriate action handler.&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">_t</span>
 
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Model</span>
 
-<span class="kn">from</span> <span class="nn">action_triggers.models</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">action_triggers.models</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Webhook</span>
 <span class="kn">from</span> <span class="nn">action_triggers.msg_broker_queues</span> <span class="kn">import</span> <span class="n">process_msg_broker_queue</span>
 <span class="kn">from</span> <span class="nn">action_triggers.payload</span> <span class="kn">import</span> <span class="n">get_payload_generator</span>
 <span class="kn">from</span> <span class="nn">action_triggers.webhooks</span> <span class="kn">import</span> <span class="n">WebhookProcessor</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="process_webhook">
+<a class="viewcode-back" href="../../modules.html#action_triggers.dispatch.process_webhook">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">process_webhook</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span>
+    <span class="n">instance</span><span class="p">:</span> <span class="n">Webhook</span><span class="p">,</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process the webhook for the given config and instance.</span>
+
+<span class="sd">    :param config: The configuration object.</span>
+<span class="sd">    :param instance: The webhook instance to process.</span>
+<span class="sd">    :param payload: The payload to send with the webhook.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">processor</span> <span class="o">=</span> <span class="n">WebhookProcessor</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">processor</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;Error processing webhook </span><span class="si">%s</span><span class="s2"> for config </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">e</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="handle_action">
@@ -115,28 +147,16 @@
 
     <span class="n">payload_gen</span> <span class="o">=</span> <span class="n">get_payload_generator</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">payload_gen</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">webhook</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">webhooks</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">WebhookProcessor</span><span class="p">(</span><span class="n">webhook</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s2">&quot;Error processing webhook </span><span class="si">%s</span><span class="s2"> for config </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="n">webhook</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">e</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">process_webhook</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">webhook</span><span class="p">,</span> <span class="n">payload</span><span class="p">))</span>
 
     <span class="k">for</span> <span class="n">msg_broker_queue</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">message_broker_queues</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">process_msg_broker_queue</span><span class="p">(</span><span class="n">msg_broker_queue</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s2">&quot;Error processing message broker queue </span><span class="si">%s</span><span class="s2"> for config </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="n">msg_broker_queue</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="n">e</span><span class="p">,</span>
-            <span class="p">)</span></div>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">process_msg_broker_queue</span><span class="p">(</span><span class="n">msg_broker_queue</span><span class="p">,</span> <span class="n">payload</span><span class="p">))</span>
+
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
 
 </pre></div>
 

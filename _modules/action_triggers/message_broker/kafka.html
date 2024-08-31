@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>action_triggers.message_broker.kafka &mdash; django-action-triggers 0.2.0 documentation</title>
+  <title>action_triggers.message_broker.kafka &mdash; django-action-triggers 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+        <script src="../../../_static/documentation_options.js?v=e259d695"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -34,7 +34,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.2.0
+                0.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../webhooks.html">Webhooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/kafka.html">Kafka</a></li>
@@ -93,9 +95,9 @@
 <span class="kn">from</span> <span class="nn">action_triggers.utils.module_import</span> <span class="kn">import</span> <span class="n">MissingImportWrapper</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Producer</span>  <span class="c1"># type: ignore[import-untyped]</span>
+    <span class="kn">from</span> <span class="nn">aiokafka</span> <span class="kn">import</span> <span class="n">AIOKafkaProducer</span>  <span class="c1"># type: ignore[import-untyped]</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="n">kafka</span> <span class="o">=</span> <span class="n">MissingImportWrapper</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>
+    <span class="n">AIOKafkaProducer</span> <span class="o">=</span> <span class="n">MissingImportWrapper</span><span class="p">(</span><span class="s2">&quot;AIOKafkaProducer&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="KafkaConnection">
@@ -125,8 +127,17 @@
 
 <div class="viewcode-block" id="KafkaConnection.connect">
 <a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.kafka.KafkaConnection.connect">[docs]</a>
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">)</span></div>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">AIOKafkaProducer</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="KafkaConnection.close">
+<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.kafka.KafkaConnection.close">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span></div>
 </div>
 
 
@@ -149,16 +160,14 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">broker_key</span><span class="p">,</span> <span class="n">conn_params</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">topic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;topic&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_send_message_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_send_message_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a message to the Kafka broker.</span>
 
 <span class="sd">        :param conn: The connection to the broker.</span>
 <span class="sd">        :param message: The message to send.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">producer</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">conn</span>
-        <span class="n">producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-        <span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+        <span class="k">await</span> <span class="n">conn</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">send_and_wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span></div>
 
 </pre></div>
 

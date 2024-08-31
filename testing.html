@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing &mdash; django-action-triggers 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=e259d695"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Don’t See What You’re Looking For?" href="features_and_bugs.html" />
+    <link rel="prev" title="RabbitMQ" href="message_brokers/rabbitmq.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.3.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#testing-with-tox">Testing With <cite>tox</cite></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-dependencies-in-a-virtual-environment">Install Dependencies in a Virtual Environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#linux-macos">Linux/MacOS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#windows">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#run-tests-across-all-environments">Run Tests Across All Environments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-tests-for-a-specific-environment">Run Tests for a Specific Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#list-all-available-environments">List All Available Environments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-with-pytest">Testing With <cite>pytest</cite></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Install Dependencies in a Virtual Environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Linux/MacOS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#run-tests-in-the-current-environment">Run Tests in the Current Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stopping-and-cleaning-up-docker-services">Stopping and Cleaning Up Docker Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/rabbitmq.html">RabbitMQ</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Module Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Testing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/testing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="testing">
+<h1>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h1>
+<p>This library integrates with various services like message brokers and
+databases. Setting up a complete test environment for all these services can be
+challenging. To simplify testing, we provide a <cite>Dockerfile</cite> and
+<cite>docker-compose.tox.yml</cite> file to help you quickly spin up the necessary
+services.</p>
+<p>To begin testing, start the services with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.tox.yml<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+<p>You can then run the tests using either <cite>tox</cite> for multi-environment testing or
+<cite>pytest</cite> for the current environment.</p>
+<section id="testing-with-tox">
+<h2>Testing With <cite>tox</cite><a class="headerlink" href="#testing-with-tox" title="Link to this heading"></a></h2>
+<p>Use <cite>tox</cite> to run tests across multiple environments, ensuring compatibility
+with different Python versions, Django versions, databases, and message
+brokers.</p>
+<section id="install-dependencies-in-a-virtual-environment">
+<h3>Install Dependencies in a Virtual Environment<a class="headerlink" href="#install-dependencies-in-a-virtual-environment" title="Link to this heading"></a></h3>
+<section id="linux-macos">
+<h4>Linux/MacOS<a class="headerlink" href="#linux-macos" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>tox
+</pre></div>
+</div>
+</section>
+<section id="windows">
+<h4>Windows<a class="headerlink" href="#windows" title="Link to this heading"></a></h4>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
+<span class="p">.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">activate</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">tox</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="run-tests-across-all-environments">
+<h3>Run Tests Across All Environments<a class="headerlink" href="#run-tests-across-all-environments" title="Link to this heading"></a></h3>
+<p>To run tests across all supported environments, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tox
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you do not have a specific Python version installed on your system, <cite>tox</cite>
+will skip the tests for that environment. Ensure that you have the required
+Python versions installed if you want to run tests across all environments.</p>
+</div>
+</section>
+<section id="run-tests-for-a-specific-environment">
+<h3>Run Tests for a Specific Environment<a class="headerlink" href="#run-tests-for-a-specific-environment" title="Link to this heading"></a></h3>
+<p>To target a specific environment (e.g., Python 3.8), use the <cite>-e</cite> flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tox<span class="w"> </span>-e<span class="w"> </span>py38
+</pre></div>
+</div>
+</section>
+<section id="list-all-available-environments">
+<h3>List All Available Environments<a class="headerlink" href="#list-all-available-environments" title="Link to this heading"></a></h3>
+<p>To view all the environments configured in <cite>tox.ini</cite>, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tox<span class="w"> </span>-l
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing-with-pytest">
+<h2>Testing With <cite>pytest</cite><a class="headerlink" href="#testing-with-pytest" title="Link to this heading"></a></h2>
+<p>For a quicker, single-environment test run, you can use <cite>pytest</cite>.</p>
+<section id="id1">
+<h3>Install Dependencies in a Virtual Environment<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<section id="id2">
+<h4>Linux/MacOS<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>poetry
+poetry<span class="w"> </span>install<span class="w"> </span>--no-root<span class="w"> </span>--all-extras
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h4>Windows<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
+<span class="p">.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">activate</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">poetry</span>
+<span class="n">poetry</span> <span class="n">install</span> <span class="p">-</span><span class="n">-no-root</span> <span class="p">-</span><span class="n">-all-extras</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="run-tests-in-the-current-environment">
+<h3>Run Tests in the Current Environment<a class="headerlink" href="#run-tests-in-the-current-environment" title="Link to this heading"></a></h3>
+<p>Once the dependencies are installed, run the tests with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
+</pre></div>
+</div>
+</section>
+<section id="stopping-and-cleaning-up-docker-services">
+<h3>Stopping and Cleaning Up Docker Services<a class="headerlink" href="#stopping-and-cleaning-up-docker-services" title="Link to this heading"></a></h3>
+<p>After testing, you can stop and remove the Docker containers with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.tox.yml<span class="w"> </span>down
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="message_brokers/rabbitmq.html" class="btn btn-neutral float-left" title="RabbitMQ" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="features_and_bugs.html" class="btn btn-neutral float-right" title="Don’t See What You’re Looking For?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
