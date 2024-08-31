@@ -1,9 +1,9 @@
 """Tests for the `dispatch` module."""
 
-from unittest.mock import patch, AsyncMock
+from unittest.mock import AsyncMock, patch
 
-from aioresponses import aioresponses
 import pytest
+from aioresponses import aioresponses
 from model_bakery import baker
 
 from action_triggers.dispatch import handle_action

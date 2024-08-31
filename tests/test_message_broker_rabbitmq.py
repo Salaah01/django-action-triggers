@@ -5,7 +5,7 @@ import json
 try:
     import aio_pika  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
-    aio_pika = None
+    aio_pika = None  # type: ignore[assignment]
 import pytest
 from django.conf import settings
 

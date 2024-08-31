@@ -1,8 +1,9 @@
 """Tests for the `api.serializers` module."""
 
+import pytest
 from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
-import pytest
+
 from action_triggers.api.serializers import ConfigSerializer
 from action_triggers.models import (
     Config,

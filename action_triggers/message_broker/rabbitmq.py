@@ -7,7 +7,7 @@ from action_triggers.utils.module_import import MissingImportWrapper
 try:
     import aio_pika  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
-    aio_pika = MissingImportWrapper("aio_pika")
+    aio_pika = MissingImportWrapper("aio_pika")  # type: ignore[assignment]
 
 
 class RabbitMQConnection(ConnectionBase):

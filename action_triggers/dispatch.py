@@ -2,10 +2,11 @@
 
 import asyncio
 import logging
+import typing as _t
 
 from django.db.models import Model
 
-from action_triggers.models import Config, Webhook, MessageBrokerQueue
+from action_triggers.models import Config, Webhook
 from action_triggers.msg_broker_queues import process_msg_broker_queue
 from action_triggers.payload import get_payload_generator
 from action_triggers.webhooks import WebhookProcessor
@@ -14,7 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 async def process_webhook(
-    config: Config, instance: Webhook, payload: dict
+    config: Config,
+    instance: Webhook,
+    payload: _t.Union[dict, str],
 ) -> None:
     """Process the webhook for the given config and instance.
 

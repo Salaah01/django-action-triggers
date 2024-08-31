@@ -1,8 +1,8 @@
 """Tests for the Kafka message broker."""
 
 import pytest
-from django.test import override_settings
 from django.conf import settings
+from django.test import override_settings
 
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 from action_triggers.message_broker.kafka import KafkaBroker, KafkaConnection

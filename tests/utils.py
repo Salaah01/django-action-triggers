@@ -1,13 +1,15 @@
-from contextlib import asynccontextmanager
-from copy import deepcopy
 import asyncio
+from contextlib import asynccontextmanager
 
 try:
     import aio_pika  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
-    aio_pika = None
+    aio_pika = None  # type: ignore[assignment]
 try:
-    from aiokafka import AIOKafkaConsumer, AIOKafkaProducer  # type: ignore[import]  # noqa E501
+    from aiokafka import (  # type: ignore[import]  # noqa E501
+        AIOKafkaConsumer,
+        AIOKafkaProducer,
+    )
 except ImportError:  # pragma: no cover
     AIOKafkaConsumer = AIOKafkaProducer = None
 from django.conf import settings

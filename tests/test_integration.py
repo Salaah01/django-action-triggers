@@ -3,19 +3,19 @@
 import asyncio
 
 import pytest
+from aio_pika.exceptions import QueueEmpty
 from aioresponses import aioresponses
+from asgiref.sync import sync_to_async
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
-from aio_pika.exceptions import QueueEmpty
-from asgiref.sync import sync_to_async
 
 from tests.models import CustomerModel
 from tests.utils import (
     can_connect_to_kafka,
     can_connect_to_rabbitmq,
-    get_rabbitmq_conn,
     get_kafka_consumer,
+    get_rabbitmq_conn,
 )
 
 

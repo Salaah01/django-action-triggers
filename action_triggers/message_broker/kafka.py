@@ -5,7 +5,7 @@ from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
-    from aiokafka import AIOKafkaProducer
+    from aiokafka import AIOKafkaProducer  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
     AIOKafkaProducer = MissingImportWrapper("AIOKafkaProducer")
 

@@ -2,8 +2,6 @@ from collections import namedtuple
 
 import django
 import pytest
-from django.apps import apps
-from django.core.management import call_command
 
 django.setup()
 
@@ -19,13 +17,7 @@ from action_triggers.models import (  # noqa: E402
     MessageBrokerQueue,
     Webhook,
 )
-from tests.models import (  # noqa: E402
-    CustomerModel,
-    CustomerOrderModel,
-    M2MModel,
-    One2OneModel,
-)
-
+from tests.models import CustomerModel, CustomerOrderModel  # noqa: E402
 
 # @pytest.fixture(autouse=True, scope="session")
 # def setup():

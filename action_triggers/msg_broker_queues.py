@@ -1,10 +1,9 @@
-import logging
 import json
+import logging
 import typing as _t
 
 from action_triggers.message_broker.broker import get_broker_class
 from action_triggers.models import MessageBrokerQueue
-
 
 logger = logging.getLogger(__name__)
 
