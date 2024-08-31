@@ -11,6 +11,7 @@ from action_triggers.models import Config, ConfigSignal
 from tests.models import CustomerModel, CustomerOrderModel
 
 
+@pytest.mark.django_db
 class TestSignal:
     """Tests that the signals are connected to the callback function."""
 

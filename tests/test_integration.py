@@ -9,12 +9,16 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
 from aio_pika.exceptions import QueueEmpty
+from asgiref.sync import sync_to_async
+from django.contrib.auth.models import User
 
 from tests.models import CustomerModel
 from tests.utils import (
     can_connect_to_kafka,
     can_connect_to_rabbitmq,
     get_rabbitmq_conn,
+    get_kafka_conn,
+    get_kafka_consumer,
 )
 
 
@@ -105,24 +109,58 @@ class TestIntegrationMessageBrokerRabbitMQ:
     not can_connect_to_kafka(),
     reason="Cannot connect to Kafka",
 )
+@pytest.mark.django_db(transaction=True)
 class TestIntegrationMessageBrokerKafka:
     """Integration tests where the action to be triggered is sending a payload
     to a Kafka message broker.
     """
 
-    # TODO: Using actual Kafka broker is not working. Need to investigate why.
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self):
+        async def purge_messages():
+            async with get_kafka_consumer() as consumer:
+                await consumer.getmany()
 
-    @patch(
-        "action_triggers.message_broker.kafka.KafkaBroker._send_message_impl",
-        autospec=True,
-    )
-    def test_simple_basic_json_message(
+        asyncio.run(purge_messages())
+
+    @pytest.mark.asyncio
+    async def test_simple_basic_json_message(
         self,
-        mock_send_message_impl,
+        customer_kafka_post_save_signal,
+        customer,
+    ):
+        async def get_next_message():
+            async with get_kafka_consumer() as consumer:
+                return await consumer.getone()
+
+        consumer_task = asyncio.create_task(get_next_message())
+        await sync_to_async(baker.make)(CustomerModel)
+        message = await consumer_task
+        assert message.value == b'{"message": "Hello, World!"}'
+
+    @pytest.fixture
+    def fixture_simple_basic_plain_message(
+        self,
         customer_kafka_post_save_signal,
     ):
+        config = customer_kafka_post_save_signal.config
+        config.payload = "Hello World!"
+        config.save()
         baker.make(CustomerModel)
-        mock_send_message_impl.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_simple_basic_plain_message(
+        self,
+        fixture_simple_basic_plain_message,
+    ):
+        async def get_next_message():
+            async with get_kafka_consumer() as consumer:
+                return await consumer.getone()
+
+        consumer_task = asyncio.create_task(get_next_message())
+        await sync_to_async(baker.make)(CustomerModel)
+        message = await consumer_task
+        assert message.value == b'"Hello World!"'
 
 
 class TestIntegrationWebhook:

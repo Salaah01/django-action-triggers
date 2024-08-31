@@ -16,11 +16,15 @@ from tests.models import (
 )
 
 
+@pytest.mark.django_db
 class TestHandleAction:
     """Tests for the `handle_action` function."""
 
     @patch("action_triggers.dispatch.process_webhook", new_callable=AsyncMock)
-    @patch("action_triggers.dispatch.process_msg_broker_queue", new_callable=AsyncMock)
+    @patch(
+        "action_triggers.dispatch.process_msg_broker_queue",
+        new_callable=AsyncMock,
+    )
     @pytest.mark.parametrize(
         "model_class",
         (CustomerModel, CustomerOrderModel, M2MModel, One2OneModel),
@@ -33,7 +37,6 @@ class TestHandleAction:
         model_class,
         config_payload,
     ):
-
         with aioresponses() as mocked:
             mocked.post("http://example.com", status=200)
 

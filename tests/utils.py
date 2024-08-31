@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from copy import deepcopy
 import asyncio
 
 try:
@@ -31,7 +32,6 @@ async def get_rabbitmq_conn(key: str = "rabbitmq_1"):
     await conn.close()
 
 
-
 @asynccontextmanager
 async def get_kafka_conn(key: str = "kafka_1"):
     """Get a connection to a Kafka broker.
@@ -45,7 +45,7 @@ async def get_kafka_conn(key: str = "kafka_1"):
     """
 
     consumer = AIOKafkaConsumer(
-        enable_auto_commit=False,
+        enable_auto_commit=True,
         auto_offset_reset="earliest",
         group_id="test_group_1",
         **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
@@ -70,12 +70,14 @@ async def get_kafka_consumer(key: str = "kafka_1"):
         Consumer: The Kafka consumer
     """
 
-    with get_kafka_conn(key) as conn:
-        conn.subscribe(
-            settings.ACTION_TRIGGERS["brokers"][key]["params"]["topic"],  # type: ignore[index]  # noqa E501
-        )
-
-        yield conn
+    consumer = AIOKafkaConsumer(
+        settings.ACTION_TRIGGERS["brokers"][key]["params"]["topic"],  # type: ignore[index]  # noqa E501
+        enable_auto_commit=True,
+        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
+    )
+    await consumer.start()
+    yield consumer
+    await consumer.stop()
 
 
 @asynccontextmanager
@@ -117,6 +119,7 @@ async def get_kafka_producer(key: str = "kafka_1"):
 #     yield message
 #     await message.ack()
 
+
 def can_connect_to_rabbitmq() -> bool:
     """Check if the service can connect to RabbitMQ.
 
@@ -134,7 +137,7 @@ def can_connect_to_rabbitmq() -> bool:
         except Exception:
             return False
 
-    return asyncio.run(_can_connect_to_rabbitmq()) 
+    return asyncio.run(_can_connect_to_rabbitmq())
 
 
 def can_connect_to_kafka() -> bool:

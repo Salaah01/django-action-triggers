@@ -13,6 +13,7 @@ from action_triggers.registry import (
 )
 
 
+@pytest.mark.django_db
 class TestRegistry:
     @pytest.fixture(autouse=True)
     def setup(self):

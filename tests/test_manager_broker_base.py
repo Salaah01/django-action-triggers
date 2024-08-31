@@ -9,6 +9,7 @@ from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 
 
+@pytest.mark.django_db
 class TestConnectionBase:
     """Tests for the `ConnectionBase` class."""
 
@@ -91,6 +92,7 @@ class TestConnectionBase:
         }
 
 
+@pytest.mark.django_db
 class TestBrokerBase:
     """Tests for the `BrokerBase` class."""
 

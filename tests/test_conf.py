@@ -8,6 +8,7 @@ from django.test import override_settings
 from action_triggers.conf import get_content_type_choices
 
 
+@pytest.mark.django_db
 class TestGetContentTypeChoices:
     """Tests for the `get_content_type_choices` function."""
 
