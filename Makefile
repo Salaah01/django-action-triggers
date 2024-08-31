@@ -16,3 +16,13 @@ format: **/*.py
 
 type-check: **/*.py
 	mypy .
+
+ci-global-install:
+	python -m pip install --upgrade pip
+	pip install poetry
+	poetry config virtualenvs.create false
+	poetry install --no-root --all-extras
+
+ci-tox-install:
+	python -m pip install --upgrade pip
+	pip install tox
