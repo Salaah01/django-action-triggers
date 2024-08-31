@@ -3,7 +3,11 @@
 import asyncio
 
 import pytest
-from aio_pika.exceptions import QueueEmpty
+
+try:
+    from aio_pika.exceptions import QueueEmpty
+except ImportError:
+    QueueEmpty = Exception  # type: ignore[misc,assignment]
 from aioresponses import aioresponses
 from asgiref.sync import sync_to_async
 from django.contrib.auth.models import User
@@ -44,6 +48,7 @@ class TestIntegrationMessageBrokerRabbitMQ:
 
         asyncio.run(purge_messages())
 
+    @pytest.mark.django_db(transaction=True)
     @pytest.mark.asyncio
     async def test_simple_basic_json_message(
         self,

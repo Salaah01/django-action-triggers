@@ -1,5 +1,6 @@
 import asyncio
 from contextlib import asynccontextmanager
+from copy import deepcopy
 
 try:
     import aio_pika  # type: ignore[import-untyped]
@@ -27,9 +28,11 @@ async def get_rabbitmq_conn(key: str = "rabbitmq_1"):
         Connection: The connection to the broker
     """
 
-    conn = await aio_pika.connect_robust(
-        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
+    conn_details = deepcopy(
+        settings.ACTION_TRIGGERS["brokers"][key]["conn_details"]  # type: ignore[index]  # noqa E501
     )
+    conn_details["port"] = int(conn_details["port"])
+    conn = await aio_pika.connect_robust(**conn_details)
     yield conn
     await conn.close()
 

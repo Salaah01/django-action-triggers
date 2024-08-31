@@ -35,6 +35,10 @@ class TestKafkaConnection:
         )
 
     @pytest.mark.asyncio
+    @pytest.mark.skipif(
+        not can_connect_to_kafka(),
+        reason="Kafka is not running.",
+    )
     async def test_connection_and_close_mechanism(self):
         conn = KafkaConnection(
             config={"topic": "test_topic_1"},

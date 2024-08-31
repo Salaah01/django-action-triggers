@@ -1,3 +1,4 @@
+from copy import deepcopy
 import typing as _t
 
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
@@ -27,6 +28,11 @@ class RabbitMQConnection(ConnectionBase):
     def validate(self) -> None:
         self.validate_queue_exists()
         super().validate()
+
+        # Python 3.8 requires the port to be an integer.
+        if "port" in self.conn_details:
+            self.conn_details = deepcopy(self.conn_details)
+            self.conn_details["port"] = int(self.conn_details["port"])
 
     async def connect(self) -> None:
         self.conn = await aio_pika.connect_robust(

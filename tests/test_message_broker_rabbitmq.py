@@ -14,7 +14,7 @@ from action_triggers.message_broker.rabbitmq import (
     RabbitMQBroker,
     RabbitMQConnection,
 )
-from tests.utils import can_connect_to_kafka, get_rabbitmq_conn
+from tests.utils import can_connect_to_rabbitmq, get_rabbitmq_conn
 
 
 class TestRabbitMQConnection:
@@ -50,6 +50,10 @@ class TestRabbitMQConnection:
         )
         assert conn
 
+    
+    @pytest.mark.skipif(
+        not can_connect_to_rabbitmq(), reason="RabbitMQ is not running."
+    )
     @pytest.mark.asyncio
     async def test_connection_and_close_mechanism(self):
         conn = RabbitMQConnection(
@@ -69,7 +73,7 @@ class TestRabbitMQBroker:
     """Tests for the `RabbitMQBroker` class."""
 
     @pytest.mark.skipif(
-        not can_connect_to_kafka(), reason="RabbitMQ is not running."
+        not can_connect_to_rabbitmq(), reason="RabbitMQ is not running."
     )
     @pytest.mark.asyncio
     async def test_message_can_be_sent(self):
