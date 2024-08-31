@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        django-version: [32, 42]
+        django-version: [32, 42, 51]
         db: [postgres, mysql, sqlite]
         broker: [rabbitmq, kafka]
     env:
