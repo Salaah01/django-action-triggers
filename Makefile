@@ -14,5 +14,5 @@ format: **/*.py
 	ruff check . --fix
 	isort .
 
-typecheck: **/*.py
+type-check: **/*.py
 	mypy .
