@@ -33,8 +33,6 @@ jobs:
             django-version: 51
           - python-version: "3.9"
             django-version: 51
-          
-          
 
     env:
       DJANGO_SETTINGS_MODULE: tests.settings
