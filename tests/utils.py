@@ -33,32 +33,6 @@ async def get_rabbitmq_conn(key: str = "rabbitmq_1"):
 
 
 @asynccontextmanager
-async def get_kafka_conn(key: str = "kafka_1"):
-    """Get a connection to a Kafka broker.
-
-    Args:
-        key (str, optional): The key of the broker in the settings.
-            Defaults to "kafka_1".
-
-    Yields:
-        Consumer: The connection to the broker
-    """
-
-    consumer = AIOKafkaConsumer(
-        enable_auto_commit=True,
-        auto_offset_reset="earliest",
-        group_id="test_group_1",
-        **settings.ACTION_TRIGGERS["brokers"][key]["conn_details"],  # type: ignore[index]  # noqa E501
-    )
-
-    await consumer.start()
-
-    yield consumer
-
-    await consumer.stop()
-
-
-@asynccontextmanager
 async def get_kafka_consumer(key: str = "kafka_1"):
     """Consume a message from a Kafka broker.
 
@@ -151,7 +125,7 @@ def can_connect_to_kafka() -> bool:
 
     async def _can_connect_to_kafka():
         try:
-            async with get_kafka_conn():
+            async with get_kafka_consumer():
                 return True
         except Exception:
             return False

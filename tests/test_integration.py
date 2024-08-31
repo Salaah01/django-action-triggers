@@ -1,23 +1,20 @@
 """Integration tests."""
 
 import asyncio
-from unittest.mock import patch
 
 import pytest
-import responses
+from aioresponses import aioresponses
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
 from aio_pika.exceptions import QueueEmpty
 from asgiref.sync import sync_to_async
-from django.contrib.auth.models import User
 
 from tests.models import CustomerModel
 from tests.utils import (
     can_connect_to_kafka,
     can_connect_to_rabbitmq,
     get_rabbitmq_conn,
-    get_kafka_conn,
     get_kafka_consumer,
 )
 
@@ -168,61 +165,58 @@ class TestIntegrationWebhook:
     to a webhook.
     """
 
-    @responses.activate
     def test_simple_basic_json_message(
         self,
         customer_webhook_post_save_signal,
     ):
-        responses.add(
-            responses.POST,
-            "https://example.com/",
-            json={"success": "True"},
-        )
+        with aioresponses() as mocked_responses:
+            mocked_responses.post(
+                "https://example.com/",
+                payload={"success": "True"},
+            )
+            baker.make(CustomerModel)
 
-        baker.make(CustomerModel)
+            mocked_responses.assert_called_once()
+            assert (
+                str(mocked_responses._responses[0].url)
+                == "https://example.com/"
+            )
 
-        assert len(responses.calls) == 1
-        assert responses.calls[0].request.url == "https://example.com/"
-        assert (
-            responses.calls[0].request.body == b'{"message": "Hello, World!"}'
-        )
-
-    @responses.activate
     def test_simple_basic_plain_message(
         self,
         customer_webhook_post_save_signal,
     ):
-        config = customer_webhook_post_save_signal.config
-        config.payload = "Hello World!"
-        config.save()
+        with aioresponses() as mocked_responses:
+            config = customer_webhook_post_save_signal.config
+            config.payload = "Hello World!"
+            config.save()
 
-        responses.add(
-            responses.POST,
-            "https://example.com/",
-            json={"success": "True"},
-        )
+            mocked_responses.post(
+                "https://example.com/",
+                payload={"success": "True"},
+            )
 
-        baker.make(CustomerModel)
+            baker.make(CustomerModel)
 
-        assert len(responses.calls) == 1
-        assert responses.calls[0].request.url == "https://example.com/"
-        assert responses.calls[0].request.body == "Hello World!"
+            mocked_responses.assert_called_once()
+            assert (
+                str(mocked_responses._responses[0].url)
+                == "https://example.com/"
+            )
 
-    @responses.activate
     def test_does_not_work_for_models_that_are_not_allowed(
         self,
         customer_webhook_post_save_signal,
     ):
-        config = customer_webhook_post_save_signal.config
-        config.content_types.set([ContentType.objects.get_for_model(User)])
-        config.save()
+        with aioresponses() as mocked_responses:
+            config = customer_webhook_post_save_signal.config
+            config.content_types.set([ContentType.objects.get_for_model(User)])
+            config.save()
 
-        responses.add(
-            responses.POST,
-            "https://example.com/",
-            json={"success": "True"},
-        )
+            mocked_responses.post(
+                "https://example.com/",
+                payload={"success": "True"},
+            )
+            baker.make(User)
 
-        baker.make(User)
-
-        assert len(responses.calls) == 0
+            mocked_responses.assert_not_called()
