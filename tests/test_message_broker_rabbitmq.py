@@ -75,22 +75,21 @@ class TestRabbitMQBroker:
     async def test_message_can_be_sent(self):
         """It should be able to send a message to RabbitMQ."""
 
-        connection = await get_rabbitmq_conn()
+        async with get_rabbitmq_conn() as connection:
+            broker = RabbitMQBroker(
+                broker_key="rabbitmq_1",
+                conn_params={},
+                params={"queue": "test_queue_1"},
+            )
+            await broker.send_message("new message")
 
-        broker = RabbitMQBroker(
-            broker_key="rabbitmq_1",
-            conn_params={},
-            params={"queue": "test_queue_1"},
-        )
-        await broker.send_message("new message")
+            async with connection:
+                channel = await connection.channel()
+                await channel.set_qos(prefetch_count=1)
+                queue = await channel.declare_queue("test_queue_1")
 
-        async with connection:
-            channel = await connection.channel()
-            await channel.set_qos(prefetch_count=1)
-            queue = await channel.declare_queue("test_queue_1")
-
-            async with queue.iterator() as queue_iter:
-                async for message in queue_iter:
-                    async with message.process():
-                        assert message.body == b"new message"
-                        break
+                async with queue.iterator() as queue_iter:
+                    async for message in queue_iter:
+                        async with message.process():
+                            assert message.body == b"new message"
+                            break

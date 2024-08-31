@@ -1,3 +1,4 @@
+import logging
 import json
 import typing as _t
 
@@ -5,7 +6,10 @@ from action_triggers.message_broker.broker import get_broker_class
 from action_triggers.models import MessageBrokerQueue
 
 
-def process_msg_broker_queue(
+logger = logging.getLogger(__name__)
+
+
+async def process_msg_broker_queue(
     msg_broker_queue: MessageBrokerQueue,
     payload: _t.Union[str, dict],
 ) -> None:
@@ -18,9 +22,19 @@ def process_msg_broker_queue(
     :return: None
     """
 
-    broker_class = get_broker_class(msg_broker_queue.name)
-    broker_class(
-        msg_broker_queue.name,
-        msg_broker_queue.conn_details,
-        msg_broker_queue.parameters,
-    ).send_message(json.dumps(payload))
+    try:
+        broker_class = get_broker_class(msg_broker_queue.name)
+        broker = broker_class(
+            msg_broker_queue.name,
+            msg_broker_queue.conn_details,
+            msg_broker_queue.parameters,
+        )
+
+        await broker.send_message(json.dumps(payload))
+    except Exception as e:
+        logger.error(
+            "Error processing message broker queue %s for config %s: %s",
+            msg_broker_queue.id,
+            msg_broker_queue.config.id,
+            e,
+        )

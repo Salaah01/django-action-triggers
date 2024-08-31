@@ -155,7 +155,7 @@ def customer_webhook_post_save_signal(
 def full_loaded_config(config):
     config.payload = {"key": "value"}
     config.save()
-    
+
     config.content_types.set(
         [
             ContentType.objects.get_for_model(CustomerModel),
@@ -199,3 +199,8 @@ def full_loaded_config(config):
 @pytest.fixture
 def superuser():
     return baker.make(User, is_staff=True, is_superuser=True)
+
+
+@pytest.fixture
+def customer():
+    return baker.make(CustomerModel)

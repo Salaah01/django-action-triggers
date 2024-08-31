@@ -1,16 +1,12 @@
 """Tests for the `webhooks` module."""
 
 from unittest.mock import patch, AsyncMock
-from asgiref.sync import sync_to_async
 import pytest
 import aiohttp
-import responses
 from aioresponses import aioresponses
-from model_bakery import baker
 
 
 from action_triggers.exceptions import DisallowedWebhookEndpointError
-from action_triggers.models import Webhook
 from action_triggers.webhooks import WebhookProcessor
 
 

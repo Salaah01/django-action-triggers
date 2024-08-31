@@ -1,5 +1,6 @@
 """Integration tests."""
 
+import asyncio
 from unittest.mock import patch
 
 import pytest
@@ -7,6 +8,7 @@ import responses
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
+from aio_pika.exceptions import QueueEmpty
 
 from tests.models import CustomerModel
 from tests.utils import (
@@ -25,58 +27,78 @@ class TestIntegrationMessageBrokerRabbitMQ:
     to a RabbitMQ message broker.
     """
 
-    def test_simple_basic_json_message(
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self):
+        async def purge_messages():
+            async with get_rabbitmq_conn() as conn:
+                channel = await conn.channel()
+                await channel.set_qos(prefetch_count=1)
+                queue = await channel.declare_queue("test_queue_1")
+                while True:
+                    try:
+                        message = await queue.get()
+                        await message.ack()
+                    except QueueEmpty:
+                        break
+
+        asyncio.run(purge_messages())
+
+    @pytest.mark.asyncio
+    async def test_simple_basic_json_message(
         self,
         customer_rabbitmq_post_save_signal,
+        customer,
     ):
-        baker.make(CustomerModel)
+        async with get_rabbitmq_conn() as conn:
+            channel = await conn.channel()
+            await channel.set_qos(prefetch_count=1)
+            queue = await channel.declare_queue("test_queue_1")
+            message = await queue.get()
+            assert message.body == b'{"message": "Hello, World!"}'
 
-        with get_rabbitmq_conn() as conn:
-            channel = conn.channel()
-            method_frame, header_frame, body = channel.basic_get(
-                queue="test_queue_1",
-                auto_ack=True,
-            )
-
-            assert body == b'{"message": "Hello, World!"}'
-
-    def test_simple_basic_plain_message(
+    @pytest.fixture
+    def fixture_simple_basic_plain_message(
         self,
         customer_rabbitmq_post_save_signal,
     ):
         config = customer_rabbitmq_post_save_signal.config
         config.payload = "Hello World!"
         config.save()
-
         baker.make(CustomerModel)
 
-        with get_rabbitmq_conn() as conn:
-            channel = conn.channel()
-            method_frame, header_frame, body = channel.basic_get(
-                queue="test_queue_1",
-                auto_ack=True,
-            )
+    @pytest.mark.asyncio
+    async def test_simple_basic_plain_message(
+        self,
+        fixture_simple_basic_plain_message,
+    ):
+        async with get_rabbitmq_conn() as conn:
+            channel = await conn.channel()
+            await channel.set_qos(prefetch_count=1)
+            queue = await channel.declare_queue("test_queue_1")
+            message = await queue.get()
+            assert message.body == b'"Hello World!"'
 
-            assert body.decode() == '"Hello World!"'
-
-    def test_does_not_work_for_models_that_are_not_allowed(
+    @pytest.fixture
+    def fixture_does_not_work_for_models_that_are_not_allowed(
         self,
         customer_rabbitmq_post_save_signal,
     ):
         config = customer_rabbitmq_post_save_signal.config
         config.content_types.set([ContentType.objects.get_for_model(User)])
         config.save()
-
         baker.make(User)
 
-        with get_rabbitmq_conn() as conn:
-            channel = conn.channel()
-            method_frame, header_frame, body = channel.basic_get(
-                queue="test_queue_1",
-                auto_ack=True,
-            )
-
-            assert body is None
+    @pytest.mark.asyncio
+    async def test_does_not_work_for_models_that_are_not_allowed(
+        self,
+        fixture_does_not_work_for_models_that_are_not_allowed,
+    ):
+        async with get_rabbitmq_conn() as conn:
+            channel = await conn.channel()
+            await channel.set_qos(prefetch_count=1)
+            queue = await channel.declare_queue("test_queue_1")
+            with pytest.raises(QueueEmpty):
+                await queue.get()
 
 
 @pytest.mark.skipif(
