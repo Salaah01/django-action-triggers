@@ -1,5 +1,5 @@
-from copy import deepcopy
 import typing as _t
+from copy import deepcopy
 
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
