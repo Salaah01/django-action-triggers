@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import typing as _t
@@ -29,7 +30,8 @@ async def process_msg_broker_queue(
             msg_broker_queue.parameters,
         )
 
-        await broker.send_message(json.dumps(payload))
+        async with asyncio.timeout(msg_broker_queue.timeout_secs):
+            await broker.send_message(json.dumps(payload))
     except Exception as e:
         logger.error(
             "Error processing message broker queue %s for config %s: %s",

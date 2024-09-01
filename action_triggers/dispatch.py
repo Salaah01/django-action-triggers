@@ -29,7 +29,8 @@ async def process_webhook(
 
     try:
         processor = WebhookProcessor(instance, payload)
-        await processor()
+        async with asyncio.timeout(instance.timeout_secs):
+            await processor()
     except Exception as e:
         logger.error(
             "Error processing webhook %s for config %s: %s",

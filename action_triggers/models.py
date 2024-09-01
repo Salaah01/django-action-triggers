@@ -14,6 +14,22 @@ from action_triggers.enums import HTTPMethodChoices, SignalChoices
 UserModel = get_user_model()
 
 
+class BaseAction(models.Model):
+    """Abstract model to represent an action."""
+
+    timeout_secs = models.PositiveIntegerField(
+        _("Timeout (seconds)"),
+        help_text=_(
+            "The number of seconds to wait before the action is killed."
+        ),
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        abstract = True
+
+
 class ConfigQuerySet(models.QuerySet):
     """Custom queryset for the Config model."""
 
@@ -94,7 +110,7 @@ class Config(models.Model):
         return f"Config {self.id}"
 
 
-class Webhook(models.Model):
+class Webhook(BaseAction):
     """Model to represent the webhook configuration."""
 
     config = models.ForeignKey(
@@ -141,7 +157,7 @@ class Webhook(models.Model):
             return False
 
 
-class MessageBrokerQueue(models.Model):
+class MessageBrokerQueue(BaseAction):
     """Model to represent a message broker queue configuration."""
 
     config = models.ForeignKey(
