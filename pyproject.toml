@@ -10,6 +10,44 @@ repository = "https://github.com/Salaah01/django-action-triggers"
 documentation = "https://salaah01.github.io/django-action-triggers/"
 packages = [{ include = "action_triggers" }]
 
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Environment :: Web Environment",
+  "Framework :: Django",
+  "Framework :: Django :: 3.2",
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.0",
+  "Framework :: Django :: 5.1",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+keywords = [
+  "django",
+  "signals",
+  "actions",
+  "triggers",
+  "webhooks",
+  "kafka",
+  "rabbitmq",
+  "async",
+  "asyncio",
+  "aiohttp",
+  "aiokafka",
+  "aio-pika",
+  "message-broker",
+  "message-queue",
+  "message-bus",
+  "pubsub",
+  "event-driven",
+  "event-driven",
+]
+
 [tool.ruff]
 line-length = 79
 
