@@ -2,6 +2,7 @@ import re
 import typing as _t
 
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -17,8 +18,9 @@ UserModel = get_user_model()
 class BaseAction(models.Model):
     """Abstract model to represent an action."""
 
-    timeout_secs = models.PositiveIntegerField(
+    timeout_secs = models.FloatField(
         _("Timeout (seconds)"),
+        validators=[MinValueValidator(0.0)],
         help_text=_(
             "The number of seconds to wait before the action is killed."
         ),

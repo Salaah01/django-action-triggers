@@ -1,5 +1,7 @@
 """Tests for the `dispatch` module."""
 
+import asyncio
+from asyncio.exceptions import TimeoutError
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -125,3 +127,26 @@ class TestHandleAction:
             f"Error processing message broker queue {msg_broker_queue.id} "
             f"for config {config.id}" in caplog.records[0].message
         )
+
+    @patch("action_triggers.webhooks.WebhookProcessor.process")
+    def test_kills_job_if_it_exceeds_timeout_webhook_action(
+        self,
+        mock_process,
+        customer_webhook_post_save_signal,
+        caplog,
+    ):
+        async def side_effect(*args, **kwargs):
+            await asyncio.sleep(3)
+            return
+
+        mock_process.side_effect = side_effect
+
+        webhook = customer_webhook_post_save_signal.trigger
+        webhook.timeout_secs = 0.1
+        webhook.save()
+
+        baker.make(CustomerModel)
+
+        assert len(caplog.records) == 1
+        assert caplog.records[0].levelname == "ERROR"
+        assert isinstance(caplog.records[0].args[2], TimeoutError)
