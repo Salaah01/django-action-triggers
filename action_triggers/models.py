@@ -2,9 +2,9 @@ import re
 import typing as _t
 
 from django.conf import settings
-from django.core.validators import MinValueValidator
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _

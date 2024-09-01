@@ -1,5 +1,5 @@
-from sample_app.models import Customer, Product, Sale
 from django.contrib import admin
+from sample_app.models import Customer
 
 
 @admin.register(Customer)

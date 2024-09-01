@@ -2,20 +2,14 @@
 
 import asyncio
 from asyncio.exceptions import TimeoutError
-from unittest.mock import AsyncMock, patch, MagicMock
-from asgiref.sync import sync_to_async
+from unittest.mock import MagicMock, patch
 
 import pytest
 from model_bakery import baker
 
 from action_triggers.dispatch import handle_action
-from action_triggers.models import Config, MessageBrokerQueue, Webhook
-from tests.models import (
-    CustomerModel,
-    CustomerOrderModel,
-    M2MModel,
-    One2OneModel,
-)
+from action_triggers.models import Config, MessageBrokerQueue
+from tests.models import CustomerModel
 
 
 @pytest.mark.django_db(transaction=True)
