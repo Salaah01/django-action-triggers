@@ -25,7 +25,7 @@ class WebhookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Webhook
-        fields = ["url", "http_method", "headers"]
+        fields = ["url", "http_method", "headers", "timeout_secs"]
 
 
 class ContentTypeSerializer(serializers.ModelSerializer):
@@ -41,7 +41,7 @@ class MessageBrokerQueueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MessageBrokerQueue
-        fields = ("name", "conn_details", "parameters")
+        fields = ("name", "conn_details", "parameters", "timeout_secs")
 
 
 class ConfigSerializer(serializers.ModelSerializer):
