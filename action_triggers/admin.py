@@ -42,7 +42,7 @@ class ConfigAdmin(admin.ModelAdmin):
 class WebhookAdmin(admin.ModelAdmin):
     """Admin interface for the `Webhook` model."""
 
-    list_display = ("id", "config", "url", "http_method")
+    list_display = ("id", "config", "url", "http_method", "timeout_secs")
     list_filter = ("http_method",)
     search_fields = ("config__id",)
     autocomplete_fields = ("config",)
@@ -52,7 +52,12 @@ class WebhookAdmin(admin.ModelAdmin):
 class MessageBrokerQueueAdmin(admin.ModelAdmin):
     """Admin interface for the `MessageBrokerQueue` model."""
 
-    list_display = ("id", "name", "config")
+    list_display = (
+        "id",
+        "name",
+        "config",
+        "timeout_secs",
+    )
     search_fields = ("config__id",)
     autocomplete_fields = ("config",)
 

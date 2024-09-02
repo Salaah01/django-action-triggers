@@ -178,4 +178,18 @@ ACTION_TRIGGERS = {
         "sample_app.customer",
         "sample_app.product",
     ),
+    "whitelisted_webhook_endpoint_patterns": (
+        "https?://localhost:[0-9]+/webhook/[0-9]+/?",
+        "https://example.com/",
+    ),
+}
+
+ACTION_TRIGGER_SETTINGS = {
+    "ALLOWED_DYNAMIC_IMPORT_PATHS": (
+        "tests.test_dynamic_loading.get_webhook_headers",
+        "tests.test_dynamic_loading.WEBHOOK_API_TOKEN",
+        "tests.test_dynamic_loading.get_api_token",
+    ),
+    "MAX_BROKER_TIMEOUT": 5,
+    "MAX_WEBHOOK_TIMEOUT": 30,
 }

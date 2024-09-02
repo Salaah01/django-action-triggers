@@ -4,8 +4,10 @@ from django.core.checks import Error, Warning
 from django.test import override_settings
 
 from action_triggers.checks import (
+    check_action_trigger_settings_set,
     check_action_triggers_set,
     check_broker_types_are_valid,
+    warning_timeout_settings_set,
     warning_whitelist_content_types_set,
     warning_whitelisted_webhook_endpoint_patterns_not_provided,
 )
@@ -26,6 +28,27 @@ class TestCheckActionTriggersSet:
 
     def test_set_action_triggers_no_error(self):
         result = check_action_triggers_set(app_configs=None)
+
+        assert result == []
+
+
+class TestCheckActionTriggerSettingsSet:
+    """Tests for the `check_action_trigger_settings_set` function."""
+
+    @override_settings(ACTION_TRIGGER_SETTINGS=None)
+    def test_unset_action_trigger_settings_shows_error(self):
+        result = check_action_trigger_settings_set(app_configs=None)
+
+        assert len(result) == 1
+        assert isinstance(result[0], Error)
+        assert result[0].id == "action_triggers.E004"
+        assert (
+            result[0].msg == "ACTION_TRIGGER_SETTINGS not set in settings.py"
+        )
+        assert result[0].hint == "Add ACTION_TRIGGER_SETTINGS to settings.py"
+
+    def test_set_action_trigger_settings_no_error(self):
+        result = check_action_trigger_settings_set(app_configs=None)
 
         assert result == []
 
@@ -154,5 +177,37 @@ class TestWarningWhitelistedWebhookEndpointPatternsNotProvided:
         result = warning_whitelisted_webhook_endpoint_patterns_not_provided(
             app_configs=None
         )
+
+        assert result == []
+
+
+class TestWarningTimeoutSettingsSet:
+    """Tests for the `warning_timeout_settings_set` function."""
+
+    @override_settings(ACTION_TRIGGER_SETTINGS={})
+    def test_unset_timeout_settings_shows_warning(self):
+        result = warning_timeout_settings_set(app_configs=None)
+
+        assert len(result) == 2
+        assert isinstance(result[0], Warning)
+        assert result[0].id == "action_triggers.W003"
+
+    @override_settings(
+        ACTION_TRIGGER_SETTINGS={
+            "MAX_BROKER_TIMEOUT": 10.0,
+            "MAX_WEBHOOK_TIMEOUT": 20.0,
+        }
+    )
+    def test_set_timeout_settings_no_warning(self):
+        result = warning_timeout_settings_set(app_configs=None)
+
+        assert result == []
+
+    @override_settings(ACTION_TRIGGER_SETTINGS=None)
+    def test_no_warnings_if_main_dict_missing(self):
+        """Note: We are doing nothing here as the check for the action trigger
+        settings is done by another check.
+        """
+        result = warning_timeout_settings_set(app_configs=None)
 
         assert result == []

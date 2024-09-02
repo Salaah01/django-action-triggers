@@ -24,6 +24,8 @@ Before you can send messages to a message broker, you must configure the broker
 in your Django settings. This involves specifying the connection details and
 any necessary parameters for the broker.
 
+For more information, refer to the :ref:`action_trigger_settings` guide.
+
 Configuring Message Brokers
 ---------------------------
 
@@ -82,13 +84,23 @@ Below is an example configuration for setting up a RabbitMQ broker:
 Best Practices for Configuration
 ================================
 
-- **Security**: Avoid hardcoding sensitive information, such as passwords, in your `settings.py` file. Use environment variables or a secure vault to manage these credentials.
-- **Testing**: Before deploying to production, thoroughly test your broker configuration in a development environment to ensure that messages are being sent and received correctly.
+- **Security**: Avoid hardcoding sensitive information, such as passwords, in
+  your `settings.py` file. Use environment variables or a secure vault to
+  manage these credentials.
+- **Testing**: Before deploying to production, thoroughly test your broker
+  configuration in a development environment to ensure that messages are being
+  sent and received correctly.
+- **Set Timeout Limits**: Define a maximum timeout for message broker actions
+  to prevent long-running requests from blocking your application. This can be
+  done by setting `ACTION_TRIGGER_SETTINGS.MAX_BROKER_TIMEOUT` in your
+  settings.
 
 Broker Configuration Guides
 ===========================
 
-This guide should help you configure message brokers within **Django Action Triggers**. For more advanced configurations, refer to the specific guides for Kafka and RabbitMQ.
+This guide should help you configure message brokers within
+**Django Action Triggers**. For more advanced configurations, refer to the
+specific guides for Kafka and RabbitMQ.
 
 .. toctree::
    :maxdepth: 2

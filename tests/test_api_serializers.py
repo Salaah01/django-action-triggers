@@ -50,11 +50,13 @@ class TestConfigSerializer:
                     "url": webhook_1.url,
                     "http_method": webhook_1.http_method,
                     "headers": webhook_1.headers,
+                    "timeout_secs": webhook_1.timeout_secs,
                 },
                 {
                     "url": webhook_2.url,
                     "http_method": webhook_2.http_method,
                     "headers": webhook_2.headers,
+                    "timeout_secs": webhook_2.timeout_secs,
                 },
             ],
             "message_broker_queues": [
@@ -62,11 +64,13 @@ class TestConfigSerializer:
                     "name": message_broker_queue_1.name,
                     "conn_details": message_broker_queue_1.conn_details,
                     "parameters": message_broker_queue_1.parameters,
+                    "timeout_secs": message_broker_queue_1.timeout_secs,
                 },
                 {
                     "name": message_broker_queue_2.name,
                     "conn_details": message_broker_queue_2.conn_details,
                     "parameters": message_broker_queue_2.parameters,
+                    "timeout_secs": message_broker_queue_2.timeout_secs,
                 },
             ],
             "payload": config.payload,
@@ -109,6 +113,7 @@ class TestConfigSerializer:
                     "url": "http://test1.com",
                     "http_method": "POST",
                     "headers": {"Content-Type": "application/json"},
+                    "timeout_secs": 10,
                 },
                 {
                     "url": "http://test2.com",
@@ -121,6 +126,7 @@ class TestConfigSerializer:
                     "name": "test_queue_1",
                     "conn_details": {"host": "localhost", "port": 5672},
                     "parameters": {"queue": "test_queue_1"},
+                    "timeout_secs": 20,
                 },
                 {
                     "name": "test_queue_2",
@@ -147,6 +153,7 @@ class TestConfigSerializer:
             "http://test1.com",
             "http://test2.com",
         }
+
         assert set(
             config.message_broker_queues.values_list("name", flat=True)
         ) == {

@@ -4,6 +4,7 @@ import typing as _t
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -12,6 +13,44 @@ from action_triggers import conf
 from action_triggers.enums import HTTPMethodChoices, SignalChoices
 
 UserModel = get_user_model()
+
+
+class BaseAction(models.Model):
+    """Abstract model to represent an action."""
+
+    TIMEOUT_SETTING_KEY: str
+
+    timeout_secs = models.FloatField(
+        _("Timeout (seconds)"),
+        validators=[MinValueValidator(0.0)],
+        help_text=_(
+            "The number of seconds to wait before the action is killed."
+        ),
+        blank=True,
+        null=True,
+    )
+
+    @property
+    def timeout_respecting_max(self) -> _t.Union[float, None]:
+        """Return the timeout respecting the maximum timeout setting.
+
+        :return: The timeout respecting the maximum timeout setting.
+        """
+
+        default_max = _t.cast(
+            _t.Optional[float],
+            settings.ACTION_TRIGGER_SETTINGS.get(self.TIMEOUT_SETTING_KEY),
+        )
+        if default_max is None:
+            return self.timeout_secs
+
+        if self.timeout_secs is None:
+            return default_max
+
+        return min(self.timeout_secs, default_max)
+
+    class Meta:
+        abstract = True
 
 
 class ConfigQuerySet(models.QuerySet):
@@ -94,8 +133,10 @@ class Config(models.Model):
         return f"Config {self.id}"
 
 
-class Webhook(models.Model):
+class Webhook(BaseAction):
     """Model to represent the webhook configuration."""
+
+    TIMEOUT_SETTING_KEY = "MAX_WEBHOOK_TIMEOUT"
 
     config = models.ForeignKey(
         Config,
@@ -141,8 +182,10 @@ class Webhook(models.Model):
             return False
 
 
-class MessageBrokerQueue(models.Model):
+class MessageBrokerQueue(BaseAction):
     """Model to represent a message broker queue configuration."""
+
+    TIMEOUT_SETTING_KEY = "MAX_BROKER_TIMEOUT"
 
     config = models.ForeignKey(
         Config,

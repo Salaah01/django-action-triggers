@@ -1,17 +1,72 @@
 """Tests for the `models` module."""
 
+import itertools
+
 import pytest
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.test import override_settings
 from model_bakery import baker
 
 from action_triggers.enums import SignalChoices
 from action_triggers.models import (
+    BaseAction,
     Config,
     ConfigSignal,
     MessageBrokerQueue,
     Webhook,
 )
 from tests.models import CustomerModel, CustomerOrderModel
+
+
+@pytest.mark.django_db
+class TestBaseAction:
+    """Tests for the `BaseAction` abstract model."""
+
+    @override_settings(ACTION_TRIGGER_SETTINGS={})
+    @pytest.mark.parametrize(
+        "model_class,timeout_secs",
+        itertools.product(BaseAction.__subclasses__(), [0.0, 10.5, None]),
+    )
+    def test_timeout_returns_instance_timeout_when_no_default_max_timeout(
+        self,
+        model_class,
+        timeout_secs,
+    ):
+        instance = baker.make(model_class, timeout_secs=timeout_secs)
+        assert instance.timeout_respecting_max == timeout_secs
+
+    @override_settings(
+        ACTION_TRIGGER_SETTINGS={
+            "MAX_BROKER_TIMEOUT": 10.0,
+            "MAX_WEBHOOK_TIMEOUT": 20.0,
+        }
+    )
+    @pytest.mark.parametrize("model_class", BaseAction.__subclasses__())
+    def test_timeout_respecting_max_returns_default_max_when_timeout_is_none(
+        self,
+        model_class,
+    ):
+        instance = baker.make(model_class, timeout_secs=None)
+        assert (
+            instance.timeout_respecting_max
+            == settings.ACTION_TRIGGER_SETTINGS[
+                model_class.TIMEOUT_SETTING_KEY
+            ]
+        )
+
+    @override_settings(ACTION_TRIGGER_SETTINGS={"MAX_BROKER_TIMEOUT": 10.0})
+    @pytest.mark.parametrize(
+        "timeout_secs,exp_timeout",
+        [(5.0, 5.0), (15.0, 10.0)],
+    )
+    def test_timeout_respecting_max_returns_correct_timeout(
+        self,
+        timeout_secs,
+        exp_timeout,
+    ):
+        instance = baker.make(MessageBrokerQueue, timeout_secs=timeout_secs)
+        assert instance.timeout_respecting_max == exp_timeout
 
 
 @pytest.mark.django_db

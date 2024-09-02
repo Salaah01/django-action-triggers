@@ -45,7 +45,18 @@ Now , suppose you want to trigger a webhook whenever a new sale is created.
 Here's how you can set that up:
 
 
-Step 1: Create a `Config` Model Instance
+Step 1: Whitelist the Content Types and Endpoint Patterns
+---------------------------------------------------------
+
+Before you can get started with webhooks, you must whitelist the content types
+and endpoint patterns in the `whitelisted_content_types` and
+`whitelisted_webhook_endpoint_patterns` settings in your Django project's
+`settings.py` file.
+
+Visit the :ref:`Action Trigger Configuration Options<action_trigger_settings_configuration_options>`
+guide for more information on whitelisting content types and endpoint patterns.
+
+Step 2: Create a `Config` Model Instance
 ----------------------------------------
 
 The `Config` model forms the basis of any action. It defines the payload that
@@ -70,7 +81,7 @@ syntax to include dynamic data.
     )
 
 
-Step 2: Create a `Webhook` Model Instance
+Step 3: Create a `Webhook` Model Instance
 -----------------------------------------
 
 The :class:`Webhook` model defines the URL and method used to send the request
@@ -97,11 +108,12 @@ when the trigger is activated.
     headers={
       "Content-Type": "application/json",
       "Authorization": "Bearer my-api-key"
-    }
+    },
+    timeout_secs=10.0
   )
 
 
-Step 3: Create a `ConfigSignal` Model Instance
+Step 4: Create a `ConfigSignal` Model Instance
 ----------------------------------------------
 
 ally, the :class:`ConfigSignal` model links the action to a specific trigger
@@ -176,9 +188,15 @@ For more information on dynamically setting headers, refer to the
 Best Practices
 ==============
 
-- **Avoid Hardcoding Sensitive Information**: Use dynamic imports to manage sensitive information such as API keys.
-- **Test Your Webhooks**: Ensure that your webhook is functioning correctly by testing it with different scenarios.
-- **Monitor Webhook Responses**: Keep track of webhook responses to ensure that your external systems are receiving and processing the requests correctly.
+- **Avoid Hardcoding Sensitive Information**: Use dynamic imports to manage
+  sensitive information such as API keys.
+- **Test Your Webhooks**: Ensure that your webhook is functioning correctly by
+  testing it with different scenarios.
+- **Monitor Webhook Responses**: Keep track of webhook responses to ensure that
+  your external systems are receiving and processing the requests correctly.
+- **Set Timeout Limits**: Define a maximum timeout for webhooks to prevent 
+  long-running requests from blocking your application. This can be done by
+  setting `ACTION_TRIGGER_SETTINGS.MAX_WEBHOOK_TIMEOUT` in your settings.
 
 ---
 

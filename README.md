@@ -98,7 +98,8 @@ Trigger a webhook whenever a `User` model is created, updated, or deleted:
       "http_method": "POST",
       "headers": {
         "Authorization": "Bearer {{ myapp.utils.get_token }}"
-      }
+      },
+      "timeout_secs": 22.5
     }
   ],
   "active": true
@@ -131,7 +132,8 @@ Trigger multiple webhooks and add messages to queues when `Product` or `Sale` mo
       "http_method": "POST",
       "headers": {
         "Authorization": "Bearer {{ myapp.utils.get_token }}"
-      }
+      },
+      "timeout_secs": 10.5
     },
     {
       "url": "https://my-other-webhook.com",
@@ -146,7 +148,8 @@ Trigger multiple webhooks and add messages to queues when `Product` or `Sale` mo
       "name": "my-msg-broker-config",
       "parameters": {
         "product_id": "{{ myapp.utils.get_product_id }}"
-      }
+      },
+      "timeout_secs": 2.5
     },
     {
       "name": "my-other-msg-broker-config",
