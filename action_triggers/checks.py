@@ -30,6 +30,24 @@ def check_action_triggers_set(app_configs, **kwargs):
 
 
 @register(Tags.compatibility)
+def check_action_trigger_settings_set(app_configs, **kwargs):
+    """Check that `ACTION_TRIGGER_SETTINGS` has been set.
+
+    :param app_configs: The app configuration.
+    :param kwargs: Additional keyword arguments.
+    """
+    if getattr(settings, "ACTION_TRIGGER_SETTINGS", None) is None:
+        return [
+            Error(
+                "ACTION_TRIGGER_SETTINGS not set in settings.py",
+                hint="Add ACTION_TRIGGER_SETTINGS to settings.py",
+                id="action_triggers.E004",
+            )
+        ]
+    return []
+
+
+@register(Tags.compatibility)
 def check_broker_types_are_valid(app_configs, **kwargs):
     """Test that the `broker_type`s provied in `ACTION_TRIGGERS.brorkers` are
     valid.
@@ -149,3 +167,41 @@ def warning_whitelisted_webhook_endpoint_patterns_not_provided(
             )
         ]
     return []
+
+
+@register(Tags.compatibility)
+def warning_timeout_settings_set(app_configs, **kwargs):
+    """Check if the setting settings are set. If it is not, show a warning that
+    it is recommended to set the setting.
+
+    :param app_configs: The app configuration.
+    :param kwargs: Additional keyword arguments.
+    """
+
+    if getattr(settings, "ACTION_TRIGGER_SETTINGS", None) is None:
+        return []
+
+    keys = (
+        "MAX_BROKER_TIMEOUT",
+        "MAX_WEBHOOK_TIMEOUT",
+    )
+    errors = []
+    msg = (
+        "{key} not set in ACTION_TRIGGER_SETTINGS, it is recommended to set "
+        "this setting to ensure that the action triggers do not hang by "
+        "waiting indefinitely for a response when processing webhooks or "
+        "message broker queues."
+    )
+    hint = "Set {key} in ACTION_TRIGGER_SETTINGS"
+
+    for key in keys:
+        if not settings.ACTION_TRIGGER_SETTINGS.get(key):
+            errors.append(
+                Warning(
+                    msg.format(key=key),
+                    hint=hint.format(key=key),
+                    id="action_triggers.W003",
+                )
+            )
+
+    return errors

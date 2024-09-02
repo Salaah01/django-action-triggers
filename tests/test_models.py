@@ -28,7 +28,7 @@ class TestBaseAction:
         "model_class,timeout_secs",
         itertools.product(BaseAction.__subclasses__(), [0.0, 10.5, None]),
     )
-    def test_timeout_respecting_max_returns_default_max_when_timeout_is_none(
+    def test_timeout_returns_instance_timeout_when_no_default_max_timeout(
         self,
         model_class,
         timeout_secs,

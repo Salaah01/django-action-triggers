@@ -4,7 +4,6 @@ import asyncio
 import logging
 import typing as _t
 
-from django.conf import settings
 from django.db.models import Model
 
 from action_triggers.models import Config, Webhook
