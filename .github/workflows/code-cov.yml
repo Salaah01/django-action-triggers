@@ -27,11 +27,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry config virtualenvs.create false
-          poetry install --no-root --all-extras
+        run: make ci-install-deps-global
 
       - name: Run tests
         env:
