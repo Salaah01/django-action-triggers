@@ -203,6 +203,7 @@ class TestWarningTimeoutSettingsSet:
 
         assert result == []
 
+    @override_settings(ACTION_TRIGGER_SETTINGS=None)
     def test_no_warnings_if_main_dict_missing(self):
         """Note: We are doing nothing here as the check for the action trigger
         settings is done by another check.
