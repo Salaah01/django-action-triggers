@@ -18,6 +18,8 @@ UserModel = get_user_model()
 class BaseAction(models.Model):
     """Abstract model to represent an action."""
 
+    TIMEOUT_SETTING_KEY: str
+
     timeout_secs = models.FloatField(
         _("Timeout (seconds)"),
         validators=[MinValueValidator(0.0)],
@@ -27,6 +29,24 @@ class BaseAction(models.Model):
         blank=True,
         null=True,
     )
+
+    @property
+    def timeout_respecting_max(self) -> _t.Union[float, None]:
+        """Return the timeout respecting the maximum timeout setting.
+
+        :return: The timeout respecting the maximum timeout setting.
+        """
+
+        default_max = settings.ACTION_TRIGGER_SETTINGS.get(
+            self.TIMEOUT_SETTING_KEY
+        )
+        if default_max is None:
+            return self.timeout_secs
+
+        if self.timeout_secs is None:
+            return default_max
+
+        return min(self.timeout_secs, default_max)
 
     class Meta:
         abstract = True
@@ -115,6 +135,8 @@ class Config(models.Model):
 class Webhook(BaseAction):
     """Model to represent the webhook configuration."""
 
+    TIMEOUT_SETTING_KEY = "MAX_WEBHOOK_TIMEOUT"
+
     config = models.ForeignKey(
         Config,
         on_delete=models.CASCADE,
@@ -161,6 +183,8 @@ class Webhook(BaseAction):
 
 class MessageBrokerQueue(BaseAction):
     """Model to represent a message broker queue configuration."""
+
+    TIMEOUT_SETTING_KEY = "MAX_BROKER_TIMEOUT"
 
     config = models.ForeignKey(
         Config,

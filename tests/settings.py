@@ -114,5 +114,7 @@ ACTION_TRIGGER_SETTINGS = {
         "tests.test_dynamic_loading.get_webhook_headers",
         "tests.test_dynamic_loading.WEBHOOK_API_TOKEN",
         "tests.test_dynamic_loading.get_api_token",
-    )
+    ),
+    "MAX_BROKER_TIMEOUT": 5,
+    "MAX_WEBHOOK_TIMEOUT": 30,
 }

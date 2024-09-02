@@ -4,6 +4,7 @@ import asyncio
 import logging
 import typing as _t
 
+from django.conf import settings
 from django.db.models import Model
 
 from action_triggers.models import Config, Webhook
@@ -29,7 +30,7 @@ async def process_webhook(
 
     try:
         processor = WebhookProcessor(instance, payload)
-        async with asyncio.timeout(instance.timeout_secs):
+        async with asyncio.timeout(instance.timeout_respecting_max):
             await processor()
     except Exception as e:
         logger.error(

@@ -30,7 +30,7 @@ async def process_msg_broker_queue(
             msg_broker_queue.parameters,
         )
 
-        async with asyncio.timeout(msg_broker_queue.timeout_secs):
+        async with asyncio.timeout(msg_broker_queue.timeout_respecting_max):
             await broker.send_message(json.dumps(payload))
     except Exception as e:
         logger.error(
