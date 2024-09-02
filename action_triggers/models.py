@@ -37,8 +37,9 @@ class BaseAction(models.Model):
         :return: The timeout respecting the maximum timeout setting.
         """
 
-        default_max = settings.ACTION_TRIGGER_SETTINGS.get(
-            self.TIMEOUT_SETTING_KEY
+        default_max = _t.cast(
+            _t.Optional[float],
+            settings.ACTION_TRIGGER_SETTINGS.get(self.TIMEOUT_SETTING_KEY),
         )
         if default_max is None:
             return self.timeout_secs
