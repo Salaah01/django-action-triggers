@@ -12,6 +12,7 @@ related to triggers and actions. These settings can be customized within your
 Django project's `settings.py` file to fine-tune the behaviour of the
 application.
 
+.. _action_trigger_settings_configuration_options:
 Configuration Options (`ACTION_TRIGGERS`)
 =========================================
 
@@ -143,9 +144,30 @@ An empty configuration for `ACTION_TRIGGER_SETTINGS` might look like this:
 
     ACTION_TRIGGER_SETTINGS = {}
 
+At the very least, this should contain some default settings for the
+application.
 
-This dictionary can be populated with various settings, including those that
-govern dynamic loading.
+Defining Default Settings
+-------------------------
+
+The following default settings should be defined in the
+`ACTION_TRIGGER_SETTINGS` dictionary:
+
+- **MAX_BROKER_TIMEOUT** - (float) The maximum time (in seconds) to wait for a broker to respond.
+- **MAX_WEBHOOK_TIMEOUT** - (float) The maximum time (in seconds) to wait for a webhook to respond.
+
+Example Configuration
+~~~~~~~~~~~~~~~~~~~~~
+
+A basic configuration for `ACTION_TRIGGER_SETTINGS` might look like this:
+
+.. code-block:: python
+
+    ACTION_TRIGGER_SETTINGS = {
+        "MAX_BROKER_TIMEOUT": 10.0,
+        "MAX_WEBHOOK_TIMEOUT": 5.0
+    }
+
 
 Defining Allowed Dynamic Loading 
 --------------------------------
