@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -141,6 +142,9 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+
 # Action triggers configuration
 ACTION_TRIGGERS = {
     "brokers": {
@@ -171,6 +175,17 @@ ACTION_TRIGGERS = {
             },
             "params": {
                 "topic": "test_topic_1",
+            },
+        },
+        "redis_with_host": {
+            "broker_type": "redis",
+            "conn_details": {
+                "host": REDIS_HOST,
+                "port": REDIS_PORT,
+                "db": 1,
+            },
+            "params": {
+                "channel": "test_channel",
             },
         },
     },

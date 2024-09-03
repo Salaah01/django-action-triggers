@@ -146,13 +146,13 @@ class BrokerBase(ABC):
         self.conn_details = replace_dict_values_with_results(
             {
                 **(conn_details or {}),
-                **(_t.cast(dict, self.config["conn_details"]) or {}),
+                **(_t.cast(dict, self.config.get("conn_details")) or {}),
             }
         )
         self.params = replace_dict_values_with_results(
             {
                 **(params or {}),
-                **(_t.cast(dict, self.config["params"]) or {}),
+                **(_t.cast(dict, self.config.get("params")) or {}),
             }
         )
         self.kwargs = kwargs

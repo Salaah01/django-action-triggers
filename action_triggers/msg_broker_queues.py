@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import traceback
 import typing as _t
 
 from action_triggers.message_broker.broker import get_broker_class
@@ -34,10 +35,10 @@ async def process_msg_broker_queue(
             broker.send_message(json.dumps(payload)),
             msg_broker_queue.timeout_respecting_max,
         )
-    except Exception as e:
+    except Exception:
         logger.error(
-            "Error processing message broker queue %s for config %s: %s",
+            "Error processing message broker queue %s for config %s:\n%s",
             msg_broker_queue.id,
             msg_broker_queue.config.id,
-            e,
+            traceback.format_exc(),
         )

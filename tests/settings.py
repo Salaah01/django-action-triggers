@@ -64,7 +64,8 @@ KAFKA_CONN_DETAILS = (
     json.loads(os.getenv("KAFKA_CONN_DETAILS", "{}"))
     or DEFAULT_KAFKA_CONN_DETAILS
 )
-
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 
 ACTION_TRIGGERS = {
     "brokers": {
@@ -94,6 +95,26 @@ ACTION_TRIGGERS = {
             "conn_details": KAFKA_CONN_DETAILS,
             "params": {
                 "topic": "test_topic_2",
+            },
+        },
+        "redis_with_url": {
+            "broker_type": "redis",
+            "conn_details": {
+                "url": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
+            },
+            "params": {
+                "channel": "test_channel",
+            },
+        },
+        "redis_with_host": {
+            "broker_type": "redis",
+            "conn_details": {
+                "host": REDIS_HOST,
+                "port": REDIS_PORT,
+                "db": 1,
+            },
+            "params": {
+                "channel": "test_channel",
             },
         },
     },
