@@ -1,3 +1,5 @@
+"""Module to support sending messages to RabbitMQ."""
+
 import typing as _t
 from copy import deepcopy
 
@@ -14,7 +16,7 @@ except ImportError:  # pragma: no cover
 class RabbitMQConnection(ConnectionBase):
     """Connection class for RabbitMQ."""
 
-    def validate_queue_exists(self):
+    def validate_queue_exists(self) -> None:
         """Validate the the queue exists either in the base configuration or
         the user provided parameters.
         """
@@ -30,9 +32,14 @@ class RabbitMQConnection(ConnectionBase):
         super().validate()
 
         # Python 3.8 requires the port to be an integer.
-        if "port" in self.conn_details:
-            self.conn_details = deepcopy(self.conn_details)
-            self.conn_details["port"] = int(self.conn_details["port"])
+        # Resetting the cached connection details to ensure that when the lazy
+        # property is accessed, the updated port is used.
+        self._conn_details = None
+        if "port" in self._user_conn_details:
+            self._user_conn_details = deepcopy(self._user_conn_details)
+            self._user_conn_details["port"] = int(
+                self._user_conn_details["port"]
+            )
 
     async def connect(self) -> None:
         self.conn = await aio_pika.connect_robust(

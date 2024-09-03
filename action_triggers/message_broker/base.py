@@ -8,16 +8,29 @@ from action_triggers.message_broker.error import Error
 
 
 class ConnectionBase(ABC):
-    """Base class for establishing a connection to a message broker.
+    """Base class for establishing a connection to a message broker. This class
+    provides the capability to marry the configuration provided in the settings
+    with the connection details and parameters provided by the user. However,
+    this enforces a one-sided relationship where the user cannot overwrite
+    the base configuration as defined in the settings as the base configuration
+    always takes precedence.
 
-    :param conn_details: The connection parameters to use for establishing the
-        connection.
+    :param config: The configuration for the message broker as defined in
+        `settings.ACTION_TRIGGERS["brokers"]`.
+    :param conn_details: Additional connection parameters to use for
+        establishing the connection provided by the user.
+    :param params: Additional parameters to use for the message broker provided
+        by the user.
     """
 
     def __init__(self, config: dict, conn_details: dict, params: dict):
         self.config = config
-        self.conn_details = conn_details
-        self.params = params
+        self._user_conn_details = conn_details
+        self._user_params = params
+
+        self._conn_details: _t.Optional[dict] = None
+        self._parmas: _t.Optional[dict] = None
+
         self._errors = Error()
         self.validate()
         self.conn: _t.Any = None
@@ -28,6 +41,38 @@ class ConnectionBase(ABC):
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
+
+    @property
+    def conn_details(self) -> dict:
+        """Lazy load the the merged connection details. When merging the
+        connection details, the user provided base connection details take
+        precedence over the base configuration.
+
+        :return: The merged connection details.
+        """
+
+        if self._conn_details is None:
+            self._conn_details = {
+                **self.config.get("conn_details", {}),
+                **self._user_conn_details,
+            }
+        return self._conn_details
+
+    @property
+    def params(self) -> dict:
+        """Lazy load the the merged parameters. When merging the parameters,
+        the user provided base parameters take precedence over the base
+        configuration.
+
+        :return: The merged parameters.
+        """
+
+        if self._parmas is None:
+            self._parmas = {
+                **self.config.get("params", {}),
+                **self._user_params,
+            }
+        return self._parmas
 
     def validate(self) -> None:
         """Validate the connection parameters. Raise an exception if
@@ -53,7 +98,10 @@ class ConnectionBase(ABC):
             return
 
         for key, value in conn_details_from_settings.items():
-            if key in self.conn_details and self.conn_details[key] != value:
+            if (
+                key in self._user_conn_details
+                and self._user_conn_details[key] != value
+            ):
                 self._errors.add_connection_params_error(  # type: ignore[attr-defined]  # noqa: E501
                     key, f"Connection details for {key} cannot be overwritten."
                 )
@@ -66,7 +114,7 @@ class ConnectionBase(ABC):
             return
 
         for key, value in params_from_settings.items():
-            if key in self.params and self.params[key] != value:
+            if key in self._user_params and self._user_params[key] != value:
                 self._errors.add_params_error(  # type: ignore[attr-defined]
                     key, f"{key} cannot be overwritten."
                 )

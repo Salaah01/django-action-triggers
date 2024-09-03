@@ -1,3 +1,5 @@
+"""Module to support sending messages to Kafka."""
+
 import typing as _t
 
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
