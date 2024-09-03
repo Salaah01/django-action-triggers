@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from django.conf import settings
 
 from action_triggers.dynamic_loading import replace_dict_values_with_results
-from action_triggers.message_broker.error import Error
+from action_triggers.message_broker.error import MessageBrokerError
 
 
 class ConnectionBase(ABC):
@@ -18,7 +18,7 @@ class ConnectionBase(ABC):
         self.config = config
         self.conn_details = conn_details
         self.params = params
-        self._errors = Error()
+        self._errors = MessageBrokerError()
         self.validate()
         self.conn: _t.Any = None
 

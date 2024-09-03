@@ -1,14 +1,14 @@
 """Tests for the `message_broker.error` module."""
 
 
-from action_triggers.message_broker.error import Error
+from action_triggers.message_broker.error import MessageBrokerError
 
 
 class TestErrorField:
     """Tests for the `ErrorField` class."""
 
     def test_add_error_adds_errors(self):
-        instance = Error()
+        instance = MessageBrokerError()
         instance.add_params_error("key_1", "message_1")
         instance.add_params_error("key_1", "message_2")
         instance.add_params_error("key_2", "message_3")
@@ -23,8 +23,8 @@ class TestErrorField:
         }
 
     def test_cant_be_mutated_across_instances(self):
-        instance_1 = Error()
-        instance_2 = Error()
+        instance_1 = MessageBrokerError()
+        instance_2 = MessageBrokerError()
 
         instance_1.add_params_error("key_1", "message_1")
 
