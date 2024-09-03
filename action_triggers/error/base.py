@@ -1,8 +1,18 @@
+"""This module contains the base class for handing errors in the application.
+It provides the building blocks for creating error classes that can be used
+to store errors for specific fields.
+"""
+
 import typing as _t
 from collections import defaultdict
 
 
 class ErrorField:
+    """A class for storing errors for a specific field.
+
+    :param field_name: The name of the field.
+    """
+
     def __init__(self, field_name):
         self.field_name = field_name
 
@@ -58,6 +68,38 @@ class MetaError(type):
 
 
 class ErrorBase(metaclass=MetaError):
+    """A base class for storing errors for a set of fields. For each field, an
+    error can be added using the `add_<field_name>_error` method.
+
+
+    :param error_class: The class of the error to raise when the error is not
+        valid.
+
+    Example:
+    --------
+
+    .. code-block:: python
+
+        class MyError(ErrorBase):
+            field_1 = ErrorField("field_1")
+            field_2 = ErrorField("field_2")
+
+        error = MyError()
+        error.add_field_1_error("key_1", "message_1")
+        error.add_field_1_error("key_1", "message_2")
+        error.add_field_2_error("key_2", "message_3")
+
+        error.as_dict()
+        # {
+        #     "field_1": {"key_1": ["message_1", "message_2"]},
+        #     "field_2": {"key_2": ["message_3"]},
+        # }
+
+        # Raises an exception if the error is not valid.
+        error.is_valid(raise_exception=True)
+
+    """
+
     _fields: _t.Dict[str, ErrorField]
     error_class: _t.Type[Exception] = Exception
 

@@ -74,15 +74,6 @@ to:
    message_brokers/kafka
    message_brokers/rabbitmq
 
-Modules
-=======
-
-For an in-depth look at the modules used in Django Action Triggers, see:
-
-.. toctree::
-   :maxdepth: 1
-   
-   modules
 
 Indices and tables
 ==================
@@ -92,6 +83,18 @@ Use the following resources to quickly find what you're looking for:
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+Modules
+=======
+
+For an in-depth look at the modules used in Django Action Triggers, see:
+
+.. toctree::
+   :maxdepth: 1
+
+   modules
+
+
 
 Additional Resources
 ====================

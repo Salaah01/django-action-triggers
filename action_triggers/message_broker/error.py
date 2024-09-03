@@ -1,3 +1,7 @@
+"""Contains the error class for generic message broker errors relating to the
+connection and parameters.
+"""
+
 from action_triggers.error.base import ErrorField, ErrorBase
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 
