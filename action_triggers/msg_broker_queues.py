@@ -35,10 +35,11 @@ async def process_msg_broker_queue(
             broker.send_message(json.dumps(payload)),
             msg_broker_queue.timeout_respecting_max,
         )
-    except Exception:
+    except Exception as e:
         logger.error(
-            "Error processing message broker queue %s for config %s:\n%s",
+            "Error processing message broker queue %s for config %s:Exception Type:%s\nTraceback:\n%s",  # noqa: E501
             msg_broker_queue.id,
             msg_broker_queue.config.id,
+            type(e),
             traceback.format_exc(),
         )

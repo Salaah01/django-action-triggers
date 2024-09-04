@@ -48,4 +48,4 @@ class TestProcessMsgBrokerQueues:
 
         assert len(caplog.records) == 1
         assert caplog.records[0].levelname == "ERROR"
-        assert isinstance(caplog.records[0].args[2], TimeoutError)
+        assert caplog.records[0].args[2] is TimeoutError

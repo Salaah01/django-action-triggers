@@ -25,8 +25,12 @@ class ConnectionBase(ABC):
 
     def __init__(self, config: dict, conn_details: dict, params: dict):
         self.config = config
-        self.conn_details = conn_details
-        self.params = params
+        self._user_conn_details = conn_details
+        self._user_params = params
+
+        self._conn_details: _t.Optional[dict] = None
+        self._parmas: _t.Optional[dict] = None
+
         self._errors = MessageBrokerError()
         self.validate()
         self.conn: _t.Any = None
