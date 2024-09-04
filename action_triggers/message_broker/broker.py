@@ -7,7 +7,6 @@ from action_triggers.message_broker.enums import BrokerType
 from action_triggers.message_broker.kafka import KafkaBroker
 from action_triggers.message_broker.rabbitmq import RabbitMQBroker
 from action_triggers.message_broker.redis import RedisBroker
-from action_triggers.message_broker.base import BrokerBase
 
 
 def get_broker_class(broker_name: str) -> _t.Type[BrokerBase]:

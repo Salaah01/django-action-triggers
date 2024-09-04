@@ -36,3 +36,8 @@ Message Broker Modules
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. automodule:: action_triggers.message_broker.redis
+   :members:
+   :undoc-members:
+   :show-inheritance:

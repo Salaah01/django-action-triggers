@@ -62,18 +62,19 @@ This documentation is organised into the following sections:
    testing
    features_and_bugs
 
-Message Broker Integrations
-===========================
-
-For detailed guidance on configuring and using specific message brokers, refer
-to:
-
 .. toctree::
    :maxdepth: 2
+   :caption: Message Broker Integrations
    
    message_brokers/kafka
    message_brokers/rabbitmq
+   message_brokers/redis
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Modules
+
+   modules
 
 Indices and tables
 ==================
@@ -83,18 +84,6 @@ Use the following resources to quickly find what you're looking for:
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-Modules
-=======
-
-For an in-depth look at the modules used in Django Action Triggers, see:
-
-.. toctree::
-   :maxdepth: 1
-
-   modules
-
-
 
 Additional Resources
 ====================
