@@ -10,14 +10,14 @@ except ImportError:
     pass
 from aioresponses import aioresponses
 from asgiref.sync import sync_to_async
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.conf import settings
 from model_bakery import baker
 
 from tests.models import CustomerModel
-from tests.utils.rabbitmq import can_connect_to_rabbitmq, get_rabbitmq_conn
 from tests.utils.kafka import can_connect_to_kafka, get_kafka_consumer
+from tests.utils.rabbitmq import can_connect_to_rabbitmq, get_rabbitmq_conn
 from tests.utils.redis import can_connect_to_redis, get_redis_conn
 
 

@@ -6,6 +6,7 @@ try:
 except ImportError:
     redis = None  # type: ignore[assignment]
 from django.conf import settings
+
 from action_triggers.message_broker.redis import RedisConnection
 
 
