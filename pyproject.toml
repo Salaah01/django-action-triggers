@@ -102,10 +102,15 @@ aiokafka = "^0.11.0"
 [tool.poetry.group.rabbitmq.dependencies]
 aio-pika = "^9.4.3"
 
+
+[tool.poetry.group.redis.dependencies]
+redis = "^5.0.8"
+
 [tool.poetry.extras]
 postgres = ["psycopg2"]
 rabbitmq = ["aio-pika"]
 kafka = ["aiokafka"]
+redis = ["redis"]
 webhooks = ["aiohttp"]
 
 [build-system]

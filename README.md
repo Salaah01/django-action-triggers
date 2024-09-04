@@ -11,6 +11,7 @@
   - [Description](#description)
   - [Key Features](#key-features)
   - [Documentation](#documentation)
+  - [Supported Message Brokers](#supported-message-brokers)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Example Scenarios](#example-scenarios)
@@ -37,6 +38,14 @@ This application is highly flexible and can be configured via code or through th
 ## Documentation
 
 For detailed documentation, including setup, configuration options, API specifications, and more examples, please refer to the [official documentation](https://salaah01.github.io/django-action-triggers/).
+
+## Supported Message Brokers
+
+* Kafka
+* RabbitMQ
+* Redis
+
+Need support for another message broker? Please submit a feature request on the [GitHub repository](https://github.com/Salaah01/django-action-triggers/issues).
 
 ## Installation
 

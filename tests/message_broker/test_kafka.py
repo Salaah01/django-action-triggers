@@ -6,7 +6,7 @@ from django.test import override_settings
 
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 from action_triggers.message_broker.kafka import KafkaBroker, KafkaConnection
-from tests.utils import can_connect_to_kafka
+from tests.utils.kafka import can_connect_to_kafka
 
 
 class TestKafkaConnection:

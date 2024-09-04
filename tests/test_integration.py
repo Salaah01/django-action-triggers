@@ -10,17 +10,15 @@ except ImportError:
     pass
 from aioresponses import aioresponses
 from asgiref.sync import sync_to_async
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
 
 from tests.models import CustomerModel
-from tests.utils import (
-    can_connect_to_kafka,
-    can_connect_to_rabbitmq,
-    get_kafka_consumer,
-    get_rabbitmq_conn,
-)
+from tests.utils.kafka import can_connect_to_kafka, get_kafka_consumer
+from tests.utils.rabbitmq import can_connect_to_rabbitmq, get_rabbitmq_conn
+from tests.utils.redis import can_connect_to_redis, get_redis_conn
 
 
 @pytest.mark.skipif(
@@ -220,3 +218,91 @@ class TestIntegrationWebhook:
             baker.make(User)
 
             mocked_responses.assert_not_called()
+
+
+@pytest.mark.skipif(
+    not can_connect_to_redis(),
+    reason="Cannot connect to Redis",
+)
+@pytest.mark.django_db(transaction=True)
+class TestIntegrationRedis:
+    """Integration tests where the action to be triggered is sending a payload
+    to a Redis message broker.
+    """
+
+    channel = settings.ACTION_TRIGGERS["brokers"]["redis_with_host"]["params"][  # type: ignore[index]  # noqa: E501
+        "channel"
+    ]
+
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self):
+        async def purge_messages():
+            async with get_redis_conn() as conn:
+                await conn.delete("test_channel")
+
+        asyncio.run(purge_messages())
+
+    async def get_next_message(self):
+        async with get_redis_conn() as conn:
+            async with conn.pubsub() as pubsub:
+                await pubsub.subscribe(self.channel)
+                i = 0
+                while i < 10:
+                    msg = await pubsub.get_message(
+                        ignore_subscribe_messages=True
+                    )
+                    if msg:
+                        return msg
+                    i += 1
+                    await asyncio.sleep(0.5)
+
+    @pytest.mark.asyncio
+    async def test_simple_basic_json_message(
+        self,
+        customer_redis_post_save_signal,
+        customer,
+    ):
+        consumer_task = asyncio.create_task(self.get_next_message())
+        await sync_to_async(baker.make)(CustomerModel)
+        message = await consumer_task
+        assert message["data"] == b'{"message": "Hello, World!"}'
+
+    @pytest.fixture
+    def fixture_simple_basic_plain_message(
+        self,
+        customer_redis_post_save_signal,
+    ):
+        config = customer_redis_post_save_signal.config
+        config.payload = "Hello World!"
+        config.save()
+        baker.make(CustomerModel)
+
+    @pytest.mark.asyncio
+    async def test_simple_basic_plain_message(
+        self,
+        fixture_simple_basic_plain_message,
+    ):
+        consumer_task = asyncio.create_task(self.get_next_message())
+        await sync_to_async(baker.make)(CustomerModel)
+        message = await consumer_task
+        assert message["data"] == b'"Hello World!"'
+
+    @pytest.fixture
+    def fixture_does_not_work_for_models_that_are_not_allowed(
+        self,
+        customer_redis_post_save_signal,
+    ):
+        config = customer_redis_post_save_signal.config
+        config.content_types.set([ContentType.objects.get_for_model(User)])
+        config.save()
+        baker.make(User)
+
+    @pytest.mark.asyncio
+    async def test_does_not_work_for_models_that_are_not_allowed(
+        self,
+        fixture_does_not_work_for_models_that_are_not_allowed,
+    ):
+        consumer_task = asyncio.create_task(self.get_next_message())
+        await sync_to_async(baker.make)(User)
+        with pytest.raises(asyncio.TimeoutError):
+            await asyncio.wait_for(consumer_task, timeout=5)

@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import traceback
 import typing as _t
 
 from action_triggers.message_broker.broker import get_broker_class
@@ -36,8 +37,9 @@ async def process_msg_broker_queue(
         )
     except Exception as e:
         logger.error(
-            "Error processing message broker queue %s for config %s: %s",
+            "Error processing message broker queue %s for config %s:Exception Type:%s\nTraceback:\n%s",  # noqa: E501
             msg_broker_queue.id,
             msg_broker_queue.config.id,
-            e,
+            type(e),
+            traceback.format_exc(),
         )

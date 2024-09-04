@@ -2,7 +2,7 @@
 connection and parameters.
 """
 
-from action_triggers.error.base import ErrorField, ErrorBase
+from action_triggers.error.base import ErrorBase, ErrorField
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 
 
