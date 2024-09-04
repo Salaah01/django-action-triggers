@@ -7,6 +7,7 @@ from action_triggers.message_broker.enums import BrokerType
 from action_triggers.message_broker.kafka import KafkaBroker
 from action_triggers.message_broker.rabbitmq import RabbitMQBroker
 from action_triggers.message_broker.redis import RedisBroker
+from action_triggers.message_broker.base import BrokerBase
 
 
 def get_broker_class(broker_name: str) -> _t.Type[BrokerBase]:
@@ -17,7 +18,7 @@ def get_broker_class(broker_name: str) -> _t.Type[BrokerBase]:
     :raises ValueError: If the broker name is invalid.
     """
 
-    broker_type_to_class_map = {
+    broker_type_to_class_map: _t.Dict[str, _t.Type[BrokerBase]] = {
         BrokerType.RABBITMQ.name: RabbitMQBroker,
         BrokerType.KAFKA.name: KafkaBroker,
         BrokerType.REDIS.name: RedisBroker,

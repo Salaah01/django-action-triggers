@@ -230,7 +230,7 @@ class TestIntegrationRedis:
     to a Redis message broker.
     """
 
-    channel = settings.ACTION_TRIGGERS["brokers"]["redis_with_host"]["params"][
+    channel = settings.ACTION_TRIGGERS["brokers"]["redis_with_host"]["params"][  # type: ignore[index]  # noqa: E501
         "channel"
     ]
 

@@ -22,9 +22,8 @@ async def get_redis_conn(key: str = "redis_with_host"):
         Connection: The connection to the broker
     """
 
-
     async with RedisConnection(
-        config=settings.ACTION_TRIGGERS["brokers"][key],
+        config=settings.ACTION_TRIGGERS["brokers"][key],  # type: ignore[index]
         conn_details={},
         params={},
     ) as conn:

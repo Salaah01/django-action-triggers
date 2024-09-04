@@ -72,7 +72,9 @@ class RedisBroker(BrokerBase):
     conn_class = RedisConnection
 
     async def _send_message_impl(
-        self, conn: redis.Redis, message: str
+        self,
+        conn: RedisConnection,
+        message: str,
     ) -> None:
         """Send a message to the Redis server.
 
