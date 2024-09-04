@@ -68,6 +68,15 @@ def kafka_1_trigger(config):
 
 
 @pytest.fixture
+def redis_with_host_trigger(config):
+    return baker.make(
+        MessageBrokerQueue,
+        name="redis_with_host",
+        config=config,
+    )
+
+
+@pytest.fixture
 def customer_post_save_signal(config):
     return baker.make(
         ConfigSignal,
@@ -101,6 +110,20 @@ def customer_kafka_post_save_signal(
         config,
         customer_post_save_signal,
         kafka_1_trigger,
+    )
+
+
+@pytest.fixture
+def customer_redis_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    redis_with_host_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        redis_with_host_trigger,
     )
 
 

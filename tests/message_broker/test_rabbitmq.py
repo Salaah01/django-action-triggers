@@ -15,7 +15,7 @@ from action_triggers.message_broker.rabbitmq import (
     RabbitMQBroker,
     RabbitMQConnection,
 )
-from tests.utils import can_connect_to_rabbitmq, get_rabbitmq_conn
+from tests.utils.rabbitmq import can_connect_to_rabbitmq, get_rabbitmq_conn
 
 
 class TestRabbitMQConnection:

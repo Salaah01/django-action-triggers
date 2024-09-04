@@ -5,7 +5,7 @@ from copy import deepcopy
 try:
     import aio_pika
 except ImportError:
-    aio_pika = None
+    aio_pika = None  # type: ignore[assignment]
 from django.conf import settings
 
 
