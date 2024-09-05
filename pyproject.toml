@@ -106,6 +106,10 @@ aio-pika = "^9.4.3"
 [tool.poetry.group.redis.dependencies]
 redis = "^5.0.8"
 
+
+[tool.poetry.group.aws.dependencies]
+localstack = "^3.7.1"
+
 [tool.poetry.extras]
 postgres = ["psycopg2"]
 rabbitmq = ["aio-pika"]
