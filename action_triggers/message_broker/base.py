@@ -1,5 +1,5 @@
 import typing as _t
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 
 from django.conf import settings
 
@@ -130,7 +130,10 @@ class BrokerBase(ABC):
     :param kwargs: Additional keyword arguments to pass to the subclass.
     """
 
-    conn_class: _t.Type[ConnectionBase]
+    @abstractproperty
+    def conn_class(self) -> _t.Type[ConnectionBase]:
+        """The connection class to use for establishing a connection to the
+        message broker."""
 
     def __init__(
         self,
