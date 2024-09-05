@@ -33,8 +33,7 @@ async def get_redis_conn(key: str = "redis_with_host"):
 def can_connect_to_redis() -> bool:
     """Check if the service can connect to Redis.
 
-    Returns:
-        bool: True if the service can connect to Redis, False otherwise
+    :return: True if the service can connect to Redis, False otherwise
     """
 
     if redis is None:
