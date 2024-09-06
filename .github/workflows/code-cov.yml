@@ -21,6 +21,9 @@ jobs:
       - name: Set up Docker Compose
         run: docker compose -f docker-compose.tox.yml up -d --wait
 
+      - name: Sleep for 30 seconds
+        run: sleep 30
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:

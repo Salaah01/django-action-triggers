@@ -18,12 +18,8 @@ jobs:
       - name: Set up Docker Compose
         run: docker compose -f docker-compose.tox.yml up -d --wait
 
-      - name: Start LocalStack
-        uses: LocalStack/setup-localstack@v0.2.2
-        with:
-          image-tag: 'latest'
-          install-awslocal: 'true'
-          configuration: DEBUG=1
+      - name: Sleep for 30 seconds
+        run: sleep 30
 
   test:
     needs: setup
