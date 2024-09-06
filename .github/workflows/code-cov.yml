@@ -21,9 +21,6 @@ jobs:
       - name: Set up Docker Compose
         run: docker compose -f docker-compose.tox.yml up -d --wait
 
-      - name: Sleep for 30 seconds
-        run: sleep 30
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -37,6 +34,8 @@ jobs:
           RABBIT_MQ_HOST: localhost
           RABBIT_MQ_PORT: 5680
           KAFKA_CONN_DETAILS: '{"bootstrap.servers": "localhost:9092"}'
+          REDIS_PORT: 6380
+          AWS_ENDPOINT: http://localhost:4566
         run: |
           make test-cov
 
