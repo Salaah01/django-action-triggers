@@ -4,7 +4,7 @@ test:
 
 .PHONY: test-cov
 test-cov:
-	pytest --cov=. || true
+	pytest --cov=. -vv || true
 	coverage html
 
 lint: **/*.py

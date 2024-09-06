@@ -239,7 +239,7 @@ def sqs_user_mod():
         sqs = SQSUser()
         sqs()
         yield sqs
-        del sqs
+        sqs.delete_user_if_exists()
 
 
 @pytest.fixture(scope="module")
@@ -250,7 +250,7 @@ def sqs_queue_mod(sqs_user_mod):
         queue = SQSQueue(sqs_user_mod)
         queue()
         yield queue
-        del queue
+        queue.delete_queue_if_exists()
 
 
 @pytest.fixture

@@ -45,10 +45,6 @@ class SQSUser:
         self.aws_access_key_id = ""
         self.aws_secret_access_key = ""
 
-    def __del__(self) -> None:
-        """Delete the user if it exists."""
-        self.delete_user_if_exists()
-
     def __call__(self) -> None:
         """Create a user with permissions to access AWS SQS.
 
@@ -110,10 +106,6 @@ class SQSQueue:
             aws_access_key_id=user.aws_access_key_id,
             aws_secret_access_key=user.aws_secret_access_key,
         )
-
-    def __del__(self) -> None:
-        """Delete the queue if it exists."""
-        self.delete_queue_if_exists()
 
     def __call__(self) -> str:
         """Create a queue.

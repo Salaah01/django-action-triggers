@@ -6,7 +6,12 @@ from action_triggers.message_broker.aws_sqs import (
     AwsSqsConnection,
 )
 from action_triggers.message_broker.exceptions import ConnectionValidationError
-from tests.utils.aws_sqs import QUEUE_NAME, can_connect_to_sqs
+from tests.utils.aws_sqs import (
+    QUEUE_NAME,
+    can_connect_to_sqs,
+    SQSUser,
+    SQSQueue,
+)
 
 try:
     import boto3  # type: ignore[import-untyped]
@@ -114,9 +119,25 @@ class TestAwsSqsConnection:
         conn = AwsSqsConnection(
             config={},
             conn_details={"endpoint_url": "http://test_endpoint"},
-            params={"queue_url": "http://test_queue_1", "queue": "bad"},
+            params={"queue_url": "http://test_queue_1", "queue_name": "bad"},
         )
         assert conn.get_queue_url() == "http://test_queue_1"
+
+    @pytest.mark.asyncio
+    async def test_get_queue_url_works_using_queue_name(self):
+        user = SQSUser()
+        url = SQSQueue(user, "my-queue").create_queue()
+        conn = AwsSqsConnection(
+            config={},
+            conn_details={
+                "endpoint_url": settings.AWS_ENDPOINT,
+                "aws_access_key_id": user.aws_access_key_id,
+                "aws_secret_access_key": user.aws_secret_access_key,
+            },
+            params={"queue_name": "my-queue"},
+        )
+        await conn.connect()
+        assert conn.queue_url == url
 
 
 @pytest.mark.skipif(
