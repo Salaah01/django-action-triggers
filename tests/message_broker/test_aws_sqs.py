@@ -27,7 +27,7 @@ def sqs_queue(sqs_queue_mod):
 class TestAwsSqsConnection:
     """Tests for the `AwsSqsConnection` class."""
 
-    def test_raise_exception_if_no_endpoint_found(self):
+    def test_raise_exception_if_no_endpoint_url_found(self):
         with pytest.raises(ConnectionValidationError):
             AwsSqsConnection(
                 config={},
@@ -39,7 +39,7 @@ class TestAwsSqsConnection:
         with pytest.raises(ConnectionValidationError):
             AwsSqsConnection(
                 config={},
-                conn_details={"endpoint": "http://test_endpoint"},
+                conn_details={"endpoint_url": "http://test_endpoint"},
                 params={},
             )
 
@@ -53,7 +53,7 @@ class TestAwsSqsConnection:
     def test_passes_when_queue_exists(self, parms):
         AwsSqsConnection(
             config={},
-            conn_details={"endpoint": "http://test_endpoint"},
+            conn_details={"endpoint_url": "http://test_endpoint"},
             params=parms,
         )
 
@@ -113,7 +113,7 @@ class TestAwsSqsConnection:
     def test_if_queue_url_preferred_over_queue_name(self):
         conn = AwsSqsConnection(
             config={},
-            conn_details={"endpoint": "http://test_endpoint"},
+            conn_details={"endpoint_url": "http://test_endpoint"},
             params={"queue_url": "http://test_queue_1", "queue": "bad"},
         )
         assert conn.get_queue_url() == "http://test_queue_1"

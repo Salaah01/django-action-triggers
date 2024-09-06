@@ -16,13 +16,15 @@ except ImportError:  # pragma: no cover
 class AwsSqsConnection(ConnectionBase):
     """Connection class for AWS SQS."""
 
-    def validate_endpoint_provided(self) -> None:
-        """Validate that the endpoint is provided in the connection details."""
+    def validate_endpoint_url_provided(self) -> None:
+        """Validate that the endpoint url is provided in the connection
+        details.
+        """
 
-        if "endpoint" not in self.conn_details.keys():
+        if "endpoint_url" not in self.conn_details.keys():
             self._errors.add_params_error(  # type: ignore[attr-defined]
-                "endpoint",
-                "An endpoint must be provided.",
+                "endpoint_url",
+                "An endpoint_url must be provided.",
             )
 
     def validate_queue_provided(self) -> None:
@@ -41,7 +43,7 @@ class AwsSqsConnection(ConnectionBase):
     def validate(self) -> None:
         """Validate the connection details."""
 
-        self.validate_endpoint_provided()
+        self.validate_endpoint_url_provided()
         self.validate_queue_provided()
         super().validate()
 
