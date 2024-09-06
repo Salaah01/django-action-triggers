@@ -1,4 +1,5 @@
-import socket
+import typing as _t
+from functools import lru_cache
 
 try:
     import boto3
@@ -14,6 +15,7 @@ QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][
 POLICY_ARN = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
 
 
+@lru_cache
 def can_connect_to_sqs() -> bool:
     """Check if the service can connect to AWS SQS.
 
@@ -24,11 +26,9 @@ def can_connect_to_sqs() -> bool:
     if not ENDPOINT:
         return False
 
-    host, port = ENDPOINT.lstrip("http://").split(":")
-
     try:
-        with socket.create_connection((host, int(port)), timeout=1):
-            return True
+        boto3.client("sqs", endpoint_url=ENDPOINT).list_queues()
+        return True
     except Exception:
         return False
 
@@ -91,7 +91,11 @@ class SQSUser:
 class SQSQueue:
     """A class to manage an AWS SQS queue."""
 
-    def __init__(self, user: SQSUser, queue_name: str = QUEUE_NAME) -> None:
+    def __init__(
+        self,
+        user: _t.Optional[SQSUser],
+        queue_name: str = QUEUE_NAME,
+    ) -> None:
         """Initialize the class.
 
         :param user: The user to use for creating the queue.

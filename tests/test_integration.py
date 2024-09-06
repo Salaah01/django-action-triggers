@@ -19,6 +19,17 @@ from tests.models import CustomerModel
 from tests.utils.kafka import can_connect_to_kafka, get_kafka_consumer
 from tests.utils.rabbitmq import can_connect_to_rabbitmq, get_rabbitmq_conn
 from tests.utils.redis import can_connect_to_redis, get_redis_conn
+from tests.utils.aws_sqs import can_connect_to_sqs
+
+
+@pytest.fixture(autouse=True, scope="module")
+def sqs_user(sqs_user_mod):
+    yield sqs_user_mod
+
+
+@pytest.fixture(autouse=True, scope="module")
+def sqs_queue(sqs_queue_mod):
+    yield sqs_queue_mod
 
 
 @pytest.mark.skipif(
@@ -141,7 +152,6 @@ class TestIntegrationMessageBrokerKafka:
         config = customer_kafka_post_save_signal.config
         config.payload = "Hello World!"
         config.save()
-        baker.make(CustomerModel)
 
     @pytest.mark.asyncio
     async def test_simple_basic_plain_message(
@@ -306,3 +316,82 @@ class TestIntegrationRedis:
         await sync_to_async(baker.make)(User)
         with pytest.raises(asyncio.TimeoutError):
             await asyncio.wait_for(consumer_task, timeout=5)
+
+
+@pytest.mark.skipif(
+    not can_connect_to_sqs(),
+    reason="Cannot connect to SQS, localstack (AWS emulator) is not running.",
+)
+@pytest.mark.django_db(transaction=True)
+class TestIntegrationMessageBrokerAwsSqs:
+    """Integration tests where the action to be triggered is sending a payload
+    to an AWS SQS message broker.
+    """
+
+    QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][
+        "queue_name"
+    ]
+
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self, sqs_client):
+        try:
+            sqs_client.purge_queue(
+                QueueUrl=sqs_client.get_queue_url(QueueName=self.QUEUE_NAME)[
+                    "QueueUrl"
+                ]
+            )
+        except Exception:
+            pass
+
+    def test_simple_basic_json_message(
+        self,
+        customer_aws_sqs_post_save_signal,
+        customer,
+        sqs_client,
+    ):
+        baker.make(CustomerModel)
+        response = sqs_client.receive_message(
+            QueueUrl=sqs_client.get_queue_url(QueueName=self.QUEUE_NAME)[
+                "QueueUrl"
+            ],
+            MaxNumberOfMessages=1,
+        )
+        message = response["Messages"][0]
+        assert message["Body"] == '{"message": "Hello, World!"}'
+        sqs_client.delete_message(
+            QueueUrl=sqs_client.get_queue_url(QueueName=self.QUEUE_NAME)[
+                "QueueUrl"
+            ],
+            ReceiptHandle=message["ReceiptHandle"],
+        )
+
+    @pytest.fixture
+    def fixture_simple_basic_plain_message(
+        self,
+        customer_aws_sqs_post_save_signal,
+        sqs_client,
+    ):
+        config = customer_aws_sqs_post_save_signal.config
+        config.payload = "Hello World!"
+        config.save()
+
+    def test_simple_basic_plain_message(
+        self,
+        fixture_simple_basic_plain_message,
+        sqs_client,
+    ):
+        baker.make(CustomerModel)
+        response = sqs_client.receive_message(
+            QueueUrl=sqs_client.get_queue_url(QueueName=self.QUEUE_NAME)[
+                "QueueUrl"
+            ],
+            MaxNumberOfMessages=1,
+        )
+        message = response["Messages"][0]
+        assert message["Body"] == '"Hello World!"'
+        sqs_client.delete_message(
+            QueueUrl=sqs_client.get_queue_url(QueueName=self.QUEUE_NAME)[
+                "QueueUrl"
+            ],
+            ReceiptHandle=message["ReceiptHandle"],
+        )

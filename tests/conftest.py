@@ -3,9 +3,16 @@ from collections import namedtuple
 import django
 import pytest
 
+try:
+    import boto3
+except ImportError:
+    boto3 = None  # type: ignore[assignment]
+
+
 django.setup()
 
 
+from django.conf import settings  # noqa: E402
 from django.contrib.auth.models import User  # noqa: E402
 from django.contrib.contenttypes.models import ContentType  # noqa: E402
 from model_bakery import baker  # noqa: E402
@@ -18,6 +25,12 @@ from action_triggers.models import (  # noqa: E402
     Webhook,
 )
 from tests.models import CustomerModel, CustomerOrderModel  # noqa: E402
+
+from tests.utils.aws_sqs import (
+    can_connect_to_sqs,
+    SQSUser,
+    SQSQueue,
+)
 
 
 @pytest.fixture
@@ -77,6 +90,15 @@ def redis_with_host_trigger(config):
 
 
 @pytest.fixture
+def aws_sqs_trigger(config):
+    return baker.make(
+        MessageBrokerQueue,
+        name="aws_sqs",
+        config=config,
+    )
+
+
+@pytest.fixture
 def customer_post_save_signal(config):
     return baker.make(
         ConfigSignal,
@@ -124,6 +146,20 @@ def customer_redis_post_save_signal(
         config,
         customer_post_save_signal,
         redis_with_host_trigger,
+    )
+
+
+@pytest.fixture
+def customer_aws_sqs_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    aws_sqs_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        aws_sqs_trigger,
     )
 
 
@@ -194,3 +230,30 @@ def superuser():
 @pytest.fixture
 def customer():
     return baker.make(CustomerModel)
+
+
+@pytest.fixture(scope="module")
+def sqs_user_mod():
+    if not can_connect_to_sqs():
+        yield None
+    else:
+        sqs = SQSUser()
+        sqs()
+        yield sqs
+        del sqs
+
+
+@pytest.fixture(scope="module")
+def sqs_queue_mod(sqs_user_mod):
+    if not can_connect_to_sqs():
+        yield None
+    else:
+        queue = SQSQueue(sqs_user_mod)
+        queue()
+        yield queue
+        del queue
+
+
+@pytest.fixture
+def sqs_client():
+    return boto3.client("sqs", endpoint_url=settings.AWS_ENDPOINT)

@@ -133,7 +133,8 @@ class BrokerBase(ABC):
     @abstractproperty
     def conn_class(self) -> _t.Type[ConnectionBase]:
         """The connection class to use for establishing a connection to the
-        message broker."""
+        message broker.
+        """
 
     def __init__(
         self,

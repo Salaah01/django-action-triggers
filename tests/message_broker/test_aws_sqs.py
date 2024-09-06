@@ -111,3 +111,28 @@ class TestAwsSqsConnection:
         await conn.close()
         assert conn.conn is None
         assert conn.queue_url is None
+
+    def test_if_queue_url_is_set_user_that(self):
+        conn = AwsSqsConnection(
+            config={},
+            conn_details={},
+            params={"queue_url": "http://test_queue_1", "queue": "bad"},
+        )
+        assert conn.get_queue_url() == "http://test_queue_1"
+
+
+@pytest.mark.skipif(
+    not can_connect_to_sqs(),
+    reason="localstack (AWS emulator) is not running.",
+)
+class TestAwsSqsBroker:
+    """Tests for the `AwsSqsBroker` class."""
+
+    @pytest.mark.asyncio
+    async def test_message_can_be_sent(self):
+        broker = AwsSqsBroker(
+            broker_key="aws_sqs",
+            conn_details={},
+            params={},
+        )
+        await broker.send_message("test_message")
