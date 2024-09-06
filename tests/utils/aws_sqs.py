@@ -22,6 +22,9 @@ def can_connect_to_sqs() -> bool:
 
     :return: True if the service can connect to AWS SQS, False otherwise.
     """
+    print("\033[93mChecking if the service can connect to AWS SQS...\033[0m")
+    print(f"Endpoint URL: {DEFAULT_CONN_DETAILS.get('endpoint_url')}")
+    print(f"boto3: {boto3}")
     if not boto3:
         return False
     if not DEFAULT_CONN_DETAILS.get("endpoint_url"):
