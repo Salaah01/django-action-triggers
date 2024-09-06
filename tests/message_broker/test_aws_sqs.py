@@ -14,7 +14,6 @@ except ImportError:
     boto3 = None  # type: ignore[assignment]
 
 
-
 @pytest.fixture(autouse=True, scope="module")
 def sqs_user(sqs_user_mod):
     yield sqs_user_mod
@@ -28,11 +27,19 @@ def sqs_queue(sqs_queue_mod):
 class TestAwsSqsConnection:
     """Tests for the `AwsSqsConnection` class."""
 
-    def test_raises_exception_if_no_queue_found(self):
+    def test_raise_exception_if_no_endpoint_found(self):
         with pytest.raises(ConnectionValidationError):
             AwsSqsConnection(
                 config={},
                 conn_details={},
+                params={"queue": "queue"},
+            )
+
+    def test_raises_exception_if_no_queue_found(self):
+        with pytest.raises(ConnectionValidationError):
+            AwsSqsConnection(
+                config={},
+                conn_details={"endpoint": "http://test_endpoint"},
                 params={},
             )
 
@@ -46,7 +53,7 @@ class TestAwsSqsConnection:
     def test_passes_when_queue_exists(self, parms):
         AwsSqsConnection(
             config={},
-            conn_details={},
+            conn_details={"endpoint": "http://test_endpoint"},
             params=parms,
         )
 

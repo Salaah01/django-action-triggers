@@ -69,6 +69,7 @@ This documentation is organised into the following sections:
    message_brokers/kafka
    message_brokers/rabbitmq
    message_brokers/redis
+   message_brokers/aws_sqs
 
 .. toctree::
    :maxdepth: 1
