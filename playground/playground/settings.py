@@ -191,11 +191,9 @@ ACTION_TRIGGERS = {
         "aws_sqs": {
             "broker_type": "aws_sqs",
             "conn_details": {
-                # Whaaattt? Plain text credentials?!
-                # Just kidding, these are localstack credentials.
                 "endpoint_url": "http://localhost:4566",
-                "aws_access_key_id": "LKIAQAAAAAAANUBAKLGK",
-                "aws_secret_access_key": "3nXJzIY8S/ogxsXSzKV5/66Mwc+sq7B662qiH3fW",
+                "aws_access_key_id": os.environ["AWS_ACCESS_KEY_ID"],
+                "aws_secret_access_key": os.environ["AWS_SECRET_ACCESS_KEY"],
             },
             "params": {
                 "queue_name": "test-1",
