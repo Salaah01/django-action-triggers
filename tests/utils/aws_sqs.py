@@ -30,7 +30,8 @@ def can_connect_to_sqs() -> bool:
     try:
         boto3.client("sqs", **DEFAULT_CONN_DETAILS).list_queues()
         return True
-    except Exception:
+    except Exception as e:
+        print(f"\033[93mError connecting to AWS SQS: {e}\033[0m")
         return False
 
 
