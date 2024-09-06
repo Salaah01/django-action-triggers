@@ -7,7 +7,9 @@ except ImportError:
 
 from django.conf import settings
 
-ENDPOINT = settings.AWS_ENDPOINT
+DEFAULT_CONN_DETAILS = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"][
+    "conn_details"
+]
 QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: ignore[index]  # noqa E501
     "queue_name"
 ]
@@ -22,11 +24,11 @@ def can_connect_to_sqs() -> bool:
     """
     if not boto3:
         return False
-    if not ENDPOINT:
+    if not DEFAULT_CONN_DETAILS.get("endpoint_url"):
         return False
 
     try:
-        boto3.client("sqs", endpoint_url=ENDPOINT).list_queues()
+        boto3.client("sqs", **DEFAULT_CONN_DETAILS).list_queues()
         return True
     except Exception:
         return False
@@ -41,7 +43,7 @@ class SQSUser:
         :param username: The username of the user.
         """
         self.username = username
-        self.client = boto3.client("iam", endpoint_url=ENDPOINT)
+        self.client = boto3.client("iam", **DEFAULT_CONN_DETAILS)
         self.aws_access_key_id = ""
         self.aws_secret_access_key = ""
 
@@ -100,12 +102,11 @@ class SQSQueue:
         """
         self.user = user
         self.queue_name = queue_name
-        print(f"\033[92mENDPOINT============={ENDPOINT}\033[0m")
         self.client = boto3.client(
             "sqs",
-            endpoint_url=ENDPOINT,
             aws_access_key_id=user.aws_access_key_id,
             aws_secret_access_key=user.aws_secret_access_key,
+            **DEFAULT_CONN_DETAILS,
         )
 
     def __call__(self) -> str:

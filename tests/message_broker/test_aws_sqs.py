@@ -19,6 +19,11 @@ except ImportError:
     boto3 = None  # type: ignore[assignment]
 
 
+DEFAULT_CONN_DETAILS = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"][
+    "conn_details"
+]
+
+
 @pytest.fixture(autouse=True, scope="module")
 def sqs_user(sqs_user_mod):
     yield sqs_user_mod
@@ -44,7 +49,7 @@ class TestAwsSqsConnection:
         with pytest.raises(ConnectionValidationError):
             AwsSqsConnection(
                 config={},
-                conn_details={"endpoint_url": "http://test_endpoint"},
+                conn_details=DEFAULT_CONN_DETAILS,
                 params={},
             )
 
@@ -58,7 +63,7 @@ class TestAwsSqsConnection:
     def test_passes_when_queue_exists(self, parms):
         AwsSqsConnection(
             config={},
-            conn_details={"endpoint_url": "http://test_endpoint"},
+            conn_details=DEFAULT_CONN_DETAILS,
             params=parms,
         )
 
@@ -78,7 +83,7 @@ class TestAwsSqsConnection:
             conn_details={
                 "aws_access_key_id": aws_access_key_id,
                 "aws_secret_access_key": aws_secret_access_key,
-                "endpoint_url": settings.AWS_ENDPOINT,
+                **DEFAULT_CONN_DETAILS,
             },
             params={"queue_name": QUEUE_NAME},
         )
@@ -102,7 +107,7 @@ class TestAwsSqsConnection:
                 "conn_details": {
                     "aws_access_key_id": aws_access_key_id,
                     "aws_secret_access_key": aws_secret_access_key,
-                    "endpoint_url": settings.AWS_ENDPOINT,
+                    **DEFAULT_CONN_DETAILS,
                 },
             },
             conn_details={},
@@ -118,7 +123,7 @@ class TestAwsSqsConnection:
     def test_if_queue_url_preferred_over_queue_name(self):
         conn = AwsSqsConnection(
             config={},
-            conn_details={"endpoint_url": "http://test_endpoint"},
+            conn_details=DEFAULT_CONN_DETAILS,
             params={"queue_url": "http://test_queue_1", "queue_name": "bad"},
         )
         assert conn.get_queue_url() == "http://test_queue_1"
@@ -130,9 +135,9 @@ class TestAwsSqsConnection:
         conn = AwsSqsConnection(
             config={},
             conn_details={
-                "endpoint_url": settings.AWS_ENDPOINT,
                 "aws_access_key_id": user.aws_access_key_id,
                 "aws_secret_access_key": user.aws_secret_access_key,
+                **DEFAULT_CONN_DETAILS,
             },
             params={"queue_name": "my-queue"},
         )

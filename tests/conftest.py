@@ -255,4 +255,7 @@ def sqs_queue_mod(sqs_user_mod):
 
 @pytest.fixture
 def sqs_client():
-    return boto3.client("sqs", endpoint_url=settings.AWS_ENDPOINT)
+    return boto3.client(
+        "sqs",
+        **settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["conn_details"],
+    )

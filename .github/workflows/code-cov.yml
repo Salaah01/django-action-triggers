@@ -35,7 +35,6 @@ jobs:
           RABBIT_MQ_PORT: 5680
           KAFKA_CONN_DETAILS: '{"bootstrap.servers": "localhost:9092"}'
           REDIS_PORT: 6380
-          AWS_ENDPOINT: http://localhost:4566
         run: |
           make test-cov
 
