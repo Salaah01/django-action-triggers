@@ -9,7 +9,7 @@ from action_triggers.message_broker.exceptions import ConnectionValidationError
 from tests.utils.aws_sqs import QUEUE_NAME, can_connect_to_sqs
 
 try:
-    import boto3
+    import boto3  # type: ignore[import-untyped]
 except ImportError:
     boto3 = None  # type: ignore[assignment]
 
@@ -110,10 +110,10 @@ class TestAwsSqsConnection:
         assert conn.conn is None
         assert conn.queue_url is None
 
-    def test_if_queue_url_is_set_user_that(self):
+    def test_if_queue_url_preferred_over_queue_name(self):
         conn = AwsSqsConnection(
             config={},
-            conn_details={},
+            conn_details={"endpoint": "http://test_endpoint"},
             params={"queue_url": "http://test_queue_1", "queue": "bad"},
         )
         assert conn.get_queue_url() == "http://test_queue_1"

@@ -2,14 +2,14 @@ import typing as _t
 from functools import lru_cache
 
 try:
-    import boto3
+    import boto3  # type: ignore[import-untyped]
 except ImportError:
     boto3 = None  # type: ignore[assignment]
 
 from django.conf import settings
 
 ENDPOINT = settings.AWS_ENDPOINT
-QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][
+QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: ignore[index]  # noqa E501
     "queue_name"
 ]
 POLICY_ARN = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
@@ -43,17 +43,19 @@ class SQSUser:
         """
         self.username = username
         self.client = boto3.client("iam", endpoint_url=ENDPOINT)
+        self.aws_access_key_id = ""
+        self.aws_secret_access_key = ""
 
     def __del__(self) -> None:
         """Delete the user if it exists."""
         self.delete_user_if_exists()
 
-    def __call__(self) -> dict:
+    def __call__(self) -> None:
         """Create a user with permissions to access AWS SQS.
 
         :return: The user's access and secret key.
         """
-        return self.create_user()
+        self.create_user()
 
     def delete_user_if_exists(self) -> None:
         """Delete the user if it exists.
@@ -73,7 +75,7 @@ class SQSUser:
         except self.client.exceptions.NoSuchEntityException:
             pass
 
-    def create_user(self) -> dict:
+    def create_user(self) -> None:
         """Create a user with permissions to access AWS SQS.
 
         :return: The user's access and secret key.
@@ -93,7 +95,7 @@ class SQSQueue:
 
     def __init__(
         self,
-        user: _t.Optional[SQSUser],
+        user: SQSUser,
         queue_name: str = QUEUE_NAME,
     ) -> None:
         """Initialize the class.

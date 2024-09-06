@@ -328,7 +328,7 @@ class TestIntegrationMessageBrokerAwsSqs:
     to an AWS SQS message broker.
     """
 
-    QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][
+    QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: ignore[index]  # noqa: E501
         "queue_name"
     ]
 

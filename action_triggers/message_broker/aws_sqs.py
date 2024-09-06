@@ -8,7 +8,7 @@ from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
-    import boto3
+    import boto3  # type: ignore[import]
 except ImportError:  # pragma: no cover
     boto3 = MissingImportWrapper("boto3")  # type: ignore[assignment]
 
@@ -19,7 +19,7 @@ class AwsSqsConnection(ConnectionBase):
     def validate_endpoint_provided(self) -> None:
         """Validate that the endpoint is provided in the connection details."""
 
-        if not "endpoint" not in self.conn_details.keys():
+        if "endpoint" not in self.conn_details.keys():
             self._errors.add_params_error(  # type: ignore[attr-defined]
                 "endpoint",
                 "An endpoint must be provided.",
@@ -69,7 +69,7 @@ class AwsSqsConnection(ConnectionBase):
         """Close the connection to the AWS SQS service."""
 
         self.conn = None
-        self.queue_url = None
+        self.queue_url = None  # type: ignore[assignment]
 
 
 class AwsSqsBroker(BrokerBase):

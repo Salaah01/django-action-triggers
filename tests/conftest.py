@@ -4,7 +4,7 @@ import django
 import pytest
 
 try:
-    import boto3
+    import boto3  # type: ignore[import-untyped]
 except ImportError:
     boto3 = None  # type: ignore[assignment]
 
