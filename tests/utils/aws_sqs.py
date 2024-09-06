@@ -100,6 +100,7 @@ class SQSQueue:
         """
         self.user = user
         self.queue_name = queue_name
+        print(f"\033[92mENDPOINT============={ENDPOINT}\033[0m")
         self.client = boto3.client(
             "sqs",
             endpoint_url=ENDPOINT,
