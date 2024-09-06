@@ -1,27 +1,18 @@
 import pytest
 from django.conf import settings
 
-from action_triggers.message_broker.exceptions import ConnectionValidationError
 from action_triggers.message_broker.aws_sqs import (
     AwsSqsBroker,
     AwsSqsConnection,
 )
-from tests.utils.aws_sqs import (
-    can_connect_to_sqs,
-    SQSUser,
-    SQSQueue,
-    QUEUE_NAME,
-)
+from action_triggers.message_broker.exceptions import ConnectionValidationError
+from tests.utils.aws_sqs import QUEUE_NAME, can_connect_to_sqs
 
 try:
     import boto3
 except ImportError:
     boto3 = None  # type: ignore[assignment]
 
-from action_triggers.message_broker.aws_sqs import (
-    AwsSqsConnection,
-    AwsSqsBroker,
-)
 
 
 @pytest.fixture(autouse=True, scope="module")

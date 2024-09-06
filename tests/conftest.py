@@ -25,11 +25,10 @@ from action_triggers.models import (  # noqa: E402
     Webhook,
 )
 from tests.models import CustomerModel, CustomerOrderModel  # noqa: E402
-
-from tests.utils.aws_sqs import (
-    can_connect_to_sqs,
-    SQSUser,
+from tests.utils.aws_sqs import (  # noqa: E402
     SQSQueue,
+    SQSUser,
+    can_connect_to_sqs,
 )
 
 

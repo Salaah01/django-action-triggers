@@ -1,5 +1,3 @@
-import pytest
-from django.conf import settings
 
 try:
     import boto3
