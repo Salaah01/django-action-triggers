@@ -8,9 +8,9 @@ from action_triggers.message_broker.aws_sqs import (
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 from tests.utils.aws_sqs import (
     QUEUE_NAME,
-    can_connect_to_sqs,
-    SQSUser,
     SQSQueue,
+    SQSUser,
+    can_connect_to_sqs,
 )
 
 try:
@@ -19,7 +19,7 @@ except ImportError:
     boto3 = None  # type: ignore[assignment]
 
 
-DEFAULT_CONN_DETAILS = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"][
+DEFAULT_CONN_DETAILS = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"][  # type: ignore[index]  # noqa E501
     "conn_details"
 ]
 

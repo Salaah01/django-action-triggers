@@ -7,7 +7,7 @@ except ImportError:
 
 from django.conf import settings
 
-DEFAULT_CONN_DETAILS = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"][
+DEFAULT_CONN_DETAILS = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"][  # type: ignore[index]  # noqa E501
     "conn_details"
 ]
 QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: ignore[index]  # noqa E501
