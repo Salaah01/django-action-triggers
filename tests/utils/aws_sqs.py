@@ -16,15 +16,13 @@ QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: 
 POLICY_ARN = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
 
 
-@lru_cache
 def can_connect_to_sqs() -> bool:
     """Check if the service can connect to AWS SQS.
 
     :return: True if the service can connect to AWS SQS, False otherwise.
     """
-    if not boto3:
+    if boto3 is None:
         return False
-        raise ImportError("boto3 is not installed")
     if not DEFAULT_CONN_DETAILS.get("endpoint_url"):
         return False
 
