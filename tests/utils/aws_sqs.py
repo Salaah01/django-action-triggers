@@ -16,26 +16,30 @@ QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: 
 POLICY_ARN = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
 
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 @lru_cache
 def can_connect_to_sqs() -> bool:
     """Check if the service can connect to AWS SQS.
 
     :return: True if the service can connect to AWS SQS, False otherwise.
     """
-    print("\033[93mChecking if the service can connect to AWS SQS...\033[0m")
-    print(f"Endpoint URL: {DEFAULT_CONN_DETAILS.get('endpoint_url')}")
-    print(f"boto3: {boto3}")
     if not boto3:
-        return False
+        # return False
+        raise ImportError("boto3 is not installed")
     if not DEFAULT_CONN_DETAILS.get("endpoint_url"):
-        return False
+        # return False
+        raise ValueError("An endpoint URL must be provided.")
 
     try:
         boto3.client("sqs", **DEFAULT_CONN_DETAILS).list_queues()
         return True
     except Exception as e:
         print(f"\033[93mError connecting to AWS SQS: {e}\033[0m")
-        return False
+        # return False
+        logger.error(f"Error connecting to AWS SQS: {e}")
 
 
 class SQSUser:
