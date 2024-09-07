@@ -18,8 +18,6 @@ jobs:
       - name: Set up Docker Compose
         run: docker compose -f docker-compose.tox.yml up -d --wait
 
-      - name: Sleep for 30 seconds
-
   test:
     needs: setup
     runs-on: ubuntu-latest
