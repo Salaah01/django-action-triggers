@@ -16,6 +16,7 @@ QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: 
 POLICY_ARN = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
 
 
+@lru_cache
 def can_connect_to_sqs() -> bool:
     """Check if the service can connect to AWS SQS.
 

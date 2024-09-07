@@ -34,6 +34,10 @@ def sqs_queue(sqs_queue_mod):
     yield sqs_queue_mod
 
 
+@pytest.mark.skipif(
+    not can_connect_to_sqs(),
+    reason="localstack (AWS emulator) is not running.",
+)
 class TestAwsSqsConnection:
     """Tests for the `AwsSqsConnection` class."""
 
@@ -68,10 +72,6 @@ class TestAwsSqsConnection:
         )
 
     @pytest.mark.asyncio
-    @pytest.mark.skipif(
-        not can_connect_to_sqs(),
-        reason="localstack (AWS emulator) is not running.",
-    )
     async def test_connection_and_close_mechanism_using_conn_details(
         self,
         sqs_user,
@@ -95,10 +95,6 @@ class TestAwsSqsConnection:
         assert conn.queue_url is None
 
     @pytest.mark.asyncio
-    @pytest.mark.skipif(
-        not can_connect_to_sqs(),
-        reason="localstack (AWS emulator) is not running.",
-    )
     async def test_connection_and_close_mechanism_using_config(self, sqs_user):
         aws_access_key_id = sqs_user.aws_access_key_id
         aws_secret_access_key = sqs_user.aws_secret_access_key
