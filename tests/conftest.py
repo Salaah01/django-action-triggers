@@ -25,10 +25,10 @@ from action_triggers.models import (  # noqa: E402
     Webhook,
 )
 from tests.models import CustomerModel, CustomerOrderModel  # noqa: E402
-from tests.utils.aws_sqs import (  # noqa: E402
+from tests.utils.aws import (
     SQSQueue,
-    SQSUser,
-    can_connect_to_sqs,
+    sqs_user_factory,
+    can_connect_to_localstack,
 )
 
 
@@ -233,10 +233,10 @@ def customer():
 
 @pytest.fixture(scope="module")
 def sqs_user_mod():
-    if not can_connect_to_sqs():
+    if not can_connect_to_localstack():
         yield None
     else:
-        sqs = SQSUser()
+        sqs = sqs_user_factory()
         sqs()
         yield sqs
         sqs.delete_user_if_exists()
@@ -244,10 +244,10 @@ def sqs_user_mod():
 
 @pytest.fixture(scope="module")
 def sqs_queue_mod(sqs_user_mod):
-    if not can_connect_to_sqs():
+    if not can_connect_to_localstack():
         yield None
     else:
-        queue = SQSQueue(sqs_user_mod)
+        queue = SQSQueue()
         queue()
         yield queue
         queue.delete_queue_if_exists()

@@ -6,12 +6,7 @@ from action_triggers.message_broker.aws_sqs import (
     AwsSqsConnection,
 )
 from action_triggers.message_broker.exceptions import ConnectionValidationError
-from tests.utils.aws_sqs import (
-    QUEUE_NAME,
-    SQSQueue,
-    SQSUser,
-    can_connect_to_sqs,
-)
+from tests.utils.aws import QUEUE_NAME, SQSQueue, can_connect_to_localstack
 
 try:
     import boto3  # type: ignore[import-untyped]
@@ -35,7 +30,7 @@ def sqs_queue(sqs_queue_mod):
 
 
 @pytest.mark.skipif(
-    not can_connect_to_sqs(),
+    not can_connect_to_localstack(),
     reason="localstack (AWS emulator) is not running.",
 )
 class TestAwsSqsConnection:
@@ -118,8 +113,7 @@ class TestAwsSqsConnection:
 
     @pytest.mark.asyncio
     async def test_get_queue_url_works_using_queue_name(self):
-        user = SQSUser()
-        url = SQSQueue(user, "my-queue").create_queue()
+        url = SQSQueue("my-queue").create_queue()
         conn = AwsSqsConnection(
             config={},
             conn_details={
@@ -132,7 +126,7 @@ class TestAwsSqsConnection:
 
 
 @pytest.mark.skipif(
-    not can_connect_to_sqs(),
+    not can_connect_to_localstack(),
     reason="localstack (AWS emulator) is not running.",
 )
 class TestAwsSqsBroker:

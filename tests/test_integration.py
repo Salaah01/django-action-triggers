@@ -16,7 +16,7 @@ from django.contrib.contenttypes.models import ContentType
 from model_bakery import baker
 
 from tests.models import CustomerModel
-from tests.utils.aws_sqs import can_connect_to_sqs
+from tests.utils.aws import can_connect_to_localstack
 from tests.utils.kafka import can_connect_to_kafka, get_kafka_consumer
 from tests.utils.rabbitmq import can_connect_to_rabbitmq, get_rabbitmq_conn
 from tests.utils.redis import can_connect_to_redis, get_redis_conn
@@ -319,7 +319,7 @@ class TestIntegrationRedis:
 
 
 @pytest.mark.skipif(
-    not can_connect_to_sqs(),
+    not can_connect_to_localstack(),
     reason="Cannot connect to SQS, localstack (AWS emulator) is not running.",
 )
 @pytest.mark.django_db(transaction=True)
