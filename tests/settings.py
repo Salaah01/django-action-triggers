@@ -67,6 +67,9 @@ KAFKA_CONN_DETAILS = (
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 
+AWS_ENDPOINT = os.getenv("AWS_ENDPOINT", "http://localhost:4566")
+AWS_REGION = os.getenv("AWS_REGION", "eu-west-1")
+
 ACTION_TRIGGERS = {
     "brokers": {
         "rabbitmq_1": {
@@ -115,6 +118,18 @@ ACTION_TRIGGERS = {
             },
             "params": {
                 "channel": "test_channel",
+            },
+        },
+        "aws_sqs": {
+            "broker_type": "aws_sqs",
+            "conn_details": {
+                "endpoint_url": AWS_ENDPOINT,
+                "region_name": AWS_REGION,
+                "aws_access_key_id": 'test-key',
+                "aws_secret_access_key": 'test-secret',
+            },
+            "params": {
+                "queue_name": "aws_sqs_queue",
             },
         },
     },

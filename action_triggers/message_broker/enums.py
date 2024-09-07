@@ -7,3 +7,4 @@ class BrokerType(Enum):
     RABBITMQ = "rabbitmq"
     KAFKA = "kafka"
     REDIS = "redis"
+    AWS_SQS = "aws_sqs"

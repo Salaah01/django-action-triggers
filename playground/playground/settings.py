@@ -188,6 +188,17 @@ ACTION_TRIGGERS = {
                 "channel": "test_channel",
             },
         },
+        "aws_sqs": {
+            "broker_type": "aws_sqs",
+            "conn_details": {
+                "endpoint_url": "http://localhost:4566",
+                "aws_access_key_id": os.environ["AWS_ACCESS_KEY_ID"],
+                "aws_secret_access_key": os.environ["AWS_SECRET_ACCESS_KEY"],
+            },
+            "params": {
+                "queue_name": "test-1",
+            },
+        },
     },
     "whitelisted_content_types": (
         "sample_app.customer",

@@ -41,3 +41,8 @@ Message Broker Modules
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. automodule:: action_triggers.message_broker.aws_sqs
+   :members:
+   :undoc-members:
+   :show-inheritance:

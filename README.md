@@ -44,6 +44,7 @@ For detailed documentation, including setup, configuration options, API specific
 * Kafka
 * RabbitMQ
 * Redis
+* AWS SQS (Amazon Simple Queue Service)
 
 Need support for another message broker? Please submit a feature request on the [GitHub repository](https://github.com/Salaah01/django-action-triggers/issues).
 

@@ -48,7 +48,6 @@ class BaseModel(models.Model):
     @classmethod
     def drop_table(cls) -> None:
         """Drops the table from the database."""
-        breakpoint()
         if cls._meta.db_table in connection.introspection.table_names():
             with connection.cursor() as cursor:
                 cursor.execute(
