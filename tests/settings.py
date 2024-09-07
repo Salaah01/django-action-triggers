@@ -125,6 +125,8 @@ ACTION_TRIGGERS = {
             "conn_details": {
                 "endpoint_url": AWS_ENDPOINT,
                 "region_name": AWS_REGION,
+                "aws_access_key_id": 'test-key',
+                "aws_secret_access_key": 'test-secret',
             },
             "params": {
                 "queue_name": "aws_sqs_queue",
