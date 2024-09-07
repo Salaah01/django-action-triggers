@@ -76,13 +76,9 @@ class TestAwsSqsConnection:
         self,
         sqs_user,
     ):
-        aws_access_key_id = sqs_user.aws_access_key_id
-        aws_secret_access_key = sqs_user.aws_secret_access_key
         conn = AwsSqsConnection(
             config={},
             conn_details={
-                "aws_access_key_id": aws_access_key_id,
-                "aws_secret_access_key": aws_secret_access_key,
                 **DEFAULT_CONN_DETAILS,
             },
             params={"queue_name": QUEUE_NAME},
@@ -95,14 +91,10 @@ class TestAwsSqsConnection:
         assert conn.queue_url is None
 
     @pytest.mark.asyncio
-    async def test_connection_and_close_mechanism_using_config(self, sqs_user):
-        aws_access_key_id = sqs_user.aws_access_key_id
-        aws_secret_access_key = sqs_user.aws_secret_access_key
+    async def test_connection_and_close_mechanism_using_config(self):
         conn = AwsSqsConnection(
             config={
                 "conn_details": {
-                    "aws_access_key_id": aws_access_key_id,
-                    "aws_secret_access_key": aws_secret_access_key,
                     **DEFAULT_CONN_DETAILS,
                 },
             },
@@ -131,8 +123,6 @@ class TestAwsSqsConnection:
         conn = AwsSqsConnection(
             config={},
             conn_details={
-                "aws_access_key_id": user.aws_access_key_id,
-                "aws_secret_access_key": user.aws_secret_access_key,
                 **DEFAULT_CONN_DETAILS,
             },
             params={"queue_name": "my-queue"},
