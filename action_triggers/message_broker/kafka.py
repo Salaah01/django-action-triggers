@@ -19,20 +19,6 @@ class KafkaConnection(ConnectionBase):
     required_conn_detail_fields = (HasField("bootstrap_servers", str),)
     required_params_fields = (HasField("topic", str),)
 
-    # def validate_topic_exists(self):
-    #     """Validate the the topic exists either in the base configuration or
-    #     the user provided parameters.
-    #     """
-    #     if not self.config.get("topic") and not self.params.get("topic"):
-    #         self._errors.add_params_error(  # type: ignore[attr-defined]
-    #             "topic",
-    #             "Topic name must be provided.",
-    #         )
-
-    # def validate(self) -> None:
-    #     self.validate_topic_exists()
-    #     super().validate()
-
     async def connect(self) -> None:
         self.conn = AIOKafkaProducer(**self.conn_details)
         await self.conn.start()

@@ -1,8 +1,8 @@
 """Tests for `action_triggers.message_broker.base` module."""
 
-import os
 from types import SimpleNamespace
 
+from django.conf import settings
 import pytest
 
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
@@ -113,18 +113,14 @@ class TestBrokerBase:
             (
                 {},
                 {},
-                {
-                    "host": "localhost",
-                    "port": os.getenv("RABBIT_MQ_PORT", 5672),
-                },
+                settings.DEFAULT_RABBIT_MQ_CONN_DETAILS,
                 {"queue": "test_queue_1"},
             ),
             (
                 {"host": "hijacked-host", "name": "rabbitmq"},
                 {"queue": "quirky-queue", "exchange": "test_exchange"},
                 {
-                    "host": "localhost",
-                    "port": os.getenv("RABBIT_MQ_PORT", 5672),
+                    **settings.DEFAULT_RABBIT_MQ_CONN_DETAILS,
                     "name": "rabbitmq",
                 },
                 {"queue": "test_queue_1", "exchange": "test_exchange"},

@@ -51,7 +51,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 DEFAULT_RABBIT_MQ_CONN_DETAILS = {
     "host": os.getenv("RABBIT_MQ_HOST", "localhost"),
-    "port": os.getenv("RABBIT_MQ_PORT", 5672),
+    "port": os.getenv("RABBIT_MQ_PORT", 5680),
 }
 RABBIT_MQ_CONN_DETAILS = (
     json.loads(os.getenv("RABBIT_MQ_CONN_DETAILS", "{}"))

@@ -32,14 +32,14 @@ class TestRabbitMQConnection:
         assert json.dumps(exc.value.as_dict()) == json.dumps(
             {
                 "connection_params": {},
-                "params": {"queue": ["Queue name must be provided."]},
+                "params": {"queue": ["The field queue must be provided."]},
             }
         )
 
     @pytest.mark.parametrize(
         "config,params",
         (
-            ({"queue": "test"}, {}),
+            ({"params": {"queue": "test"}}, {}),
             ({}, {"queue": "test"}),
         ),
     )
@@ -57,7 +57,7 @@ class TestRabbitMQConnection:
     @pytest.mark.asyncio
     async def test_connection_and_close_mechanism(self):
         conn = RabbitMQConnection(
-            config={"queue": "test_queue_1"},
+            config={"params": {"queue": "test_queue_1"}},
             conn_details=settings.ACTION_TRIGGERS["brokers"]["rabbitmq_1"][
                 "conn_details"
             ],

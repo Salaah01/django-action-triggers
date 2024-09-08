@@ -6,6 +6,7 @@ from copy import deepcopy
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
+from action_triggers.config_required_fields import HasField
 
 try:
     import aio_pika  # type: ignore[import-untyped]
@@ -16,24 +17,10 @@ except ImportError:  # pragma: no cover
 class RabbitMQConnection(ConnectionBase):
     """Connection class for RabbitMQ."""
 
-    required_conn_detail_fields = []
-    required_params_fields = []
-
-    def validate_queue_exists(self) -> None:
-        """Validate the the queue exists either in the base configuration or
-        the user provided parameters.
-        """
-
-        if not self.config.get("queue") and not self.params.get("queue"):
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "queue",
-                "Queue name must be provided.",
-            )
+    required_conn_detail_fields = ()
+    required_params_fields = (HasField("queue", str),)
 
     def validate(self) -> None:
-        self.validate_queue_exists()
-        super().validate()
-
         # Python 3.8 requires the port to be an integer.
         # Resetting the cached connection details to ensure that when the lazy
         # property is accessed, the updated port is used.
@@ -43,6 +30,7 @@ class RabbitMQConnection(ConnectionBase):
             self._user_conn_details["port"] = int(
                 self._user_conn_details["port"]
             )
+        super().validate()
 
     async def connect(self) -> None:
         self.conn = await aio_pika.connect_robust(
