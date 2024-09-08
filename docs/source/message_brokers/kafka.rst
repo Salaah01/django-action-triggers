@@ -44,8 +44,7 @@ Here is an example configuration for Kafka:
   }
 
 In this configuration:
-- The `my_kafka_broker` is set to connect to Kafka running on `localhost` on
-  port `9092`.
+- The `my_kafka_broker` is set to connect to Kafka running on `localhost` on port `9092`.
 - Messages will be sent to the `my_topic` topic.
 
 Creating a Kafka Action

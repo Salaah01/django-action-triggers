@@ -9,6 +9,7 @@ Module Documentation
       modules/apps
       modules/checks
       modules/conf
+      modules/config_required_fields
       modules/dispatch
       modules/dynamic_loading
       modules/enums
