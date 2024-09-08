@@ -5,6 +5,7 @@ import typing as _t
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
+from action_triggers.config_required_fields import HasField
 
 try:
     from aiokafka import AIOKafkaProducer  # type: ignore[import-untyped]
@@ -15,22 +16,22 @@ except ImportError:  # pragma: no cover
 class KafkaConnection(ConnectionBase):
     """Connection class for Kafka."""
 
-    required_conn_detail_fields = []
-    required_params_fields = []
+    required_conn_detail_fields = ()
+    required_params_fields = (HasField("topic", str),)
 
-    def validate_topic_exists(self):
-        """Validate the the topic exists either in the base configuration or
-        the user provided parameters.
-        """
-        if not self.config.get("topic") and not self.params.get("topic"):
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "topic",
-                "Topic name must be provided.",
-            )
+    # def validate_topic_exists(self):
+    #     """Validate the the topic exists either in the base configuration or
+    #     the user provided parameters.
+    #     """
+    #     if not self.config.get("topic") and not self.params.get("topic"):
+    #         self._errors.add_params_error(  # type: ignore[attr-defined]
+    #             "topic",
+    #             "Topic name must be provided.",
+    #         )
 
-    def validate(self) -> None:
-        self.validate_topic_exists()
-        super().validate()
+    # def validate(self) -> None:
+    #     self.validate_topic_exists()
+    #     super().validate()
 
     async def connect(self) -> None:
         self.conn = AIOKafkaProducer(**self.conn_details)

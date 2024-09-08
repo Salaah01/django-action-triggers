@@ -23,7 +23,7 @@ class TestKafkaConnection:
     @pytest.mark.parametrize(
         "config,params",
         (
-            ({"topic": "test_topic_1"}, {}),
+            ({"params": {"topic": "test_topic_1"}}, {}),
             ({}, {"topic": "test_topic_1"}),
         ),
     )
@@ -41,7 +41,7 @@ class TestKafkaConnection:
     )
     async def test_connection_and_close_mechanism(self):
         conn = KafkaConnection(
-            config={"topic": "test_topic_1"},
+            config={"params": {"topic": "test_topic_1"}},
             conn_details=settings.KAFKA_CONN_DETAILS,
             params={},
         )
