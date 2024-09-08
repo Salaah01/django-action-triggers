@@ -27,10 +27,10 @@ class AwsSnsConnection(ConnectionBase):
                 "An endpoint_url must be provided.",
             )
 
-    def validate_topic_provided(self) -> None:
+    def validate_topic_arn_provided(self) -> None:
         """Validate that the topic is provided."""
 
-        if not set(self.params.keys()).intersection({"topic", "topic_arn"}):
+        if not self.params.get("topic_arn"):
             self._errors.add_params_error(  # type: ignore[attr-defined]
                 "topic",
                 "A topic must be provided.",
@@ -40,28 +40,13 @@ class AwsSnsConnection(ConnectionBase):
         """Validate the connection details."""
 
         self.validate_endpoint_url_provided()
-        self.validate_topic_provided()
+        self.validate_topic_arn_provided()
         super().validate()
 
     async def connect(self) -> None:
         """Connect to the AWS SQS service."""
 
         self.conn = boto3.client("sns", **self.conn_details)
-        self.topic_arn = self.get_topic_arn()
-
-    def get_topic_arn(self) -> str:
-        """Get the topic ARN from the parameters or fetch it from AWS using the
-        topic name.
-
-        :return: The topic ARN.
-        """
-
-        if self.params.get("topic_arn"):
-            return self.params["topic_arn"]
-
-        breakpoint()
-        response = self.conn.create_topic(Name=self.params["topic"])
-        return response["TopicArn"]
 
     async def close(self) -> None:
         """Close the connection to the AWS SNS service."""
@@ -97,8 +82,7 @@ class AwsSnsBroker(BrokerBase):
             None,
             partial(
                 conn.conn.publish,
-                TopicArn=conn.topic_arn,
+                TopicArn=conn.params["topic_arn"],
                 Message=message,
             ),
         )
-

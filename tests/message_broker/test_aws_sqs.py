@@ -103,7 +103,7 @@ class TestAwsSqsConnection:
         assert conn.conn is None
         assert conn.queue_url is None
 
-    def test_if_queue_url_preferred_over_queue_name(self):
+    def test_queue_url_preferred_over_queue_name(self):
         conn = AwsSqsConnection(
             config={},
             conn_details=DEFAULT_CONN_DETAILS,

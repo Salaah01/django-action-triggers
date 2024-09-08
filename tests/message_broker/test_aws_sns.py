@@ -6,7 +6,7 @@ from action_triggers.message_broker.aws_sns import (
 )
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 from tests.utils.aws import (
-    TOPIC_NAME,
+    TOPIC_ARN,
     CONN_DETAILS,
     SNSTopic,
     can_connect_to_localstack,
@@ -38,7 +38,7 @@ class TestAwsSnsConnection:
                 params={"topic": "topic"},
             )
 
-    def test_raises_exception_if_no_topic_found(self):
+    def test_raises_exception_if_no_topic_arn_found(self):
         with pytest.raises(ConnectionValidationError):
             AwsSnsConnection(
                 config={},
@@ -46,18 +46,11 @@ class TestAwsSnsConnection:
                 params={},
             )
 
-    @pytest.mark.parametrize(
-        "parms",
-        [
-            {"topic_arn": "http://test_topic_1"},
-            {"topic": "test_topic_1"},
-        ],
-    )
-    def test_passes_when_topic_exists(self, parms):
+    def test_passes_when_topic_arn_exists(self):
         AwsSnsConnection(
             config={},
             conn_details=CONN_DETAILS,
-            params=parms,
+            params={"topic_arn": "http://test_topic_1"},
         )
 
     @pytest.mark.asyncio
@@ -68,10 +61,10 @@ class TestAwsSnsConnection:
         conn = AwsSnsConnection(
             config={},
             conn_details=CONN_DETAILS,
-            params={"topic": "test_topic_1"},
+            params={"topic_arn": "test_topic_1"},
         )
         await conn.connect()
-        assert conn.topic_arn
+        assert conn.conn
         await conn.close()
         assert not conn.conn
 
@@ -84,31 +77,12 @@ class TestAwsSnsConnection:
                 },
             },
             conn_details={},
-            params={"topic": TOPIC_NAME},
+            params={"topic_arn": TOPIC_ARN},
         )
         await conn.connect()
         assert conn.conn
         await conn.close()
         assert not conn.conn
-
-    def test_topic_arn_is_preferred_over_queue_arn(self):
-        conn = AwsSnsConnection(
-            config={},
-            conn_details=CONN_DETAILS,
-            params={"topic_arn": "test_topic_1", "topic": "test_topic_2"},
-        )
-        assert conn.get_topic_arn() == "test_topic_1"
-
-    @pytest.mark.asyncio
-    async def test_get_topic_works_using_topic_name(self):
-        url = SNSTopic("new-topic").create_topic()
-        conn = AwsSnsConnection(
-            config={},
-            conn_details=CONN_DETAILS,
-            params={"topic": "new-topic"},
-        )
-        await conn.connect()
-        assert conn.topic_arn == url
 
 
 @pytest.mark.skipif(
