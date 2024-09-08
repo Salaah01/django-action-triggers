@@ -30,6 +30,46 @@ initiates a corresponding **"action"**. Triggers are typically associated with
 database changes, such as creating, updating, or deleting records,
 while actions define the code that is executed in response to those changes.
 
+Why Django Action Triggers Over Django Signals?
+===============================================
+
+In Django, signals are often hardcoded into a `signals.py` file to define
+actions that happen when specific events occur (like saving or deleting a model
+instance). While this is useful, it can have several limitations:
+
+- **Changes require redeployments**: To add, remove, or update a signal, you
+  must modify the code and redeploy your application.
+- **Static configuration**: Signals are hardcoded, meaning there's little
+  flexibility for runtime changes.
+- **Maintenance burden**: As your application grows, managing multiple signals
+  across different models can become cumbersome.
+- **No out-of-the-box integrations**: Integrating signals with external
+  services like **AWS**, **RabbitMQ**, **Kafka**, etc., requires additional
+  custom code.
+
+How Django Action Triggers Helps
+--------------------------------
+
+Django Action Triggers addresses these limitations by providing:
+
+- **Dynamic signal management**: You can add, update, or remove signals without
+  touching the codebase. Everything is managed through the
+  **Django admin interface** or via the **API**, allowing for quick adjustments
+  and runtime flexibility.
+- **Built-in support for external services**: Seamless integration with popular
+  message brokers such as **AWS SQS**, **Kafka**, **RabbitMQ**, and more,
+  without the need for additional custom code.
+- **Asynchronous actions**: Actions are handled asynchronously, ensuring that
+  each trigger is processed efficiently without blocking the main thread.
+- **Flexibility and scalability**: As your application grows, Django Action
+  Triggers simplifies signal management, allowing you to easily scale and
+  integrate with third-party services.
+
+In short, Django Action Triggers allows you to manage and extend signal-driven
+workflows at runtime, while also providing built-in integrations with external
+services. It removes the need for code modifications and redeployments,
+offering a more flexible and maintainable approach.
+
 Supported Actions
 -----------------
 
