@@ -16,7 +16,7 @@ except ImportError:  # pragma: no cover
 class KafkaConnection(ConnectionBase):
     """Connection class for Kafka."""
 
-    required_conn_detail_fields = ()
+    required_conn_detail_fields = (HasField("bootstrap_servers", str),)
     required_params_fields = (HasField("topic", str),)
 
     # def validate_topic_exists(self):

@@ -16,15 +16,26 @@ class TestKafkaConnection:
         with pytest.raises(ConnectionValidationError):
             KafkaConnection(
                 config={},
-                conn_details={},
+                conn_details={
+                    "conn_details": {"bootstrap_servers": "localhost:9092"},
+                },
                 params={},
             )
 
     @pytest.mark.parametrize(
         "config,params",
         (
-            ({"params": {"topic": "test_topic_1"}}, {}),
-            ({}, {"topic": "test_topic_1"}),
+            (
+                {
+                    "params": {"topic": "test_topic_1"},
+                    "conn_details": {"bootstrap_servers": "localhost:9092"},
+                },
+                {},
+            ),
+            (
+                {"conn_details": {"bootstrap_servers": "localhost:9092"}},
+                {"topic": "test_topic_1"},
+            ),
         ),
     )
     def test_passes_when_topic_exists(self, config, params):
