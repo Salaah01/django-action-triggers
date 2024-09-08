@@ -76,11 +76,6 @@ class HasField(RequiredFieldBase):
             return True
 
         arg_0 = self.args[0]
-        if type(arg_0) is not type:
-            raise ValueError(
-                "The first positional argument must be a type to check the "
-                "field against."
-            )
 
         if not isinstance(context[self.field], arg_0):
             self._error_msg = (

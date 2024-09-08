@@ -14,7 +14,7 @@ class TestRequiredFieldBase:
     """Tests for the `RequiredFieldBase` class."""
 
     def test_str_is_a_string(self):
-        assert isinstance(HasField("field", str).field, str)
+        assert isinstance(str(HasField("field", str)), str)
 
     def test_repr_is_a_string(self):
         assert isinstance(repr(HasField("field", str)), str)
