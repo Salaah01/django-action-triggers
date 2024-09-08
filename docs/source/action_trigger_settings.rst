@@ -13,6 +13,7 @@ Django project's `settings.py` file to fine-tune the behaviour of the
 application.
 
 .. _action_trigger_settings_configuration_options:
+
 Configuration Options (`ACTION_TRIGGERS`)
 =========================================
 
