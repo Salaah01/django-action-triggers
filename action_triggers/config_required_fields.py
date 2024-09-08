@@ -132,6 +132,9 @@ class HasAtLeastOneOffField(RequiredFieldBase):
     be present in the context.
     """
 
+    def __init__(self, field: str = "", *args, **kwargs) -> None:
+        super().__init__(field, *args, **kwargs)
+
     def _validate_init_params(self) -> None:
         if self.field:
             raise ValueError(
