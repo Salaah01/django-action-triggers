@@ -3,6 +3,10 @@
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
+from action_triggers.config_required_fields import (
+    HasField,
+    HasAtLeastOneOffField,
+)
 
 try:
     import redis.asyncio as redis  # type: ignore[import-untyped]
@@ -13,37 +17,10 @@ except ImportError:  # pragma: no cover
 class RedisConnection(ConnectionBase):
     """Connection class for Redis."""
 
-    required_conn_detail_fields = []
-    required_params_fields = []
-
-    def validate_either_url_or_host_provided(self) -> None:
-        """Validate that either a URL or host is provided in the connection
-        details.
-        """
-
-        if not self.conn_details.get("url") and not self.conn_details.get(
-            "host"
-        ):
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "url",
-                "Either a URL or host must be provided.",
-            )
-
-    def validate_channel_exists(self) -> None:
-        """Validate that the channel exists in the parameters."""
-
-        if not self.params.get("channel"):
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "channel",
-                "Channel name must be provided.",
-            )
-
-    def validate(self) -> None:
-        """Validate the connection details."""
-
-        self.validate_either_url_or_host_provided()
-        self.validate_channel_exists()
-        super().validate()
+    required_conn_detail_fields = (
+        HasAtLeastOneOffField(fields=("url", "host")),
+    )
+    required_params_fields = (HasField("channel", str),)
 
     async def connect(self) -> None:
         """Connect to the Redis server."""
