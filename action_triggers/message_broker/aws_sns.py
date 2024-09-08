@@ -6,6 +6,7 @@ from functools import partial
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
+from action_triggers.config_required_fields import HasField
 
 try:
     import boto3  # type: ignore[import]
@@ -16,35 +17,8 @@ except ImportError:  # pragma: no cover
 class AwsSnsConnection(ConnectionBase):
     """Connection class for AWS SNS."""
 
-    required_conn_detail_fields = []
-    required_params_fields = []
-
-    def validate_endpoint_url_provided(self) -> None:
-        """Validate that the endpoint url is provided in the connection
-        details.
-        """
-
-        if "endpoint_url" not in self.conn_details.keys():
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "endpoint_url",
-                "An endpoint_url must be provided.",
-            )
-
-    def validate_topic_arn_provided(self) -> None:
-        """Validate that the topic is provided."""
-
-        if not self.params.get("topic_arn"):
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "topic",
-                "A topic must be provided.",
-            )
-
-    def validate(self) -> None:
-        """Validate the connection details."""
-
-        self.validate_endpoint_url_provided()
-        self.validate_topic_arn_provided()
-        super().validate()
+    required_conn_detail_fields = (HasField("endpoint_url", str),)
+    required_params_fields = (HasField("topic_arn", str),)
 
     async def connect(self) -> None:
         """Connect to the AWS SQS service."""

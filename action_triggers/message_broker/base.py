@@ -151,7 +151,7 @@ class ConnectionBase(ABC):
 
         for field in required_fields:
             if not field.check(settings_context):
-                err_fn(field.fields, field.error_msg)
+                err_fn(field.key_repr, field.error_msg)
 
     def validate_required_conn_details(self) -> None:
         """Validate that the required connection details are present."""

@@ -13,6 +13,12 @@ class RequiredFieldBase(ABC):
         self.kwargs = kwargs
         self._validate_init_params()
 
+    def __str__(self) -> str:
+        return self.key_repr
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.key_repr!r})"
+
     @abstractmethod
     def check(self, context: dict) -> bool:
         """Check if the required field is present in the context.
@@ -34,9 +40,71 @@ class RequiredFieldBase(ABC):
             parameters.
         """
 
+    @property
+    def key_repr(self) -> str:
+        """The key representation of the field."""
+
+        return self.field
+
 
 class HasField(RequiredFieldBase):
     """Represents a required field that must be present in the context."""
+
+    def check_exists(self, context: dict) -> bool:
+        """Check if the field is present in the context.
+
+        :param context: The context to check.
+        :return: True if the field is present, False otherwise.
+        """
+        self._error_msg = f"The field {self.field} must be provided."
+        return self.field in context.keys()
+
+    def check_type_from_args(self, context: dict) -> bool:
+        """Check if the field type is provided in the first positional
+        argument, and if so, check if the field is of that type.
+
+        :param context: The context to check.
+        :return: True if the field is of the specified type, False otherwise.
+        :raises ValueError: If the first positional argument is not a type.
+        """
+
+        if not self.args:
+            return True
+
+        arg_0 = self.args[0]
+        if type(arg_0) is not type:
+            raise ValueError(
+                "The first positional argument must be a type to check the "
+                "field against."
+            )
+
+        if not isinstance(context[self.field], arg_0):
+            self._error_msg = (
+                f"The field {self.field} must be of type {arg_0.__name__}."
+            )
+            return False
+
+        return True
+
+    def check_type_from_kwargs(self, context: dict) -> bool:
+        """Check if the field type is provided in the `type` keyword argument,
+        and if so, check if the field is of that type.
+
+        :param context: The context to check.
+        :return: True if the field is of the specified type, False otherwise.
+        """
+
+        if "type" not in self.kwargs:
+            return True
+
+        arg_0 = self.kwargs["type"]
+        if not isinstance(context[self.field], arg_0):
+            self._error_msg = (
+                f"The field {self.field} must be of type {arg_0.__name__}."
+            )
+            return False
+
+        return True
 
     def check(self, context: dict) -> bool:
         """Check if the field is present in the context.
@@ -45,13 +113,18 @@ class HasField(RequiredFieldBase):
         :return: True if the field is present, False otherwise.
         """
 
-        return all(field in context.keys() for field in self.fields)
+        checks = (
+            self.check_exists,
+            self.check_type_from_args,
+            self.check_type_from_kwargs,
+        )
+        return all(check(context) for check in checks)
 
     @property
     def error_msg(self) -> str:
         """The error message to display if the field is not present."""
 
-        return f"The field {self.field} must be provided."
+        return self._error_msg
 
 
 class HasAtLeastOneOffField(RequiredFieldBase):
@@ -89,3 +162,9 @@ class HasAtLeastOneOffField(RequiredFieldBase):
         """
 
         return f"At least one of the fields {self.fields} must be provided."
+
+    @property
+    def key_repr(self) -> str:
+        """The key representation of the field."""
+
+        return ", ".join(self.fields)
