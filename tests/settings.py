@@ -125,11 +125,23 @@ ACTION_TRIGGERS = {
             "conn_details": {
                 "endpoint_url": AWS_ENDPOINT,
                 "region_name": AWS_REGION,
-                "aws_access_key_id": 'test-key',
-                "aws_secret_access_key": 'test-secret',
+                "aws_access_key_id": "test-key",
+                "aws_secret_access_key": "test-secret",
             },
             "params": {
                 "queue_name": "aws_sqs_queue",
+            },
+        },
+        "aws_sns": {
+            "broker_type": "aws_sns",
+            "conn_details": {
+                "endpoint_url": AWS_ENDPOINT,
+                "region_name": AWS_REGION,
+                "aws_access_key_id": "test-key",
+                "aws_secret_access_key": "test-secret",
+            },
+            "params": {
+                "topic_arn": "arn:aws:sns:eu-west-1:000000000000:test_topic_1",
             },
         },
     },

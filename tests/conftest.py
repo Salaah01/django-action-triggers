@@ -25,10 +25,11 @@ from action_triggers.models import (  # noqa: E402
     Webhook,
 )
 from tests.models import CustomerModel, CustomerOrderModel  # noqa: E402
-from tests.utils.aws_sqs import (  # noqa: E402
+from tests.utils.aws import (  # noqa: E402
+    SNSTopic,
     SQSQueue,
-    SQSUser,
-    can_connect_to_sqs,
+    can_connect_to_localstack,
+    sqs_user_factory,
 )
 
 
@@ -98,6 +99,15 @@ def aws_sqs_trigger(config):
 
 
 @pytest.fixture
+def aws_sns_trigger(config):
+    return baker.make(
+        MessageBrokerQueue,
+        name="aws_sns",
+        config=config,
+    )
+
+
+@pytest.fixture
 def customer_post_save_signal(config):
     return baker.make(
         ConfigSignal,
@@ -159,6 +169,20 @@ def customer_aws_sqs_post_save_signal(
         config,
         customer_post_save_signal,
         aws_sqs_trigger,
+    )
+
+
+@pytest.fixture
+def customer_aws_sns_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    aws_sns_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        aws_sns_trigger,
     )
 
 
@@ -233,10 +257,10 @@ def customer():
 
 @pytest.fixture(scope="module")
 def sqs_user_mod():
-    if not can_connect_to_sqs():
+    if not can_connect_to_localstack():
         yield None
     else:
-        sqs = SQSUser()
+        sqs = sqs_user_factory()
         sqs()
         yield sqs
         sqs.delete_user_if_exists()
@@ -244,13 +268,24 @@ def sqs_user_mod():
 
 @pytest.fixture(scope="module")
 def sqs_queue_mod(sqs_user_mod):
-    if not can_connect_to_sqs():
+    if not can_connect_to_localstack():
         yield None
     else:
-        queue = SQSQueue(sqs_user_mod)
+        queue = SQSQueue()
         queue()
         yield queue
         queue.delete_queue_if_exists()
+
+
+@pytest.fixture(scope="module")
+def sns_queue_mod(sqs_user_mod):
+    if not can_connect_to_localstack():
+        yield None
+    else:
+        queue = SNSTopic()
+        queue()
+        yield queue
+        queue.delete_topic_if_exists()
 
 
 @pytest.fixture
@@ -258,4 +293,12 @@ def sqs_client():
     return boto3.client(
         "sqs",
         **settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["conn_details"],
+    )
+
+
+@pytest.fixture
+def sns_client():
+    return boto3.client(
+        "sns",
+        **settings.ACTION_TRIGGERS["brokers"]["aws_sns"]["conn_details"],
     )

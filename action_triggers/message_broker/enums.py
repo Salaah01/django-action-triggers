@@ -8,3 +8,4 @@ class BrokerType(Enum):
     KAFKA = "kafka"
     REDIS = "redis"
     AWS_SQS = "aws_sqs"
+    AWS_SNS = "aws_sns"

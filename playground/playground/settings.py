@@ -192,11 +192,24 @@ ACTION_TRIGGERS = {
             "broker_type": "aws_sqs",
             "conn_details": {
                 "endpoint_url": "http://localhost:4566",
-                "aws_access_key_id": os.environ["AWS_ACCESS_KEY_ID"],
-                "aws_secret_access_key": os.environ["AWS_SECRET_ACCESS_KEY"],
+                "region_name": "eu-west-1",
+                "aws_access_key_id": "test-key",
+                "aws_secret_access_key": "test-secret",
             },
             "params": {
                 "queue_name": "test-1",
+            },
+        },
+        "aws_sns": {
+            "broker_type": "aws_sns",
+            "conn_details": {
+                "endpoint_url": "http://localhost:4566",
+                "region_name": "eu-west-1",
+                "aws_access_key_id": "test-key",
+                "aws_secret_access_key": "test-secret",
+            },
+            "params": {
+                "topic": "aws_sns_topic",
             },
         },
     },

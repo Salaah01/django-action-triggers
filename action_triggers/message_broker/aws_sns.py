@@ -1,4 +1,4 @@
-"""Module to support sending messages to AWS SQS."""
+"""Module to support sending messages to AWS SNS."""
 
 import asyncio
 from functools import partial
@@ -13,8 +13,8 @@ except ImportError:  # pragma: no cover
     boto3 = MissingImportWrapper("boto3")  # type: ignore[assignment]
 
 
-class AwsSqsConnection(ConnectionBase):
-    """Connection class for AWS SQS."""
+class AwsSnsConnection(ConnectionBase):
+    """Connection class for AWS SNS."""
 
     def validate_endpoint_url_provided(self) -> None:
         """Validate that the endpoint url is provided in the connection
@@ -27,55 +27,34 @@ class AwsSqsConnection(ConnectionBase):
                 "An endpoint_url must be provided.",
             )
 
-    def validate_queue_provided(self) -> None:
-        """Validate that the queue url or name is provided in the
-        parameters.
-        """
+    def validate_topic_arn_provided(self) -> None:
+        """Validate that the topic is provided."""
 
-        # TODO: change to `queue_arn` and `queue_name`
-        if not self.params.get("queue_url") and not self.params.get(
-            "queue_name"
-        ):
+        if not self.params.get("topic_arn"):
             self._errors.add_params_error(  # type: ignore[attr-defined]
-                "queue",
-                "Either a queue URL or name must be provided.",
+                "topic",
+                "A topic must be provided.",
             )
 
     def validate(self) -> None:
         """Validate the connection details."""
 
         self.validate_endpoint_url_provided()
-        self.validate_queue_provided()
+        self.validate_topic_arn_provided()
         super().validate()
-
-    def get_queue_url(self) -> str:
-        """Get the queue URL from the parameters or fetch it from AWS using the
-        queue name.
-
-        :return: The queue URL.
-        """
-
-        if self.params.get("queue_url"):
-            return self.params["queue_url"]
-
-        response = self.conn.get_queue_url(QueueName=self.params["queue_name"])
-        return response["QueueUrl"]
 
     async def connect(self) -> None:
         """Connect to the AWS SQS service."""
 
-        loop = asyncio.get_event_loop()
-        self.conn = boto3.client("sqs", **self.conn_details)
-        self.queue_url = await loop.run_in_executor(None, self.get_queue_url)
+        self.conn = boto3.client("sns", **self.conn_details)
 
     async def close(self) -> None:
-        """Close the connection to the AWS SQS service."""
+        """Close the connection to the AWS SNS service."""
 
         self.conn = None
-        self.queue_url = None  # type: ignore[assignment]
 
 
-class AwsSqsBroker(BrokerBase):
+class AwsSnsBroker(BrokerBase):
     """Broker class for AWS SQS.
 
     :param broker_key: The key for the broker (must exist in the
@@ -84,12 +63,12 @@ class AwsSqsBroker(BrokerBase):
         connection to the broker.
     """
 
-    broker_type = BrokerType.AWS_SQS
-    conn_class = AwsSqsConnection
+    broker_type = BrokerType.AWS_SNS
+    conn_class = AwsSnsConnection
 
     async def _send_message_impl(
         self,
-        conn: AwsSqsConnection,
+        conn: AwsSnsConnection,
         message: str,
     ) -> None:
         """Send a message to the AWS SQS queue.
@@ -102,8 +81,8 @@ class AwsSqsBroker(BrokerBase):
         loop.run_in_executor(
             None,
             partial(
-                conn.conn.send_message,
-                QueueUrl=conn.queue_url,
-                MessageBody=message,
+                conn.conn.publish,
+                TopicArn=conn.params["topic_arn"],
+                Message=message,
             ),
         )
