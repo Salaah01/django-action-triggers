@@ -15,7 +15,7 @@ CONN_DETAILS = BROKER_SETTINGS["conn_details"]  # type: ignore[index]
 QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: ignore[index]  # noqa E501
     "queue_name"
 ]
-TOPIC_NAME = BROKER_SETTINGS["params"]["topic"]  # type: ignore[index]
+TOPIC_NAME = "test_topic"
 
 TOPIC_ARN = BROKER_SETTINGS["params"]["topic_arn"]  # type: ignore[index]
 
