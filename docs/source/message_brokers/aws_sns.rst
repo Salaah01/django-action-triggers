@@ -47,8 +47,6 @@ Here is an example configuration for AWS SNS:
     }
   }
 
-
-
 Example Configuration in `settings.py` using `endpoint_url`
 -----------------------------------------------------------
 
@@ -69,7 +67,6 @@ be useful when using a local instance of the AWS SNS service:
     }
   }
 
- 
 Creating an AWS SNS Action
 ==========================
 

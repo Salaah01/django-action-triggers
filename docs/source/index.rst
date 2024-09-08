@@ -70,6 +70,7 @@ This documentation is organised into the following sections:
    message_brokers/rabbitmq
    message_brokers/redis
    message_brokers/aws_sqs
+   message_brokers/aws_sns
 
 .. toctree::
    :maxdepth: 1
