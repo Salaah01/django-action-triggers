@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-action-triggers"
-version = "0.3.0"
+version = "0.4.0"
 description = "A Django application that asynchronously triggers actions based on database changes. Supports webhook integration, message brokers (Kafka, RabbitMQ), and flexible configurations."
 authors = ["Salaah Amin <salaah01@users.noreply.github.com>"]
 readme = "README.md"
