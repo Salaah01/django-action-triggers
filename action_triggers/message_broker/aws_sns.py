@@ -30,7 +30,7 @@ class AwsSnsConnection(ConnectionBase):
     def validate_topic_provided(self) -> None:
         """Validate that the topic is provided."""
 
-        if "topic" not in self.params.keys():
+        if not set(self.params.keys()).intersection({"topic", "topic_arn"}):
             self._errors.add_params_error(  # type: ignore[attr-defined]
                 "topic",
                 "A topic must be provided.",
@@ -46,17 +46,59 @@ class AwsSnsConnection(ConnectionBase):
     async def connect(self) -> None:
         """Connect to the AWS SQS service."""
 
-        loop = asyncio.get_event_loop()
-        self.conn = loop.run_in_executor(
-            None,
-            partial(
-                boto3.client,
-                "sns",
-                **self.conn_details,
-            ),
-        )
+        self.conn = boto3.client("sns", **self.conn_details)
+        self.topic_arn = self.get_topic_arn()
+
+    def get_topic_arn(self) -> str:
+        """Get the topic ARN from the parameters or fetch it from AWS using the
+        topic name.
+
+        :return: The topic ARN.
+        """
+
+        if self.params.get("topic_arn"):
+            return self.params["topic_arn"]
+
+        breakpoint()
+        response = self.conn.create_topic(Name=self.params["topic"])
+        return response["TopicArn"]
 
     async def close(self) -> None:
         """Close the connection to the AWS SNS service."""
 
         self.conn = None
+
+
+class AwsSnsBroker(BrokerBase):
+    """Broker class for AWS SQS.
+
+    :param broker_key: The key for the broker (must exist in the
+        `settings.ACTION_TRIGGERS["brokers"]` dictionary)).
+    :param conn_params: The connection parameters to use for establishing the
+        connection to the broker.
+    """
+
+    broker_type = BrokerType.AWS_SNS
+    conn_class = AwsSnsConnection
+
+    async def _send_message_impl(
+        self,
+        conn: AwsSnsConnection,
+        message: str,
+    ) -> None:
+        """Send a message to the AWS SQS queue.
+
+        :param conn: The connection to the AWS SQS service.
+        :param message: The message to send.
+        """
+
+        loop = asyncio.get_event_loop()
+        loop.run_in_executor(
+            None,
+            partial(
+                conn.conn.publish,
+                TopicArn=conn.topic_arn,
+                Message=message,
+            ),
+        )
+

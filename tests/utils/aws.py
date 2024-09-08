@@ -11,15 +11,14 @@ except ImportError:
 
 from django.conf import settings
 
-CONN_DETAILS = settings.ACTION_TRIGGERS["brokers"]["aws_sns"][  # type: ignore[index]  # noqa E501
-    "conn_details"
-]
+BROKER_SETTINGS = settings.ACTION_TRIGGERS["brokers"]["aws_sns"]
+CONN_DETAILS = BROKER_SETTINGS["conn_details"]  # type: ignore[index]
 QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: ignore[index]  # noqa E501
     "queue_name"
 ]
-TOPIC = settings.ACTION_TRIGGERS["brokers"]["aws_sns"]["params"][  # type: ignore[index]  # noqa E501
-    "topic"
-]
+TOPIC_NAME = BROKER_SETTINGS["params"]["topic"]  # type: ignore[index]
+
+TOPIC_ARN = BROKER_SETTINGS["params"]["topic_arn"]  # type: ignore[index]
 
 
 class PolicyEnum(Enum):
@@ -169,6 +168,42 @@ class SQSQueue:
         response = self.client.create_queue(QueueName=self.queue_name)
         self.queue_url = response["QueueUrl"]
         return self.queue_url
+
+
+class SNSTopic:
+    """A class to manage an AWS SNS topic."""
+
+    def __init__(self, topic: str = TOPIC_NAME) -> None:
+        """Initialize the class.
+
+        :param topic: The name of the topic.
+        """
+        self.topic = topic
+        self.client = boto3.client("sns", **CONN_DETAILS)
+
+    def __call__(self) -> str:
+        """Create a topic.
+
+        :return: The topic ARN.
+        """
+        return self.create_topic()
+
+    def delete_topic_if_exists(self) -> None:
+        """Delete the topic if it exists."""
+        try:
+            self.client.delete_topic(TopicArn=self.topic_arn)
+        except AttributeError:
+            pass
+
+    def create_topic(self) -> str:
+        """Create a topic.
+
+        :return: The topic ARN.
+        """
+        self.delete_topic_if_exists()
+        response = self.client.create_topic(Name=self.topic)
+        self.topic_arn = response["TopicArn"]
+        return self.topic_arn
 
 
 @lru_cache

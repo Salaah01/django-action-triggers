@@ -1,6 +1,7 @@
 """Integration tests."""
 
 import asyncio
+import json
 
 import pytest
 
@@ -333,7 +334,7 @@ class TestIntegrationMessageBrokerAwsSqs:
     ]
 
     @pytest.fixture(autouse=True)
-    def purge_all_messages(self, sqs_client):
+    def purge_all_sqs_messages(self, sqs_client):
         try:
             sqs_client.purge_queue(
                 QueueUrl=sqs_client.get_queue_url(QueueName=self.QUEUE_NAME)[
@@ -395,3 +396,95 @@ class TestIntegrationMessageBrokerAwsSqs:
             ],
             ReceiptHandle=message["ReceiptHandle"],
         )
+
+
+@pytest.mark.skipif(
+    not can_connect_to_localstack(),
+    reason="Cannot connect to SQS, localstack (AWS emulator) is not running.",
+)
+@pytest.mark.django_db(transaction=True)
+class TestIntegrationMessageBrokerAwsSns:
+    """Integration tests where the action to be triggered is sending a payload
+    to an AWS SNS message broker.
+    """
+
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self, sns_client):
+        response = sns_client.list_topics()
+        for topic in response["Topics"]:
+            sns_client.delete_topic(TopicArn=topic["TopicArn"])
+
+    def test_simple_basic_json_message(
+        self,
+        customer_aws_sns_post_save_signal,
+        sns_client,
+        sqs_client,
+    ):
+        queue_url = sqs_client.create_queue(QueueName="test_queue_1")[
+            "QueueUrl"
+        ]
+        topic_arn = sns_client.create_topic(Name="test_topic_1")["TopicArn"]
+        sns_client.subscribe(
+            TopicArn=topic_arn,
+            Protocol="sqs",
+            Endpoint=sqs_client.get_queue_attributes(
+                QueueUrl=queue_url,
+                AttributeNames=["QueueArn"],
+            )["Attributes"]["QueueArn"],
+        )
+        baker.make(CustomerModel)
+        response = sqs_client.receive_message(
+            QueueUrl=queue_url,
+            MaxNumberOfMessages=1,
+            WaitTimeSeconds=10,
+        )
+
+        assert (
+            json.loads(response["Messages"][0]["Body"])["Message"]
+            == '{"message": "Hello, World!"}'
+        )
+
+        sqs_client.delete_queue(QueueUrl=queue_url)
+
+    @pytest.fixture
+    def fixture_simple_basic_plain_message(
+        self,
+        customer_aws_sns_post_save_signal,
+        sns_client,
+        sqs_client,
+    ):
+        config = customer_aws_sns_post_save_signal.config
+        config.payload = "Hello Plain World!"
+        config.save()
+
+    def test_simple_basic_plain_message(
+        self,
+        fixture_simple_basic_plain_message,
+        sns_client,
+        sqs_client,
+    ):
+        queue_url = sqs_client.create_queue(QueueName="test_queue_1")[
+            "QueueUrl"
+        ]
+        topic_arn = sns_client.create_topic(Name="test_topic_1")["TopicArn"]
+        sns_client.subscribe(
+            TopicArn=topic_arn,
+            Protocol="sqs",
+            Endpoint=sqs_client.get_queue_attributes(
+                QueueUrl=queue_url,
+                AttributeNames=["QueueArn"],
+            )["Attributes"]["QueueArn"],
+        )
+        baker.make(CustomerModel)
+        response = sqs_client.receive_message(
+            QueueUrl=queue_url,
+            MaxNumberOfMessages=1,
+            WaitTimeSeconds=10,
+        )
+
+        assert (
+            json.loads(response["Messages"][0]["Body"])["Message"]
+            == '"Hello Plain World!"'
+        )
+
+        sqs_client.delete_queue(QueueUrl=queue_url)

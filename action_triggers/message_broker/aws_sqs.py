@@ -32,6 +32,7 @@ class AwsSqsConnection(ConnectionBase):
         parameters.
         """
 
+        # TODO: change to `queue_arn` and `queue_name`
         if not self.params.get("queue_url") and not self.params.get(
             "queue_name"
         ):
@@ -77,8 +78,8 @@ class AwsSqsConnection(ConnectionBase):
 class AwsSqsBroker(BrokerBase):
     """Broker class for AWS SQS.
 
-    :param broker_key: The key for the broker (must existing in
-        `settings.ACTION_TRIGGERS`).
+    :param broker_key: The key for the broker (must exist in the
+        `settings.ACTION_TRIGGERS["brokers"]` dictionary)).
     :param conn_params: The connection parameters to use for establishing the
         connection to the broker.
     """

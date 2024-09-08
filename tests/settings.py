@@ -141,7 +141,8 @@ ACTION_TRIGGERS = {
                 "aws_secret_access_key": "test-secret",
             },
             "params": {
-                "topic": "aws_sns_topic",
+                "topic": "test_topic",
+                "topic_arn": "arn:aws:sns:eu-west-1:000000000000:test_topic_1",
             },
         },
     },
