@@ -2,8 +2,8 @@ import typing as _t
 
 from django.conf import settings
 
-from action_triggers.message_broker.aws_sqs import AwsSqsBroker
 from action_triggers.message_broker.aws_sns import AwsSnsBroker
+from action_triggers.message_broker.aws_sqs import AwsSqsBroker
 from action_triggers.message_broker.base import BrokerBase
 from action_triggers.message_broker.enums import BrokerType
 from action_triggers.message_broker.kafka import KafkaBroker

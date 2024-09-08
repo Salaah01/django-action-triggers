@@ -1,8 +1,7 @@
 from enum import Enum
-from functools import lru_cache
+from functools import lru_cache, partial
 from string import Template
 from uuid import uuid4
-from functools import partial
 
 try:
     import boto3  # type: ignore[import-untyped]
@@ -11,7 +10,7 @@ except ImportError:
 
 from django.conf import settings
 
-BROKER_SETTINGS = settings.ACTION_TRIGGERS["brokers"]["aws_sns"]
+BROKER_SETTINGS = settings.ACTION_TRIGGERS["brokers"]["aws_sns"]  # type: ignore[index]  # noqa E501
 CONN_DETAILS = BROKER_SETTINGS["conn_details"]  # type: ignore[index]
 QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: ignore[index]  # noqa E501
     "queue_name"
@@ -65,7 +64,9 @@ class User:
 
         :return: The user's access and secret key.
         """
-        self.create_user()
+        # The `create_user` method is typically replaced by the factory
+        # function which creates the user with the appropriate policy.
+        self.create_user()  # type: ignore[call-arg]
 
     def delete_user_if_exists(self) -> None:
         """Delete the user if it exists.
@@ -114,7 +115,10 @@ def user_factory(username: str, policy: PolicyEnum) -> User:
         user=username, suffix=uuid4().hex[:8]
     )
     klass = User(username)
-    klass.create_user = partial(klass.create_user, policy)
+    klass.create_user = partial(  # type: ignore[method-assign]
+        klass.create_user,
+        policy,
+    )
     return klass
 
 
@@ -123,7 +127,10 @@ def sqs_user_factory() -> User:
 
     :return: The user object.
     """
-    return user_factory("sqs", PolicyEnum.SQS_FULL_ACCESS.value)
+    return user_factory(  # type: ignore[call-arg]
+        "sqs",
+        PolicyEnum.SQS_FULL_ACCESS.value,  # type: ignore[arg-type]
+    )
 
 
 def sns_user_factory() -> User:
@@ -131,7 +138,10 @@ def sns_user_factory() -> User:
 
     :return: The user object.
     """
-    return user_factory("sns", PolicyEnum.SNS_FULL_ACCESS.value)
+    return user_factory(  # type: ignore[call-arg]
+        "sns",
+        PolicyEnum.SNS_FULL_ACCESS.value,  # type: ignore[arg-type]
+    )
 
 
 class SQSQueue:

@@ -5,12 +5,7 @@ from action_triggers.message_broker.aws_sns import (
     AwsSnsConnection,
 )
 from action_triggers.message_broker.exceptions import ConnectionValidationError
-from tests.utils.aws import (
-    TOPIC_ARN,
-    CONN_DETAILS,
-    SNSTopic,
-    can_connect_to_localstack,
-)
+from tests.utils.aws import CONN_DETAILS, TOPIC_ARN, can_connect_to_localstack
 
 try:
     import boto3  # type: ignore[import-untyped]
