@@ -44,8 +44,7 @@ def can_connect_to_rabbitmq() -> bool:
         try:
             async with get_rabbitmq_conn():
                 return True
-        except Exception as e:
-            raise e
+        except Exception:
             return False
 
     return asyncio.run(_can_connect_to_rabbitmq())
