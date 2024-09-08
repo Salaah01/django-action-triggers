@@ -36,8 +36,6 @@ This application is highly flexible and can be configured via code or through th
 In Django, signals are typically hardcoded in a `signals.py` file, where you define logic like "if this happens, do that." While this works well for many cases, it introduces a few limitations:
 
 - **Changes require code updates:** Adding or modifying signals requires changes to your codebase and redeployment.
-- 
-
 - **Static and inflexible:** Anytime you need to modify, add, or remove signals, you have to manually edit the code and redeploy the application.
 - **Maintenance overhead:** As your application grows, managing signals this way can make the code harder to maintain and scale.
 
