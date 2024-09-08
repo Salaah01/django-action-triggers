@@ -24,13 +24,13 @@ class RabbitMQConnection(ConnectionBase):
         # Python 3.8 requires the port to be an integer.
         # Resetting the cached connection details to ensure that when the lazy
         # property is accessed, the updated port is used.
+        super().validate()
         self._conn_details = None
         if "port" in self._user_conn_details:
             self._user_conn_details = deepcopy(self._user_conn_details)
             self._user_conn_details["port"] = int(
                 self._user_conn_details["port"]
             )
-        super().validate()
 
     async def connect(self) -> None:
         self.conn = await aio_pika.connect_robust(

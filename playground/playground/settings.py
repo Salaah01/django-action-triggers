@@ -171,7 +171,7 @@ ACTION_TRIGGERS = {
         "kafka_1": {
             "broker_type": "kafka",
             "conn_details": {
-                "bootstrap.servers": "localhost:29092",
+                "bootstrap_servers": "localhost:29092",
             },
             "params": {
                 "topic": "test_topic_1",
