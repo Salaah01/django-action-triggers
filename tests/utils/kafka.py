@@ -67,7 +67,8 @@ def can_connect_to_kafka() -> bool:
         try:
             async with get_kafka_consumer():
                 return True
-        except Exception:
+        except Exception as e:
+            raise e
             return False
 
     return asyncio.run(_can_connect_to_kafka())
