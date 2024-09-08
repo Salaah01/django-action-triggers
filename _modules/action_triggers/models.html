@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>action_triggers.models &mdash; django-action-triggers 0.3.0 documentation</title>
+  <title>action_triggers.models &mdash; django-action-triggers 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=e259d695"></script>
+        <script src="../../_static/documentation_options.js?v=6c02275b"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -34,7 +34,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -55,10 +55,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../message_brokers/kafka.html">Kafka</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">Module Documentation</a></li>
 </ul>
@@ -94,6 +99,7 @@
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.contenttypes.models</span> <span class="kn">import</span> <span class="n">ContentType</span>
+<span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="kn">import</span> <span class="n">MinValueValidator</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">gettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
@@ -104,13 +110,57 @@
 <span class="n">UserModel</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
 
 
+<div class="viewcode-block" id="BaseAction">
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.BaseAction">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseAction</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract model to represent an action.&quot;&quot;&quot;</span>
+
+    <span class="n">TIMEOUT_SETTING_KEY</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">timeout_secs</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FloatField</span><span class="p">(</span>
+        <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Timeout (seconds)&quot;</span><span class="p">),</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">MinValueValidator</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)],</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span>
+            <span class="s2">&quot;The number of seconds to wait before the action is killed.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">timeout_respecting_max</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the timeout respecting the maximum timeout setting.</span>
+
+<span class="sd">        :return: The timeout respecting the maximum timeout setting.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">default_max</span> <span class="o">=</span> <span class="n">_t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span>
+            <span class="n">_t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+            <span class="n">settings</span><span class="o">.</span><span class="n">ACTION_TRIGGER_SETTINGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TIMEOUT_SETTING_KEY</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">default_max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_secs</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_secs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default_max</span>
+
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout_secs</span><span class="p">,</span> <span class="n">default_max</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseAction.Meta">
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.BaseAction.Meta">[docs]</a>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">abstract</span> <span class="o">=</span> <span class="kc">True</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="ConfigQuerySet">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.ConfigQuerySet">[docs]</a>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.ConfigQuerySet">[docs]</a>
 <span class="k">class</span> <span class="nc">ConfigQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom queryset for the Config model.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ConfigQuerySet.active">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.ConfigQuerySet.active">[docs]</a>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.ConfigQuerySet.active">[docs]</a>
     <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ConfigQuerySet&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return only active configurations.</span>
 
@@ -121,7 +171,7 @@
 
 
 <div class="viewcode-block" id="ConfigQuerySet.for_signal">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.ConfigQuerySet.for_signal">[docs]</a>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.ConfigQuerySet.for_signal">[docs]</a>
     <span class="k">def</span> <span class="nf">for_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">:</span> <span class="n">SignalChoices</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ConfigQuerySet&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return only configurations for the given signal.</span>
 
@@ -135,7 +185,7 @@
 
 
 <div class="viewcode-block" id="ConfigQuerySet.for_model">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.ConfigQuerySet.for_model">[docs]</a>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.ConfigQuerySet.for_model">[docs]</a>
     <span class="k">def</span> <span class="nf">for_model</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">_t</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">]],</span>
@@ -157,7 +207,7 @@
 
 
 <div class="viewcode-block" id="Config">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.Config">[docs]</a>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.Config">[docs]</a>
 <span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model to represent the action triggers configuration.&quot;&quot;&quot;</span>
 
@@ -200,9 +250,11 @@
 
 
 <div class="viewcode-block" id="Webhook">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.Webhook">[docs]</a>
-<span class="k">class</span> <span class="nc">Webhook</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.Webhook">[docs]</a>
+<span class="k">class</span> <span class="nc">Webhook</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model to represent the webhook configuration.&quot;&quot;&quot;</span>
+
+    <span class="n">TIMEOUT_SETTING_KEY</span> <span class="o">=</span> <span class="s2">&quot;MAX_WEBHOOK_TIMEOUT&quot;</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
         <span class="n">Config</span><span class="p">,</span>
@@ -232,7 +284,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(Webhook </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">) [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">http_method</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">url_repr</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="Webhook.is_endpoint_whitelisted">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.Webhook.is_endpoint_whitelisted">[docs]</a>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.Webhook.is_endpoint_whitelisted">[docs]</a>
     <span class="k">def</span> <span class="nf">is_endpoint_whitelisted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the webhook endpoint is whitelisted.</span>
 
@@ -253,9 +305,11 @@
 
 
 <div class="viewcode-block" id="MessageBrokerQueue">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.MessageBrokerQueue">[docs]</a>
-<span class="k">class</span> <span class="nc">MessageBrokerQueue</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.MessageBrokerQueue">[docs]</a>
+<span class="k">class</span> <span class="nc">MessageBrokerQueue</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model to represent a message broker queue configuration.&quot;&quot;&quot;</span>
+
+    <span class="n">TIMEOUT_SETTING_KEY</span> <span class="o">=</span> <span class="s2">&quot;MAX_BROKER_TIMEOUT&quot;</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
         <span class="n">Config</span><span class="p">,</span>
@@ -292,7 +346,7 @@
 
 
 <div class="viewcode-block" id="ConfigSignal">
-<a class="viewcode-back" href="../../modules.html#action_triggers.admin.ConfigSignal">[docs]</a>
+<a class="viewcode-back" href="../../modules/models.html#action_triggers.models.ConfigSignal">[docs]</a>
 <span class="k">class</span> <span class="nc">ConfigSignal</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model to represent the type of signals to trigger for.&quot;&quot;&quot;</span>
 

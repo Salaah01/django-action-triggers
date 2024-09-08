@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Action Trigger Settings &mdash; django-action-triggers 0.3.0 documentation</title>
+  <title>Action Trigger Settings &mdash; django-action-triggers 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=e259d695"></script>
+        <script src="_static/documentation_options.js?v=6c02275b"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -37,7 +37,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -63,6 +63,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#configuring-webhooks-action-triggers-webhooks">Configuring Webhooks (<cite>ACTION_TRIGGERS.webhooks</cite>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#behavioural-settings-action-trigger-settings">Behavioural Settings (<cite>ACTION_TRIGGER_SETTINGS</cite>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#defining-default-settings">Defining Default Settings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Example Configuration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#defining-allowed-dynamic-loading">Defining Allowed Dynamic Loading</a></li>
 </ul>
 </li>
@@ -75,10 +79,15 @@
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="message_brokers/kafka.html">Kafka</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Module Documentation</a></li>
 </ul>
@@ -117,7 +126,7 @@ Django project’s <cite>settings.py</cite> file to fine-tune the behaviour of t
 application.</p>
 </section>
 <section id="configuration-options-action-triggers">
-<h2>Configuration Options (<cite>ACTION_TRIGGERS</cite>)<a class="headerlink" href="#configuration-options-action-triggers" title="Link to this heading"></a></h2>
+<span id="action-trigger-settings-configuration-options"></span><h2>Configuration Options (<cite>ACTION_TRIGGERS</cite>)<a class="headerlink" href="#configuration-options-action-triggers" title="Link to this heading"></a></h2>
 <p>The primary configuration options for Django Action Triggers are contained
 within the <cite>ACTION_TRIGGERS</cite> dictionary. The key options include:</p>
 <ul class="simple">
@@ -222,8 +231,27 @@ triggers and actions are executed.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_TRIGGER_SETTINGS</span> <span class="o">=</span> <span class="p">{}</span>
 </pre></div>
 </div>
-<p>This dictionary can be populated with various settings, including those that
-govern dynamic loading.</p>
+<p>At the very least, this should contain some default settings for the
+application.</p>
+<section id="defining-default-settings">
+<h3>Defining Default Settings<a class="headerlink" href="#defining-default-settings" title="Link to this heading"></a></h3>
+<p>The following default settings should be defined in the
+<cite>ACTION_TRIGGER_SETTINGS</cite> dictionary:</p>
+<ul class="simple">
+<li><p><strong>MAX_BROKER_TIMEOUT</strong> - (float) The maximum time (in seconds) to wait for a broker to respond.</p></li>
+<li><p><strong>MAX_WEBHOOK_TIMEOUT</strong> - (float) The maximum time (in seconds) to wait for a webhook to respond.</p></li>
+</ul>
+<section id="id2">
+<h4>Example Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>A basic configuration for <cite>ACTION_TRIGGER_SETTINGS</cite> might look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_TRIGGER_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;MAX_BROKER_TIMEOUT&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="s2">&quot;MAX_WEBHOOK_TIMEOUT&quot;</span><span class="p">:</span> <span class="mf">5.0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
 <section id="defining-allowed-dynamic-loading">
 <h3>Defining Allowed Dynamic Loading<a class="headerlink" href="#defining-allowed-dynamic-loading" title="Link to this heading"></a></h3>
 <div class="admonition note">

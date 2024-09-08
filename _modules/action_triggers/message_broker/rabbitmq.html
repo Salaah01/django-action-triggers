@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>action_triggers.message_broker.rabbitmq &mdash; django-action-triggers 0.3.0 documentation</title>
+  <title>action_triggers.message_broker.rabbitmq &mdash; django-action-triggers 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=e259d695"></script>
+        <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -34,7 +34,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -55,10 +55,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/kafka.html">Kafka</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Module Documentation</a></li>
 </ul>
@@ -88,9 +93,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for action_triggers.message_broker.rabbitmq</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">_t</span>
+<span></span><span class="sd">&quot;&quot;&quot;Module to support sending messages to RabbitMQ.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">_t</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
+<span class="kn">from</span> <span class="nn">action_triggers.config_required_fields</span> <span class="kn">import</span> <span class="n">HasField</span>
 <span class="kn">from</span> <span class="nn">action_triggers.message_broker.base</span> <span class="kn">import</span> <span class="n">BrokerBase</span><span class="p">,</span> <span class="n">ConnectionBase</span>
 <span class="kn">from</span> <span class="nn">action_triggers.message_broker.enums</span> <span class="kn">import</span> <span class="n">BrokerType</span>
 <span class="kn">from</span> <span class="nn">action_triggers.utils.module_import</span> <span class="kn">import</span> <span class="n">MissingImportWrapper</span>
@@ -102,38 +110,30 @@
 
 
 <div class="viewcode-block" id="RabbitMQConnection">
-<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection">[docs]</a>
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection">[docs]</a>
 <span class="k">class</span> <span class="nc">RabbitMQConnection</span><span class="p">(</span><span class="n">ConnectionBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Connection class for RabbitMQ.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RabbitMQConnection.validate_queue_exists">
-<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate_queue_exists">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate_queue_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the the queue exists either in the base configuration or</span>
-<span class="sd">        the user provided parameters.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">required_conn_detail_fields</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">required_params_fields</span> <span class="o">=</span> <span class="p">(</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;queue&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">),)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;queue&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;queue&quot;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_errors</span><span class="o">.</span><span class="n">add_params_error</span><span class="p">(</span>  <span class="c1"># type: ignore[attr-defined]</span>
-                <span class="s2">&quot;queue&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;Queue name must be provided.&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="RabbitMQConnection.validate">
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Python 3.8 requires the port to be an integer.</span>
+        <span class="c1"># Resetting the cached connection details to ensure that when the lazy</span>
+        <span class="c1"># property is accessed, the updated port is used.</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conn_details</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s2">&quot;port&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user_conn_details</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_user_conn_details</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_user_conn_details</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_user_conn_details</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_user_conn_details</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">]</span>
             <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="RabbitMQConnection.validate">
-<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">validate_queue_exists</span><span class="p">()</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
-
-        <span class="c1"># Python 3.8 requires the port to be an integer.</span>
-        <span class="k">if</span> <span class="s2">&quot;port&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">])</span></div>
-
-
 <div class="viewcode-block" id="RabbitMQConnection.connect">
-<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect">[docs]</a>
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aio_pika</span><span class="o">.</span><span class="n">connect_robust</span><span class="p">(</span>
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">,</span>
@@ -141,7 +141,7 @@
 
 
 <div class="viewcode-block" id="RabbitMQConnection.close">
-<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.close">[docs]</a>
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.rabbitmq.RabbitMQConnection.close">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -151,7 +151,7 @@
 
 
 <div class="viewcode-block" id="RabbitMQBroker">
-<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.rabbitmq.RabbitMQBroker">[docs]</a>
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.rabbitmq.RabbitMQBroker">[docs]</a>
 <span class="k">class</span> <span class="nc">RabbitMQBroker</span><span class="p">(</span><span class="n">BrokerBase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Broker class for RabbitMQ.</span>
 

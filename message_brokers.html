@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Message Brokers &mdash; django-action-triggers 0.3.0 documentation</title>
+  <title>Message Brokers &mdash; django-action-triggers 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=e259d695"></script>
+        <script src="_static/documentation_options.js?v=6c02275b"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -37,7 +37,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -71,10 +71,15 @@
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="message_brokers/kafka.html">Kafka</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Module Documentation</a></li>
 </ul>
@@ -118,6 +123,7 @@ like to see support for a specific message broker, please open an issue on the
 <p>Before you can send messages to a message broker, you must configure the broker
 in your Django settings. This involves specifying the connection details and
 any necessary parameters for the broker.</p>
+<p>For more information, refer to the <a class="reference internal" href="action_trigger_settings.html#action-trigger-settings"><span class="std std-ref">Action Trigger Settings</span></a> guide.</p>
 <section id="configuring-message-brokers">
 <h3>Configuring Message Brokers<a class="headerlink" href="#configuring-message-brokers" title="Link to this heading"></a></h3>
 <p>Message brokers are configured in the <cite>ACTION_TRIGGERS.brokers</cite> dictionary in
@@ -193,13 +199,23 @@ connection details, and any additional parameters required.</p>
 <section id="best-practices-for-configuration">
 <h2>Best Practices for Configuration<a class="headerlink" href="#best-practices-for-configuration" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>Security</strong>: Avoid hardcoding sensitive information, such as passwords, in your <cite>settings.py</cite> file. Use environment variables or a secure vault to manage these credentials.</p></li>
-<li><p><strong>Testing</strong>: Before deploying to production, thoroughly test your broker configuration in a development environment to ensure that messages are being sent and received correctly.</p></li>
+<li><p><strong>Security</strong>: Avoid hardcoding sensitive information, such as passwords, in
+your <cite>settings.py</cite> file. Use environment variables or a secure vault to
+manage these credentials.</p></li>
+<li><p><strong>Testing</strong>: Before deploying to production, thoroughly test your broker
+configuration in a development environment to ensure that messages are being
+sent and received correctly.</p></li>
+<li><p><strong>Set Timeout Limits</strong>: Define a maximum timeout for message broker actions
+to prevent long-running requests from blocking your application. This can be
+done by setting <cite>ACTION_TRIGGER_SETTINGS.MAX_BROKER_TIMEOUT</cite> in your
+settings.</p></li>
 </ul>
 </section>
 <section id="broker-configuration-guides">
 <h2>Broker Configuration Guides<a class="headerlink" href="#broker-configuration-guides" title="Link to this heading"></a></h2>
-<p>This guide should help you configure message brokers within <strong>Django Action Triggers</strong>. For more advanced configurations, refer to the specific guides for Kafka and RabbitMQ.</p>
+<p>This guide should help you configure message brokers within
+<strong>Django Action Triggers</strong>. For more advanced configurations, refer to the
+specific guides for Kafka and RabbitMQ.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Message Brokers:</span></p>
 <ul>

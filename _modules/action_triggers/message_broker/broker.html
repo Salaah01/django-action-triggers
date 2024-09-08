@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>action_triggers.message_broker.broker &mdash; django-action-triggers 0.3.0 documentation</title>
+  <title>action_triggers.message_broker.broker &mdash; django-action-triggers 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=e259d695"></script>
+        <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -34,7 +34,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -55,10 +55,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/kafka.html">Kafka</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Module Documentation</a></li>
 </ul>
@@ -92,14 +97,17 @@
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 
+<span class="kn">from</span> <span class="nn">action_triggers.message_broker.aws_sns</span> <span class="kn">import</span> <span class="n">AwsSnsBroker</span>
+<span class="kn">from</span> <span class="nn">action_triggers.message_broker.aws_sqs</span> <span class="kn">import</span> <span class="n">AwsSqsBroker</span>
 <span class="kn">from</span> <span class="nn">action_triggers.message_broker.base</span> <span class="kn">import</span> <span class="n">BrokerBase</span>
 <span class="kn">from</span> <span class="nn">action_triggers.message_broker.enums</span> <span class="kn">import</span> <span class="n">BrokerType</span>
 <span class="kn">from</span> <span class="nn">action_triggers.message_broker.kafka</span> <span class="kn">import</span> <span class="n">KafkaBroker</span>
 <span class="kn">from</span> <span class="nn">action_triggers.message_broker.rabbitmq</span> <span class="kn">import</span> <span class="n">RabbitMQBroker</span>
+<span class="kn">from</span> <span class="nn">action_triggers.message_broker.redis</span> <span class="kn">import</span> <span class="n">RedisBroker</span>
 
 
 <div class="viewcode-block" id="get_broker_class">
-<a class="viewcode-back" href="../../../modules.html#action_triggers.message_broker.broker.get_broker_class">[docs]</a>
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.broker.get_broker_class">[docs]</a>
 <span class="k">def</span> <span class="nf">get_broker_class</span><span class="p">(</span><span class="n">broker_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_t</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">BrokerBase</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the broker class based on the broker name.</span>
 
@@ -108,9 +116,12 @@
 <span class="sd">    :raises ValueError: If the broker name is invalid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">broker_type_to_class_map</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">broker_type_to_class_map</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_t</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">BrokerBase</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">BrokerType</span><span class="o">.</span><span class="n">RABBITMQ</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">RabbitMQBroker</span><span class="p">,</span>
         <span class="n">BrokerType</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">KafkaBroker</span><span class="p">,</span>
+        <span class="n">BrokerType</span><span class="o">.</span><span class="n">REDIS</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">RedisBroker</span><span class="p">,</span>
+        <span class="n">BrokerType</span><span class="o">.</span><span class="n">AWS_SQS</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">AwsSqsBroker</span><span class="p">,</span>
+        <span class="n">BrokerType</span><span class="o">.</span><span class="n">AWS_SNS</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">AwsSnsBroker</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">broker_type_to_class_map</span><span class="p">[</span>

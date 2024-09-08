@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Broker Modules &mdash; django-action-triggers 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6c02275b"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Models Module" href="models.html" />
+    <link rel="prev" title="Exceptions Module" href="exceptions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.4.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Module Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="admin.html">Admin Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">API Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps.html">Apps Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="checks.html">Checks Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conf.html">Conf Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_required_fields.html">Config Required Fields Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_loading.html">Dynamic Loading Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html">Enums Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.html">Error Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Message Broker Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase"><code class="docutils literal notranslate"><span class="pre">BrokerBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase.conn_class"><code class="docutils literal notranslate"><span class="pre">BrokerBase.conn_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase.send_message"><code class="docutils literal notranslate"><span class="pre">BrokerBase.send_message()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase"><code class="docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.close"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.conn_details"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.conn_details</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.connect"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.params"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.required_conn_detail_fields"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.required_conn_detail_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.required_params_fields"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.required_params_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate_connection_details_not_overwritten"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate_connection_details_not_overwritten()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate_params_not_overwritten"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate_params_not_overwritten()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate_required_conn_details"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate_required_conn_details()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate_required_keys"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate_required_keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase.validate_required_params"><code class="docutils literal notranslate"><span class="pre">ConnectionBase.validate_required_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.broker.get_broker_class"><code class="docutils literal notranslate"><span class="pre">get_broker_class()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType"><code class="docutils literal notranslate"><span class="pre">BrokerType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType.AWS_SNS"><code class="docutils literal notranslate"><span class="pre">BrokerType.AWS_SNS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType.AWS_SQS"><code class="docutils literal notranslate"><span class="pre">BrokerType.AWS_SQS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType.KAFKA"><code class="docutils literal notranslate"><span class="pre">BrokerType.KAFKA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType.RABBITMQ"><code class="docutils literal notranslate"><span class="pre">BrokerType.RABBITMQ</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.enums.BrokerType.REDIS"><code class="docutils literal notranslate"><span class="pre">BrokerType.REDIS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.error.MessageBrokerError"><code class="docutils literal notranslate"><span class="pre">MessageBrokerError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.error.MessageBrokerError.add_connection_params_error"><code class="docutils literal notranslate"><span class="pre">MessageBrokerError.add_connection_params_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.error.MessageBrokerError.add_params_error"><code class="docutils literal notranslate"><span class="pre">MessageBrokerError.add_params_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.error.MessageBrokerError.connection_params"><code class="docutils literal notranslate"><span class="pre">MessageBrokerError.connection_params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.error.MessageBrokerError.error_class"><code class="docutils literal notranslate"><span class="pre">MessageBrokerError.error_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.error.MessageBrokerError.params"><code class="docutils literal notranslate"><span class="pre">MessageBrokerError.params</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.exceptions.ConnectionValidationError"><code class="docutils literal notranslate"><span class="pre">ConnectionValidationError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.exceptions.ConnectionValidationError.as_dict"><code class="docutils literal notranslate"><span class="pre">ConnectionValidationError.as_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.exceptions.ConnectionValidationError.as_json"><code class="docutils literal notranslate"><span class="pre">ConnectionValidationError.as_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaBroker"><code class="docutils literal notranslate"><span class="pre">KafkaBroker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaBroker.broker_type"><code class="docutils literal notranslate"><span class="pre">KafkaBroker.broker_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaBroker.conn_class"><code class="docutils literal notranslate"><span class="pre">KafkaBroker.conn_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection"><code class="docutils literal notranslate"><span class="pre">KafkaConnection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.close"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.connect"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.required_conn_detail_fields"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.required_conn_detail_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection.required_params_fields"><code class="docutils literal notranslate"><span class="pre">KafkaConnection.required_params_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker"><code class="docutils literal notranslate"><span class="pre">RabbitMQBroker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker.broker_type"><code class="docutils literal notranslate"><span class="pre">RabbitMQBroker.broker_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker.conn_class"><code class="docutils literal notranslate"><span class="pre">RabbitMQBroker.conn_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.close"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.required_conn_detail_fields"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.required_conn_detail_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.required_params_fields"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.required_params_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate"><code class="docutils literal notranslate"><span class="pre">RabbitMQConnection.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.redis.RedisBroker"><code class="docutils literal notranslate"><span class="pre">RedisBroker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.redis.RedisBroker.broker_type"><code class="docutils literal notranslate"><span class="pre">RedisBroker.broker_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.redis.RedisBroker.conn_class"><code class="docutils literal notranslate"><span class="pre">RedisBroker.conn_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.redis.RedisConnection"><code class="docutils literal notranslate"><span class="pre">RedisConnection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.redis.RedisConnection.close"><code class="docutils literal notranslate"><span class="pre">RedisConnection.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.redis.RedisConnection.connect"><code class="docutils literal notranslate"><span class="pre">RedisConnection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.redis.RedisConnection.required_conn_detail_fields"><code class="docutils literal notranslate"><span class="pre">RedisConnection.required_conn_detail_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.redis.RedisConnection.required_params_fields"><code class="docutils literal notranslate"><span class="pre">RedisConnection.required_params_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsBroker"><code class="docutils literal notranslate"><span class="pre">AwsSqsBroker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsBroker.broker_type"><code class="docutils literal notranslate"><span class="pre">AwsSqsBroker.broker_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsBroker.conn_class"><code class="docutils literal notranslate"><span class="pre">AwsSqsBroker.conn_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection"><code class="docutils literal notranslate"><span class="pre">AwsSqsConnection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.close"><code class="docutils literal notranslate"><span class="pre">AwsSqsConnection.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.connect"><code class="docutils literal notranslate"><span class="pre">AwsSqsConnection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.get_queue_url"><code class="docutils literal notranslate"><span class="pre">AwsSqsConnection.get_queue_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.required_conn_detail_fields"><code class="docutils literal notranslate"><span class="pre">AwsSqsConnection.required_conn_detail_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.required_params_fields"><code class="docutils literal notranslate"><span class="pre">AwsSqsConnection.required_params_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsBroker"><code class="docutils literal notranslate"><span class="pre">AwsSnsBroker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsBroker.broker_type"><code class="docutils literal notranslate"><span class="pre">AwsSnsBroker.broker_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsBroker.conn_class"><code class="docutils literal notranslate"><span class="pre">AwsSnsBroker.conn_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection"><code class="docutils literal notranslate"><span class="pre">AwsSnsConnection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection.close"><code class="docutils literal notranslate"><span class="pre">AwsSnsConnection.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection.connect"><code class="docutils literal notranslate"><span class="pre">AwsSnsConnection.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection.required_conn_detail_fields"><code class="docutils literal notranslate"><span class="pre">AwsSnsConnection.required_conn_detail_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection.required_params_fields"><code class="docutils literal notranslate"><span class="pre">AwsSnsConnection.required_params_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg_broker_queues.html">Message Broker Queues Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="registry.html">Registry Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signals.html">Signals Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="urls.html">URLs Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webhooks.html">Webhooks Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Module Documentation</a></li>
+      <li class="breadcrumb-item active">Message Broker Modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/message_broker.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-action_triggers.message_broker.base">
+<span id="message-broker-modules"></span><h1>Message Broker Modules<a class="headerlink" href="#module-action_triggers.message_broker.base" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.BrokerBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.base.</span></span><span class="sig-name descname"><span class="pre">BrokerBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#BrokerBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.BrokerBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Base class for a message broker. This class should be subclassed
+to implement the specific message broker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conn_details</strong> – The connection parameters to use for establishing the
+connection.</p></li>
+<li><p><strong>params</strong> – Additional parameters to use for the message broker.</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments to pass to the subclass.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.BrokerBase.conn_class">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">conn_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><span class="pre">ConnectionBase</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#action_triggers.message_broker.base.BrokerBase.conn_class" title="Link to this definition"></a></dt>
+<dd><p>The connection class to use for establishing a connection to the
+message broker.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.BrokerBase.send_message">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#BrokerBase.send_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.BrokerBase.send_message" title="Link to this definition"></a></dt>
+<dd><p>Starts a connection with the message broker and sends a message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> – The message to send to the message broker.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.base.</span></span><span class="sig-name descname"><span class="pre">ConnectionBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Base class for establishing a connection to a message broker. This class
+provides the capability to marry the configuration provided in the settings
+with the connection details and parameters provided by the user. However,
+this enforces a one-sided relationship where the user cannot overwrite
+the base configuration as defined in the settings as the base configuration
+always takes precedence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – The configuration for the message broker as defined in
+<cite>settings.ACTION_TRIGGERS[“brokers”]</cite>.</p></li>
+<li><p><strong>conn_details</strong> – Additional connection parameters to use for
+establishing the connection provided by the user.</p></li>
+<li><p><strong>params</strong> – Additional parameters to use for the message broker provided
+by the user.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.close">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.close" title="Link to this definition"></a></dt>
+<dd><p>Close the connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.conn_details">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">conn_details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.conn_details" title="Link to this definition"></a></dt>
+<dd><p>Lazy load the the merged connection details. When merging the
+connection details, the user provided base connection details take
+precedence over the base configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The merged connection details.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.connect">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.connect" title="Link to this definition"></a></dt>
+<dd><p>Establish a connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.params">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.params" title="Link to this definition"></a></dt>
+<dd><p>Lazy load the the merged parameters. When merging the parameters,
+the user provided base parameters take precedence over the base
+configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The merged parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.required_conn_detail_fields">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">required_conn_detail_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config_required_fields.html#action_triggers.config_required_fields.RequiredFieldBase" title="action_triggers.config_required_fields.RequiredFieldBase"><span class="pre">RequiredFieldBase</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.required_conn_detail_fields" title="Link to this definition"></a></dt>
+<dd><p>The required connection detail fields that must be provided by the
+user.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.required_params_fields">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">required_params_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config_required_fields.html#action_triggers.config_required_fields.RequiredFieldBase" title="action_triggers.config_required_fields.RequiredFieldBase"><span class="pre">RequiredFieldBase</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.required_params_fields" title="Link to this definition"></a></dt>
+<dd><p>The required parameters fields that must be provided by the user.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate the connection parameters. Raise an exception if
+invalid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate_connection_details_not_overwritten">
+<span class="sig-name descname"><span class="pre">validate_connection_details_not_overwritten</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase.validate_connection_details_not_overwritten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate_connection_details_not_overwritten" title="Link to this definition"></a></dt>
+<dd><p>Validate that the base connection details are not overwritten.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate_params_not_overwritten">
+<span class="sig-name descname"><span class="pre">validate_params_not_overwritten</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase.validate_params_not_overwritten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate_params_not_overwritten" title="Link to this definition"></a></dt>
+<dd><p>Validate that the base parameters are not overwritten.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate_required_conn_details">
+<span class="sig-name descname"><span class="pre">validate_required_conn_details</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase.validate_required_conn_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate_required_conn_details" title="Link to this definition"></a></dt>
+<dd><p>Validate that the required connection details are present.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate_required_keys">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_required_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">required_fields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config_required_fields.html#action_triggers.config_required_fields.RequiredFieldBase" title="action_triggers.config_required_fields.RequiredFieldBase"><span class="pre">RequiredFieldBase</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase.validate_required_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate_required_keys" title="Link to this definition"></a></dt>
+<dd><p>Validate that the required keys are present in the connection
+details and parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>required_fields</strong> – The required fields to check.</p></li>
+<li><p><strong>settings_context</strong> – The context to check.</p></li>
+<li><p><strong>err_fn</strong> – The function to call if the required fields are not</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.base.ConnectionBase.validate_required_params">
+<span class="sig-name descname"><span class="pre">validate_required_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/base.html#ConnectionBase.validate_required_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.base.ConnectionBase.validate_required_params" title="Link to this definition"></a></dt>
+<dd><p>Validate that the required parameters are present.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function" id="module-action_triggers.message_broker.broker">
+<dt class="sig sig-object py" id="action_triggers.message_broker.broker.get_broker_class">
+<span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.broker.</span></span><span class="sig-name descname"><span class="pre">get_broker_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><span class="pre">BrokerBase</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/broker.html#get_broker_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.broker.get_broker_class" title="Link to this definition"></a></dt>
+<dd><p>Get the broker class based on the broker name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>broker_name</strong> – The name of the broker.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The broker class.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the broker name is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class" id="module-action_triggers.message_broker.enums">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.enums.</span></span><span class="sig-name descname"><span class="pre">BrokerType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/enums.html#BrokerType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Represents the types of brokers supported by the application.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType.AWS_SNS">
+<span class="sig-name descname"><span class="pre">AWS_SNS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'aws_sns'</span></em><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType.AWS_SNS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType.AWS_SQS">
+<span class="sig-name descname"><span class="pre">AWS_SQS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'aws_sqs'</span></em><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType.AWS_SQS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType.KAFKA">
+<span class="sig-name descname"><span class="pre">KAFKA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kafka'</span></em><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType.KAFKA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType.RABBITMQ">
+<span class="sig-name descname"><span class="pre">RABBITMQ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rabbitmq'</span></em><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType.RABBITMQ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.enums.BrokerType.REDIS">
+<span class="sig-name descname"><span class="pre">REDIS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'redis'</span></em><a class="headerlink" href="#action_triggers.message_broker.enums.BrokerType.REDIS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p id="module-action_triggers.message_broker.error">Contains the error class for generic message broker errors relating to the
+connection and parameters.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.MessageBrokerError">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.error.</span></span><span class="sig-name descname"><span class="pre">MessageBrokerError</span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/error.html#MessageBrokerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.error.MessageBrokerError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#action_triggers.error.base.ErrorBase" title="action_triggers.error.base.ErrorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErrorBase</span></code></a></p>
+<p>A class for storing errors for a message broker.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.MessageBrokerError.add_connection_params_error">
+<span class="sig-name descname"><span class="pre">add_connection_params_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#action_triggers.message_broker.error.MessageBrokerError.add_connection_params_error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.MessageBrokerError.add_params_error">
+<span class="sig-name descname"><span class="pre">add_params_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#action_triggers.message_broker.error.MessageBrokerError.add_params_error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.MessageBrokerError.connection_params">
+<span class="sig-name descname"><span class="pre">connection_params</span></span><a class="headerlink" href="#action_triggers.message_broker.error.MessageBrokerError.connection_params" title="Link to this definition"></a></dt>
+<dd><p>A class for storing errors for a specific field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field_name</strong> – The name of the field.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.MessageBrokerError.error_class">
+<span class="sig-name descname"><span class="pre">error_class</span></span><a class="headerlink" href="#action_triggers.message_broker.error.MessageBrokerError.error_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.message_broker.exceptions.ConnectionValidationError" title="action_triggers.message_broker.exceptions.ConnectionValidationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionValidationError</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.error.MessageBrokerError.params">
+<span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#action_triggers.message_broker.error.MessageBrokerError.params" title="Link to this definition"></a></dt>
+<dd><p>A class for storing errors for a specific field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field_name</strong> – The name of the field.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception" id="module-action_triggers.message_broker.exceptions">
+<dt class="sig sig-object py" id="action_triggers.message_broker.exceptions.ConnectionValidationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.exceptions.</span></span><span class="sig-name descname"><span class="pre">ConnectionValidationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/exceptions.html#ConnectionValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.exceptions.ConnectionValidationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Exception raised when connection parameters are invalid.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.exceptions.ConnectionValidationError.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/exceptions.html#ConnectionValidationError.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.exceptions.ConnectionValidationError.as_dict" title="Link to this definition"></a></dt>
+<dd><p>Return the error message as a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.exceptions.ConnectionValidationError.as_json">
+<span class="sig-name descname"><span class="pre">as_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/exceptions.html#ConnectionValidationError.as_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.exceptions.ConnectionValidationError.as_json" title="Link to this definition"></a></dt>
+<dd><p>Return the error message as a JSON string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-action_triggers.message_broker.kafka">Module to support sending messages to Kafka.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaBroker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.kafka.</span></span><span class="sig-name descname"><span class="pre">KafkaBroker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/kafka.html#KafkaBroker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaBroker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrokerBase</span></code></a></p>
+<p>Broker class for Kafka.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaBroker.broker_type">
+<span class="sig-name descname"><span class="pre">broker_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kafka'</span></em><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaBroker.broker_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaBroker.conn_class">
+<span class="sig-name descname"><span class="pre">conn_class</span></span><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaBroker.conn_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.message_broker.kafka.KafkaConnection" title="action_triggers.message_broker.kafka.KafkaConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">KafkaConnection</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.kafka.</span></span><span class="sig-name descname"><span class="pre">KafkaConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/kafka.html#KafkaConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
+<p>Connection class for Kafka.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/kafka.html#KafkaConnection.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection.close" title="Link to this definition"></a></dt>
+<dd><p>Close the connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection.connect">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/kafka.html#KafkaConnection.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection.connect" title="Link to this definition"></a></dt>
+<dd><p>Establish a connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection.required_conn_detail_fields">
+<span class="sig-name descname"><span class="pre">required_conn_detail_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasField('bootstrap_servers'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection.required_conn_detail_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.kafka.KafkaConnection.required_params_fields">
+<span class="sig-name descname"><span class="pre">required_params_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasField('topic'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.kafka.KafkaConnection.required_params_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p id="module-action_triggers.message_broker.rabbitmq">Module to support sending messages to RabbitMQ.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQBroker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.rabbitmq.</span></span><span class="sig-name descname"><span class="pre">RabbitMQBroker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQBroker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrokerBase</span></code></a></p>
+<p>Broker class for RabbitMQ.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>broker_key</strong> – The key for the broker (must existing in
+<cite>settings.ACTION_TRIGGERS</cite>).</p></li>
+<li><p><strong>conn_params</strong> – The connection parameters to use for establishing the
+connection.</p></li>
+<li><p><strong>params</strong> – Additional parameters to use for the message broker.</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments to pass to the subclass.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQBroker.broker_type">
+<span class="sig-name descname"><span class="pre">broker_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rabbitmq'</span></em><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker.broker_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQBroker.conn_class">
+<span class="sig-name descname"><span class="pre">conn_class</span></span><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQBroker.conn_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection" title="action_triggers.message_broker.rabbitmq.RabbitMQConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">RabbitMQConnection</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.rabbitmq.</span></span><span class="sig-name descname"><span class="pre">RabbitMQConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
+<p>Connection class for RabbitMQ.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.close" title="Link to this definition"></a></dt>
+<dd><p>Close the connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.connect" title="Link to this definition"></a></dt>
+<dd><p>Establish a connection to the message broker.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection.required_conn_detail_fields">
+<span class="sig-name descname"><span class="pre">required_conn_detail_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.required_conn_detail_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection.required_params_fields">
+<span class="sig-name descname"><span class="pre">required_params_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasField('queue'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.required_params_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/rabbitmq.html#RabbitMQConnection.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.rabbitmq.RabbitMQConnection.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate the connection parameters. Raise an exception if
+invalid.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-action_triggers.message_broker.redis">Module to support sending messages to Redis.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.redis.RedisBroker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.redis.</span></span><span class="sig-name descname"><span class="pre">RedisBroker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/redis.html#RedisBroker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.redis.RedisBroker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrokerBase</span></code></a></p>
+<p>Broker class for Redis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>broker_key</strong> – The key for the broker (must existing in
+<cite>settings.ACTION_TRIGGERS</cite>).</p></li>
+<li><p><strong>conn_params</strong> – The connection parameters to use for establishing the
+connection.</p></li>
+<li><p><strong>params</strong> – Additional parameters to use for the message broker.</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments to pass to the subclass.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.redis.RedisBroker.broker_type">
+<span class="sig-name descname"><span class="pre">broker_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'redis'</span></em><a class="headerlink" href="#action_triggers.message_broker.redis.RedisBroker.broker_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.redis.RedisBroker.conn_class">
+<span class="sig-name descname"><span class="pre">conn_class</span></span><a class="headerlink" href="#action_triggers.message_broker.redis.RedisBroker.conn_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.message_broker.redis.RedisConnection" title="action_triggers.message_broker.redis.RedisConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">RedisConnection</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.redis.RedisConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.redis.</span></span><span class="sig-name descname"><span class="pre">RedisConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/redis.html#RedisConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.redis.RedisConnection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
+<p>Connection class for Redis.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.redis.RedisConnection.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/redis.html#RedisConnection.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.redis.RedisConnection.close" title="Link to this definition"></a></dt>
+<dd><p>Close the connection to the Redis server.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.redis.RedisConnection.connect">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/redis.html#RedisConnection.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.redis.RedisConnection.connect" title="Link to this definition"></a></dt>
+<dd><p>Connect to the Redis server.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.redis.RedisConnection.required_conn_detail_fields">
+<span class="sig-name descname"><span class="pre">required_conn_detail_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasAtLeastOneOffField('url,</span> <span class="pre">host'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.redis.RedisConnection.required_conn_detail_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.redis.RedisConnection.required_params_fields">
+<span class="sig-name descname"><span class="pre">required_params_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasField('channel'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.redis.RedisConnection.required_params_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p id="module-action_triggers.message_broker.aws_sqs">Module to support sending messages to AWS SQS.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsBroker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.aws_sqs.</span></span><span class="sig-name descname"><span class="pre">AwsSqsBroker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sqs.html#AwsSqsBroker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsBroker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrokerBase</span></code></a></p>
+<p>Broker class for AWS SQS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>broker_key</strong> – The key for the broker (must exist in the
+<cite>settings.ACTION_TRIGGERS[“brokers”]</cite> dictionary)).</p></li>
+<li><p><strong>conn_params</strong> – The connection parameters to use for establishing the
+connection to the broker.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsBroker.broker_type">
+<span class="sig-name descname"><span class="pre">broker_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'aws_sqs'</span></em><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsBroker.broker_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsBroker.conn_class">
+<span class="sig-name descname"><span class="pre">conn_class</span></span><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsBroker.conn_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection" title="action_triggers.message_broker.aws_sqs.AwsSqsConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">AwsSqsConnection</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.aws_sqs.</span></span><span class="sig-name descname"><span class="pre">AwsSqsConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sqs.html#AwsSqsConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
+<p>Connection class for AWS SQS.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsConnection.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sqs.html#AwsSqsConnection.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.close" title="Link to this definition"></a></dt>
+<dd><p>Close the connection to the AWS SQS service.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsConnection.connect">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sqs.html#AwsSqsConnection.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.connect" title="Link to this definition"></a></dt>
+<dd><p>Connect to the AWS SQS service.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsConnection.get_queue_url">
+<span class="sig-name descname"><span class="pre">get_queue_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sqs.html#AwsSqsConnection.get_queue_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.get_queue_url" title="Link to this definition"></a></dt>
+<dd><p>Get the queue URL from the parameters or fetch it from AWS using the
+queue name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The queue URL.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsConnection.required_conn_detail_fields">
+<span class="sig-name descname"><span class="pre">required_conn_detail_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasField('endpoint_url'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.required_conn_detail_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sqs.AwsSqsConnection.required_params_fields">
+<span class="sig-name descname"><span class="pre">required_params_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasAtLeastOneOffField('queue_url,</span> <span class="pre">queue_name'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.aws_sqs.AwsSqsConnection.required_params_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p id="module-action_triggers.message_broker.aws_sns">Module to support sending messages to AWS SNS.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sns.AwsSnsBroker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.aws_sns.</span></span><span class="sig-name descname"><span class="pre">AwsSnsBroker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">broker_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sns.html#AwsSnsBroker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sns.AwsSnsBroker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.BrokerBase" title="action_triggers.message_broker.base.BrokerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrokerBase</span></code></a></p>
+<p>Broker class for AWS SQS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>broker_key</strong> – The key for the broker (must exist in the
+<cite>settings.ACTION_TRIGGERS[“brokers”]</cite> dictionary)).</p></li>
+<li><p><strong>conn_params</strong> – The connection parameters to use for establishing the
+connection to the broker.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sns.AwsSnsBroker.broker_type">
+<span class="sig-name descname"><span class="pre">broker_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'aws_sns'</span></em><a class="headerlink" href="#action_triggers.message_broker.aws_sns.AwsSnsBroker.broker_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sns.AwsSnsBroker.conn_class">
+<span class="sig-name descname"><span class="pre">conn_class</span></span><a class="headerlink" href="#action_triggers.message_broker.aws_sns.AwsSnsBroker.conn_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection" title="action_triggers.message_broker.aws_sns.AwsSnsConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">AwsSnsConnection</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sns.AwsSnsConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.message_broker.aws_sns.</span></span><span class="sig-name descname"><span class="pre">AwsSnsConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sns.html#AwsSnsConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.message_broker.base.ConnectionBase" title="action_triggers.message_broker.base.ConnectionBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionBase</span></code></a></p>
+<p>Connection class for AWS SNS.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sns.AwsSnsConnection.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sns.html#AwsSnsConnection.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection.close" title="Link to this definition"></a></dt>
+<dd><p>Close the connection to the AWS SNS service.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sns.AwsSnsConnection.connect">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/action_triggers/message_broker/aws_sns.html#AwsSnsConnection.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection.connect" title="Link to this definition"></a></dt>
+<dd><p>Connect to the AWS SQS service.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sns.AwsSnsConnection.required_conn_detail_fields">
+<span class="sig-name descname"><span class="pre">required_conn_detail_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasField('endpoint_url'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection.required_conn_detail_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.message_broker.aws_sns.AwsSnsConnection.required_params_fields">
+<span class="sig-name descname"><span class="pre">required_params_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(HasField('topic_arn'),)</span></em><a class="headerlink" href="#action_triggers.message_broker.aws_sns.AwsSnsConnection.required_params_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="exceptions.html" class="btn btn-neutral float-left" title="Exceptions Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="models.html" class="btn btn-neutral float-right" title="Models Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

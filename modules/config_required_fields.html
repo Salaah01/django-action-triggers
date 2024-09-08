@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Config Required Fields Module &mdash; django-action-triggers 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6c02275b"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dispatch Module" href="dispatch.html" />
+    <link rel="prev" title="Conf Module" href="conf.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.4.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Module Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="admin.html">Admin Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">API Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps.html">Apps Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="checks.html">Checks Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conf.html">Conf Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Config Required Fields Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.config_required_fields.HasAtLeastOneOffField"><code class="docutils literal notranslate"><span class="pre">HasAtLeastOneOffField</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.HasAtLeastOneOffField.check"><code class="docutils literal notranslate"><span class="pre">HasAtLeastOneOffField.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.HasAtLeastOneOffField.error_msg"><code class="docutils literal notranslate"><span class="pre">HasAtLeastOneOffField.error_msg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.HasAtLeastOneOffField.key_repr"><code class="docutils literal notranslate"><span class="pre">HasAtLeastOneOffField.key_repr</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.config_required_fields.HasField"><code class="docutils literal notranslate"><span class="pre">HasField</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.HasField.check"><code class="docutils literal notranslate"><span class="pre">HasField.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.HasField.check_exists"><code class="docutils literal notranslate"><span class="pre">HasField.check_exists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.HasField.check_type_from_args"><code class="docutils literal notranslate"><span class="pre">HasField.check_type_from_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.HasField.check_type_from_kwargs"><code class="docutils literal notranslate"><span class="pre">HasField.check_type_from_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.HasField.error_msg"><code class="docutils literal notranslate"><span class="pre">HasField.error_msg</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.config_required_fields.RequiredFieldBase"><code class="docutils literal notranslate"><span class="pre">RequiredFieldBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.RequiredFieldBase.check"><code class="docutils literal notranslate"><span class="pre">RequiredFieldBase.check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.RequiredFieldBase.error_msg"><code class="docutils literal notranslate"><span class="pre">RequiredFieldBase.error_msg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.config_required_fields.RequiredFieldBase.key_repr"><code class="docutils literal notranslate"><span class="pre">RequiredFieldBase.key_repr</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_loading.html">Dynamic Loading Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html">Enums Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.html">Error Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message_broker.html">Message Broker Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg_broker_queues.html">Message Broker Queues Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="registry.html">Registry Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signals.html">Signals Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="urls.html">URLs Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webhooks.html">Webhooks Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Module Documentation</a></li>
+      <li class="breadcrumb-item active">Config Required Fields Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/config_required_fields.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-action_triggers.config_required_fields">
+<span id="config-required-fields-module"></span><h1>Config Required Fields Module<a class="headerlink" href="#module-action_triggers.config_required_fields" title="Link to this heading"></a></h1>
+<p>Provides classes to represent required fields for key/value pairs that must
+be presenting in the <cite>settings.ACTION_TRIGGERS</cite> dictionary for a given action.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasAtLeastOneOffField">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.config_required_fields.</span></span><span class="sig-name descname"><span class="pre">HasAtLeastOneOffField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#HasAtLeastOneOffField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.HasAtLeastOneOffField" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.config_required_fields.RequiredFieldBase" title="action_triggers.config_required_fields.RequiredFieldBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequiredFieldBase</span></code></a></p>
+<p>Represents a required field that requires at least one of the fields to
+be present in the context.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasAtLeastOneOffField.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#HasAtLeastOneOffField.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.HasAtLeastOneOffField.check" title="Link to this definition"></a></dt>
+<dd><p>Check if at least one of the fields is present in the context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if at least one of the fields is present,
+False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasAtLeastOneOffField.error_msg">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">error_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#action_triggers.config_required_fields.HasAtLeastOneOffField.error_msg" title="Link to this definition"></a></dt>
+<dd><p>The error message to display if at least one of the fields is not
+present.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasAtLeastOneOffField.key_repr">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">key_repr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#action_triggers.config_required_fields.HasAtLeastOneOffField.key_repr" title="Link to this definition"></a></dt>
+<dd><p>The key representation of the field.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasField">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.config_required_fields.</span></span><span class="sig-name descname"><span class="pre">HasField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#HasField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.HasField" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#action_triggers.config_required_fields.RequiredFieldBase" title="action_triggers.config_required_fields.RequiredFieldBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequiredFieldBase</span></code></a></p>
+<p>Represents a required field that must be present in the context.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasField.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#HasField.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.HasField.check" title="Link to this definition"></a></dt>
+<dd><p>Check if the field is present in the context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the field is present, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasField.check_exists">
+<span class="sig-name descname"><span class="pre">check_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#HasField.check_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.HasField.check_exists" title="Link to this definition"></a></dt>
+<dd><p>Check if the field is present in the context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the field is present, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasField.check_type_from_args">
+<span class="sig-name descname"><span class="pre">check_type_from_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#HasField.check_type_from_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.HasField.check_type_from_args" title="Link to this definition"></a></dt>
+<dd><p>Check if the field type is provided in the first positional
+argument, and if so, check if the field is of that type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the field is of the specified type, False otherwise.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the first positional argument is not a type.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasField.check_type_from_kwargs">
+<span class="sig-name descname"><span class="pre">check_type_from_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#HasField.check_type_from_kwargs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.HasField.check_type_from_kwargs" title="Link to this definition"></a></dt>
+<dd><p>Check if the field type is provided in the <cite>type</cite> keyword argument,
+and if so, check if the field is of that type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the field is of the specified type, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.HasField.error_msg">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">error_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#action_triggers.config_required_fields.HasField.error_msg" title="Link to this definition"></a></dt>
+<dd><p>The error message to display if the field is not present.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.RequiredFieldBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.config_required_fields.</span></span><span class="sig-name descname"><span class="pre">RequiredFieldBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#RequiredFieldBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.RequiredFieldBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Represents a required field for the connection details and parameters
+that must be provided by the user.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.RequiredFieldBase.check">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/action_triggers/config_required_fields.html#RequiredFieldBase.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.config_required_fields.RequiredFieldBase.check" title="Link to this definition"></a></dt>
+<dd><p>Check if the required field is present in the context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – The context to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the field is present, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.RequiredFieldBase.error_msg">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">error_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#action_triggers.config_required_fields.RequiredFieldBase.error_msg" title="Link to this definition"></a></dt>
+<dd><p>The error message to display if the required field is not
+present.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.config_required_fields.RequiredFieldBase.key_repr">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">key_repr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#action_triggers.config_required_fields.RequiredFieldBase.key_repr" title="Link to this definition"></a></dt>
+<dd><p>The key representation of the field.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="conf.html" class="btn btn-neutral float-left" title="Conf Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dispatch.html" class="btn btn-neutral float-right" title="Dispatch Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

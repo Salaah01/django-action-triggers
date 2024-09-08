@@ -75,7 +75,8 @@ Below is an example of the payload structure used when interacting with the API.
         "http_method": "GET" | "POST" | "PUT" | "DELETE",  // HTTP method
         "headers"?: {
           [key: string]: string  // Optional headers
-        }
+        },
+        "timeout_secs"?: number  // Optional timeout in seconds
       }
     ],
     "msg_broker_queues"?: [
@@ -87,6 +88,7 @@ Below is an example of the payload structure used when interacting with the API.
         "parameters"?: {
           [key: string]: string  // Optional parameters
         }
+        "timeout_secs"?: number  // Optional timeout in seconds
       }
     ],
     "active": boolean,  // Whether the trigger is active
@@ -160,7 +162,8 @@ whenever a `Customer` model instance is created, updated, or deleted.
         "http_method": "POST",
         "headers": {
           "Authorization": "Bearer {{ myapp.utils.get_token }}"
-        }
+        },
+        "timeout_secs": 10.0
       }
     ],
     "active": true
@@ -198,7 +201,8 @@ updated.
         "http_method": "POST",
         "headers": {
           "Authorization": "Bearer {{ myapp.utils.get_token }}"
-        }
+        },
+        "timeout_secs": 2.25
       },
       {
         "url": "https://my-other-webhook.com",
@@ -213,7 +217,8 @@ updated.
         "name": "my-msg-broker-config",
         "parameters": {
           "product_id": "{{ myapp.utils.get_product_id }}"
-        }
+        },
+        "timeout_secs": 5.75
       },
       {
         "name": "my-other-msg-broker-config",
@@ -253,7 +258,8 @@ customer name and product name along with a static action.
         "http_method": "POST",
         "headers": {
           "Authorization": "Bearer {{ myapp.utils.get_token }}"
-        }
+        },
+        "timeout_secs": 12.25
       }
     ],
     "active": true,

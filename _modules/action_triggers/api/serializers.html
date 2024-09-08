@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>action_triggers.api.serializers &mdash; django-action-triggers 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.4.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Module Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">action_triggers.api.serializers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for action_triggers.api.serializers</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">_t</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib.contenttypes.models</span> <span class="kn">import</span> <span class="n">ContentType</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">transaction</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>  <span class="c1"># type: ignore[import-untyped]</span>
+
+<span class="kn">from</span> <span class="nn">action_triggers.models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Config</span><span class="p">,</span>
+    <span class="n">ConfigSignal</span><span class="p">,</span>
+    <span class="n">MessageBrokerQueue</span><span class="p">,</span>
+    <span class="n">Webhook</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="ConfigSignalSerializer">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ConfigSignalSerializer">[docs]</a>
+<span class="k">class</span> <span class="nc">ConfigSignalSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serializer for the `ConfigSignal` model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigSignalSerializer.Meta">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ConfigSignalSerializer.Meta">[docs]</a>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ConfigSignal</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">,)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="WebhookSerializer">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.WebhookSerializer">[docs]</a>
+<span class="k">class</span> <span class="nc">WebhookSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serializer for the `Webhook` model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="WebhookSerializer.Meta">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.WebhookSerializer.Meta">[docs]</a>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Webhook</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;http_method&quot;</span><span class="p">,</span> <span class="s2">&quot;headers&quot;</span><span class="p">,</span> <span class="s2">&quot;timeout_secs&quot;</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ContentTypeSerializer">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ContentTypeSerializer">[docs]</a>
+<span class="k">class</span> <span class="nc">ContentTypeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serializer for the `ContentType` model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContentTypeSerializer.Meta">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ContentTypeSerializer.Meta">[docs]</a>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ContentType</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;app_label&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MessageBrokerQueueSerializer">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.MessageBrokerQueueSerializer">[docs]</a>
+<span class="k">class</span> <span class="nc">MessageBrokerQueueSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serializer for the `MessageBrokerQueue` model.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MessageBrokerQueueSerializer.Meta">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.MessageBrokerQueueSerializer.Meta">[docs]</a>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">MessageBrokerQueue</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;conn_details&quot;</span><span class="p">,</span> <span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="s2">&quot;timeout_secs&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigSerializer">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ConfigSerializer">[docs]</a>
+<span class="k">class</span> <span class="nc">ConfigSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serializer for the `Config` model.&quot;&quot;&quot;</span>
+
+    <span class="n">config_signals</span> <span class="o">=</span> <span class="n">ConfigSignalSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">message_broker_queues</span> <span class="o">=</span> <span class="n">MessageBrokerQueueSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">webhooks</span> <span class="o">=</span> <span class="n">WebhookSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">content_types</span> <span class="o">=</span> <span class="n">ContentTypeSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ConfigSerializer.Meta">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ConfigSerializer.Meta">[docs]</a>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Config</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;active&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;payload&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;config_signals&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content_types&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;webhooks&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;message_broker_queues&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConfigSerializer.get_content_types_from_data">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ConfigSerializer.get_content_types_from_data">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_content_types_from_data</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ContentType</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get content types from the data</span>
+
+<span class="sd">        :param data: List of content types data where the app_label and model</span>
+<span class="sd">            are provided.</span>
+<span class="sd">        :return: List of content types.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">app_label</span><span class="o">=</span><span class="n">content_type</span><span class="p">[</span><span class="s2">&quot;app_label&quot;</span><span class="p">],</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">content_type</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">content_type</span> <span class="ow">in</span> <span class="n">data</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ConfigSerializer.create">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ConfigSerializer.create">[docs]</a>
+    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validate_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new `Config` instance and related objects.</span>
+
+<span class="sd">        :param validate_data: The validated data.</span>
+<span class="sd">        :return: The created `Config` instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">config_signals</span> <span class="o">=</span> <span class="n">validate_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;config_signals&quot;</span><span class="p">)</span>
+        <span class="n">message_broker_queues</span> <span class="o">=</span> <span class="n">validate_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;message_broker_queues&quot;</span><span class="p">)</span>
+        <span class="n">webhooks</span> <span class="o">=</span> <span class="n">validate_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;webhooks&quot;</span><span class="p">)</span>
+        <span class="n">content_types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_content_types_from_data</span><span class="p">(</span>
+            <span class="n">validate_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;content_types&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="n">validate_data</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">content_types</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">content_types</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">signal</span> <span class="ow">in</span> <span class="n">config_signals</span><span class="p">:</span>
+            <span class="n">ConfigSignal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">signal</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">webhook</span> <span class="ow">in</span> <span class="n">webhooks</span><span class="p">:</span>
+            <span class="n">Webhook</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">webhook</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">queue</span> <span class="ow">in</span> <span class="n">message_broker_queues</span><span class="p">:</span>
+            <span class="n">MessageBrokerQueue</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">queue</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="ConfigSerializer.update">
+<a class="viewcode-back" href="../../../modules/api.html#action_triggers.api.serializers.ConfigSerializer.update">[docs]</a>
+    <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">validate_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the `Config` instance updating any related objects.</span>
+
+<span class="sd">        :param instance: The `Config` instance to update.</span>
+<span class="sd">        :param validate_data: The validated data.</span>
+<span class="sd">        :return: The updated `Config` instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">config_signals</span> <span class="o">=</span> <span class="n">validate_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;config_signals&quot;</span><span class="p">)</span>
+        <span class="n">message_broker_queues</span> <span class="o">=</span> <span class="n">validate_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;message_broker_queues&quot;</span><span class="p">)</span>
+        <span class="n">webhooks</span> <span class="o">=</span> <span class="n">validate_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;webhooks&quot;</span><span class="p">)</span>
+        <span class="n">content_types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_content_types_from_data</span><span class="p">(</span>
+            <span class="n">validate_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;content_types&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">validate_data</span><span class="p">)</span>
+
+        <span class="n">instance</span><span class="o">.</span><span class="n">config_signals</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">message_broker_queues</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">webhooks</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">content_types</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">content_types</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">signal</span> <span class="ow">in</span> <span class="n">config_signals</span><span class="p">:</span>
+            <span class="n">ConfigSignal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">signal</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">webhook</span> <span class="ow">in</span> <span class="n">webhooks</span><span class="p">:</span>
+            <span class="n">Webhook</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">webhook</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">queue</span> <span class="ow">in</span> <span class="n">message_broker_queues</span><span class="p">:</span>
+            <span class="n">MessageBrokerQueue</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">queue</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">instance</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

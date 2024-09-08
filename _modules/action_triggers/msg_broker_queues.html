@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>action_triggers.msg_broker_queues &mdash; django-action-triggers 0.3.0 documentation</title>
+  <title>action_triggers.msg_broker_queues &mdash; django-action-triggers 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=e259d695"></script>
+        <script src="../../_static/documentation_options.js?v=6c02275b"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -34,7 +34,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -55,10 +55,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../message_brokers/kafka.html">Kafka</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">Module Documentation</a></li>
 </ul>
@@ -88,8 +93,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for action_triggers.msg_broker_queues</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">_t</span>
 
 <span class="kn">from</span> <span class="nn">action_triggers.message_broker.broker</span> <span class="kn">import</span> <span class="n">get_broker_class</span>
@@ -99,7 +106,7 @@
 
 
 <div class="viewcode-block" id="process_msg_broker_queue">
-<a class="viewcode-back" href="../../modules.html#action_triggers.msg_broker_queues.process_msg_broker_queue">[docs]</a>
+<a class="viewcode-back" href="../../modules/msg_broker_queues.html#action_triggers.msg_broker_queues.process_msg_broker_queue">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">process_msg_broker_queue</span><span class="p">(</span>
     <span class="n">msg_broker_queue</span><span class="p">:</span> <span class="n">MessageBrokerQueue</span><span class="p">,</span>
     <span class="n">payload</span><span class="p">:</span> <span class="n">_t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
@@ -121,13 +128,17 @@
             <span class="n">msg_broker_queue</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">await</span> <span class="n">broker</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">))</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span>
+            <span class="n">broker</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)),</span>
+            <span class="n">msg_broker_queue</span><span class="o">.</span><span class="n">timeout_respecting_max</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-            <span class="s2">&quot;Error processing message broker queue </span><span class="si">%s</span><span class="s2"> for config </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Error processing message broker queue </span><span class="si">%s</span><span class="s2"> for config </span><span class="si">%s</span><span class="s2">:Exception Type:</span><span class="si">%s</span><span class="se">\n</span><span class="s2">Traceback:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
             <span class="n">msg_broker_queue</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">msg_broker_queue</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">e</span><span class="p">,</span>
+            <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span>
         <span class="p">)</span></div>
 
 </pre></div>

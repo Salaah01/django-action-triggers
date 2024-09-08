@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>action_triggers.message_broker.aws_sqs &mdash; django-action-triggers 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.4.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Module Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">action_triggers.message_broker.aws_sqs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for action_triggers.message_broker.aws_sqs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module to support sending messages to AWS SQS.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="kn">from</span> <span class="nn">action_triggers.config_required_fields</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">HasAtLeastOneOffField</span><span class="p">,</span>
+    <span class="n">HasField</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">action_triggers.message_broker.base</span> <span class="kn">import</span> <span class="n">BrokerBase</span><span class="p">,</span> <span class="n">ConnectionBase</span>
+<span class="kn">from</span> <span class="nn">action_triggers.message_broker.enums</span> <span class="kn">import</span> <span class="n">BrokerType</span>
+<span class="kn">from</span> <span class="nn">action_triggers.utils.module_import</span> <span class="kn">import</span> <span class="n">MissingImportWrapper</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">boto3</span>  <span class="c1"># type: ignore[import]</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="n">boto3</span> <span class="o">=</span> <span class="n">MissingImportWrapper</span><span class="p">(</span><span class="s2">&quot;boto3&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore[assignment]</span>
+
+
+<div class="viewcode-block" id="AwsSqsConnection">
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.aws_sqs.AwsSqsConnection">[docs]</a>
+<span class="k">class</span> <span class="nc">AwsSqsConnection</span><span class="p">(</span><span class="n">ConnectionBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Connection class for AWS SQS.&quot;&quot;&quot;</span>
+
+    <span class="n">required_conn_detail_fields</span> <span class="o">=</span> <span class="p">(</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;endpoint_url&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">),)</span>
+    <span class="n">required_params_fields</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">HasAtLeastOneOffField</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;queue_url&quot;</span><span class="p">,</span> <span class="s2">&quot;queue_name&quot;</span><span class="p">)),</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="AwsSqsConnection.get_queue_url">
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.aws_sqs.AwsSqsConnection.get_queue_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_queue_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the queue URL from the parameters or fetch it from AWS using the</span>
+<span class="sd">        queue name.</span>
+
+<span class="sd">        :return: The queue URL.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;queue_url&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;queue_url&quot;</span><span class="p">]</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">get_queue_url</span><span class="p">(</span><span class="n">QueueName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;queue_name&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;QueueUrl&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AwsSqsConnection.connect">
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.aws_sqs.AwsSqsConnection.connect">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connect to the AWS SQS service.&quot;&quot;&quot;</span>
+
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;sqs&quot;</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conn_details</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue_url</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queue_url</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AwsSqsConnection.close">
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.aws_sqs.AwsSqsConnection.close">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the connection to the AWS SQS service.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue_url</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: ignore[assignment]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AwsSqsBroker">
+<a class="viewcode-back" href="../../../modules/message_broker.html#action_triggers.message_broker.aws_sqs.AwsSqsBroker">[docs]</a>
+<span class="k">class</span> <span class="nc">AwsSqsBroker</span><span class="p">(</span><span class="n">BrokerBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Broker class for AWS SQS.</span>
+
+<span class="sd">    :param broker_key: The key for the broker (must exist in the</span>
+<span class="sd">        `settings.ACTION_TRIGGERS[&quot;brokers&quot;]` dictionary)).</span>
+<span class="sd">    :param conn_params: The connection parameters to use for establishing the</span>
+<span class="sd">        connection to the broker.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">broker_type</span> <span class="o">=</span> <span class="n">BrokerType</span><span class="o">.</span><span class="n">AWS_SQS</span>
+    <span class="n">conn_class</span> <span class="o">=</span> <span class="n">AwsSqsConnection</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_send_message_impl</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">conn</span><span class="p">:</span> <span class="n">AwsSqsConnection</span><span class="p">,</span>
+        <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a message to the AWS SQS queue.</span>
+
+<span class="sd">        :param conn: The connection to the AWS SQS service.</span>
+<span class="sd">        :param message: The message to send.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+        <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">partial</span><span class="p">(</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">send_message</span><span class="p">,</span>
+                <span class="n">QueueUrl</span><span class="o">=</span><span class="n">conn</span><span class="o">.</span><span class="n">queue_url</span><span class="p">,</span>
+                <span class="n">MessageBody</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -5,14 +5,14 @@ Testing
 This library integrates with various services like message brokers and
 databases. Setting up a complete test environment for all these services can be
 challenging. To simplify testing, we provide a `Dockerfile` and
-`docker-compose.tox.yml` file to help you quickly spin up the necessary
+`docker-compose.yml` file to help you quickly spin up the necessary
 services.
 
 To begin testing, start the services with the following command:
 
 .. code-block:: bash
 
-    docker-compose -f docker-compose.tox.yml up -d
+    docker-compose up -d
 
 You can then run the tests using either `tox` for multi-environment testing or
 `pytest` for the current environment.
@@ -121,4 +121,4 @@ After testing, you can stop and remove the Docker containers with:
 
 .. code-block:: bash
 
-    docker-compose -f docker-compose.tox.yml down
+    docker-compose -f docker-compose.yml down

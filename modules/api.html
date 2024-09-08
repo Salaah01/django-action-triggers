@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Modules &mdash; django-action-triggers 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6c02275b"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Apps Module" href="apps.html" />
+    <link rel="prev" title="Admin Modules" href="admin.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.4.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Module Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="admin.html">Admin Modules</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">API Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.api.serializers.ConfigSerializer"><code class="docutils literal notranslate"><span class="pre">ConfigSerializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.serializers.ConfigSerializer.Meta"><code class="docutils literal notranslate"><span class="pre">ConfigSerializer.Meta</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.serializers.ConfigSerializer.create"><code class="docutils literal notranslate"><span class="pre">ConfigSerializer.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.serializers.ConfigSerializer.get_content_types_from_data"><code class="docutils literal notranslate"><span class="pre">ConfigSerializer.get_content_types_from_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.serializers.ConfigSerializer.update"><code class="docutils literal notranslate"><span class="pre">ConfigSerializer.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.api.serializers.ConfigSignalSerializer"><code class="docutils literal notranslate"><span class="pre">ConfigSignalSerializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.serializers.ConfigSignalSerializer.Meta"><code class="docutils literal notranslate"><span class="pre">ConfigSignalSerializer.Meta</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.api.serializers.ContentTypeSerializer"><code class="docutils literal notranslate"><span class="pre">ContentTypeSerializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.serializers.ContentTypeSerializer.Meta"><code class="docutils literal notranslate"><span class="pre">ContentTypeSerializer.Meta</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.api.serializers.MessageBrokerQueueSerializer"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueSerializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.serializers.MessageBrokerQueueSerializer.Meta"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueSerializer.Meta</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.api.serializers.WebhookSerializer"><code class="docutils literal notranslate"><span class="pre">WebhookSerializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.serializers.WebhookSerializer.Meta"><code class="docutils literal notranslate"><span class="pre">WebhookSerializer.Meta</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.api.views.ConfigViewSet"><code class="docutils literal notranslate"><span class="pre">ConfigViewSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.views.ConfigViewSet.basename"><code class="docutils literal notranslate"><span class="pre">ConfigViewSet.basename</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.views.ConfigViewSet.description"><code class="docutils literal notranslate"><span class="pre">ConfigViewSet.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.views.ConfigViewSet.detail"><code class="docutils literal notranslate"><span class="pre">ConfigViewSet.detail</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.views.ConfigViewSet.name"><code class="docutils literal notranslate"><span class="pre">ConfigViewSet.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.views.ConfigViewSet.queryset"><code class="docutils literal notranslate"><span class="pre">ConfigViewSet.queryset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.views.ConfigViewSet.serializer_class"><code class="docutils literal notranslate"><span class="pre">ConfigViewSet.serializer_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.api.views.ConfigViewSet.suffix"><code class="docutils literal notranslate"><span class="pre">ConfigViewSet.suffix</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apps.html">Apps Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="checks.html">Checks Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conf.html">Conf Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_required_fields.html">Config Required Fields Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_loading.html">Dynamic Loading Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html">Enums Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.html">Error Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message_broker.html">Message Broker Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg_broker_queues.html">Message Broker Queues Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="registry.html">Registry Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signals.html">Signals Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="urls.html">URLs Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webhooks.html">Webhooks Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Module Documentation</a></li>
+      <li class="breadcrumb-item active">API Modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-action_triggers.api.serializers">
+<span id="api-modules"></span><h1>API Modules<a class="headerlink" href="#module-action_triggers.api.serializers" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.api.serializers.</span></span><span class="sig-name descname"><span class="pre">ConfigSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ConfigSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ConfigSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelSerializer</span></code></p>
+<p>Serializer for the <cite>Config</cite> model.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSerializer.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ConfigSerializer.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ConfigSerializer.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSerializer.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'active',</span> <span class="pre">'payload',</span> <span class="pre">'config_signals',</span> <span class="pre">'content_types',</span> <span class="pre">'webhooks',</span> <span class="pre">'message_broker_queues')</span></em><a class="headerlink" href="#action_triggers.api.serializers.ConfigSerializer.Meta.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSerializer.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.api.serializers.ConfigSerializer.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#action_triggers.models.Config" title="action_triggers.models.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSerializer.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validate_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#action_triggers.models.Config" title="action_triggers.models.Config"><span class="pre">Config</span></a></span></span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ConfigSerializer.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ConfigSerializer.create" title="Link to this definition"></a></dt>
+<dd><p>Create a new <cite>Config</cite> instance and related objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>validate_data</strong> – The validated data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created <cite>Config</cite> instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSerializer.get_content_types_from_data">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_content_types_from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ContentType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ConfigSerializer.get_content_types_from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ConfigSerializer.get_content_types_from_data" title="Link to this definition"></a></dt>
+<dd><p>Get content types from the data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – List of content types data where the app_label and model
+are provided.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of content types.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSerializer.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#action_triggers.models.Config" title="action_triggers.models.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#action_triggers.models.Config" title="action_triggers.models.Config"><span class="pre">Config</span></a></span></span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ConfigSerializer.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ConfigSerializer.update" title="Link to this definition"></a></dt>
+<dd><p>Update the <cite>Config</cite> instance updating any related objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The <cite>Config</cite> instance to update.</p></li>
+<li><p><strong>validate_data</strong> – The validated data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated <cite>Config</cite> instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSignalSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.api.serializers.</span></span><span class="sig-name descname"><span class="pre">ConfigSignalSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ConfigSignalSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ConfigSignalSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelSerializer</span></code></p>
+<p>Serializer for the <cite>ConfigSignal</cite> model.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSignalSerializer.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ConfigSignalSerializer.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ConfigSignalSerializer.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSignalSerializer.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('signal',)</span></em><a class="headerlink" href="#action_triggers.api.serializers.ConfigSignalSerializer.Meta.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ConfigSignalSerializer.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.api.serializers.ConfigSignalSerializer.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#action_triggers.models.ConfigSignal" title="action_triggers.models.ConfigSignal"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSignal</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ContentTypeSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.api.serializers.</span></span><span class="sig-name descname"><span class="pre">ContentTypeSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ContentTypeSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ContentTypeSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelSerializer</span></code></p>
+<p>Serializer for the <cite>ContentType</cite> model.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ContentTypeSerializer.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#ContentTypeSerializer.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.ContentTypeSerializer.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ContentTypeSerializer.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['app_label',</span> <span class="pre">'model']</span></em><a class="headerlink" href="#action_triggers.api.serializers.ContentTypeSerializer.Meta.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.ContentTypeSerializer.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.api.serializers.ContentTypeSerializer.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ContentType</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.MessageBrokerQueueSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.api.serializers.</span></span><span class="sig-name descname"><span class="pre">MessageBrokerQueueSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#MessageBrokerQueueSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.MessageBrokerQueueSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelSerializer</span></code></p>
+<p>Serializer for the <cite>MessageBrokerQueue</cite> model.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.MessageBrokerQueueSerializer.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#MessageBrokerQueueSerializer.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.MessageBrokerQueueSerializer.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.MessageBrokerQueueSerializer.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'conn_details',</span> <span class="pre">'parameters',</span> <span class="pre">'timeout_secs')</span></em><a class="headerlink" href="#action_triggers.api.serializers.MessageBrokerQueueSerializer.Meta.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.MessageBrokerQueueSerializer.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.api.serializers.MessageBrokerQueueSerializer.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#action_triggers.models.MessageBrokerQueue" title="action_triggers.models.MessageBrokerQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBrokerQueue</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.WebhookSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.api.serializers.</span></span><span class="sig-name descname"><span class="pre">WebhookSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#WebhookSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.WebhookSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelSerializer</span></code></p>
+<p>Serializer for the <cite>Webhook</cite> model.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.WebhookSerializer.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="../_modules/action_triggers/api/serializers.html#WebhookSerializer.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.serializers.WebhookSerializer.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.WebhookSerializer.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['url',</span> <span class="pre">'http_method',</span> <span class="pre">'headers',</span> <span class="pre">'timeout_secs']</span></em><a class="headerlink" href="#action_triggers.api.serializers.WebhookSerializer.Meta.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.serializers.WebhookSerializer.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.api.serializers.WebhookSerializer.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#action_triggers.models.Webhook" title="action_triggers.models.Webhook"><code class="xref py py-class docutils literal notranslate"><span class="pre">Webhook</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-action_triggers.api.urls">API URLs for the action_triggers app.</p>
+<dl class="py class" id="module-action_triggers.api.views">
+<dt class="sig sig-object py" id="action_triggers.api.views.ConfigViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.api.views.</span></span><span class="sig-name descname"><span class="pre">ConfigViewSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/api/views.html#ConfigViewSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.api.views.ConfigViewSet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Config instances, along with related
+instances.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.views.ConfigViewSet.basename">
+<span class="sig-name descname"><span class="pre">basename</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#action_triggers.api.views.ConfigViewSet.basename" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.views.ConfigViewSet.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#action_triggers.api.views.ConfigViewSet.description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.views.ConfigViewSet.detail">
+<span class="sig-name descname"><span class="pre">detail</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#action_triggers.api.views.ConfigViewSet.detail" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.views.ConfigViewSet.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#action_triggers.api.views.ConfigViewSet.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.views.ConfigViewSet.queryset">
+<span class="sig-name descname"><span class="pre">queryset</span></span><a class="headerlink" href="#action_triggers.api.views.ConfigViewSet.queryset" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.views.ConfigViewSet.serializer_class">
+<span class="sig-name descname"><span class="pre">serializer_class</span></span><a class="headerlink" href="#action_triggers.api.views.ConfigViewSet.serializer_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#action_triggers.api.serializers.ConfigSerializer" title="action_triggers.api.serializers.ConfigSerializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSerializer</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.api.views.ConfigViewSet.suffix">
+<span class="sig-name descname"><span class="pre">suffix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#action_triggers.api.views.ConfigViewSet.suffix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="admin.html" class="btn btn-neutral float-left" title="Admin Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="apps.html" class="btn btn-neutral float-right" title="Apps Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

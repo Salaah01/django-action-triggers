@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redis &mdash; django-action-triggers 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6c02275b"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AWS SQS (AWS Simple Queue Service)" href="aws_sqs.html" />
+    <link rel="prev" title="Don’t See What You’re Looking For?" href="../features_and_bugs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.4.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Redis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#redis-configuration">Redis Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-configuration-in-settings-py">Example Configuration in <cite>settings.py</cite></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-1-using-host-and-port">Example 1 (using <cite>host</cite> and <cite>port</cite>):</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-2-using-url">Example 2 (using <cite>url</cite>):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-redis-action">Creating a Redis Action</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-create-a-config-model-instance-base-action">Step 1: Create a <cite>Config</cite> Model Instance (Base Action)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-create-a-messagebrokerqueue-model-instance-redis-action">Step 2: Create a <cite>MessageBrokerQueue</cite> Model Instance (Redis Action)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-create-a-configsignal-model-instance-trigger">Step 3: Create a <cite>ConfigSignal</cite> Model Instance (Trigger)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamically-setting-conn-details-and-parameters">Dynamically Setting <cite>conn_details</cite> and <cite>parameters</cite></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#replacing-hardcoded-values">Replacing Hardcoded Values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-dynamic-import-paths-to-settings">Adding Dynamic Import Paths to Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Module Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Redis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/message_brokers/redis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="redis">
+<h1>Redis<a class="headerlink" href="#redis" title="Link to this heading"></a></h1>
+<p><strong>Django Action Triggers</strong> supports sending messages to a Redis message broker.
+This section guides you through configuring Redis and creating triggers that
+send messages to a Redis broker.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>Before messages can be sent to a Redis message broker, the broker needs to be
+configured in the Django settings.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See the <a class="reference internal" href="../message_brokers.html#message-brokers-configuration"><span class="std std-ref">message brokers configuration</span></a>
+guide for information on configuring message brokers.</p>
+</div>
+<section id="redis-configuration">
+<h3>Redis Configuration<a class="headerlink" href="#redis-configuration" title="Link to this heading"></a></h3>
+<p>In the Redis configuration, you must set the <cite>params.channel</cite> to specify the
+channel where messages will be sent when a trigger is activated.</p>
+</section>
+<section id="example-configuration-in-settings-py">
+<h3>Example Configuration in <cite>settings.py</cite><a class="headerlink" href="#example-configuration-in-settings-py" title="Link to this heading"></a></h3>
+<p>Here are two possible configurations for Redis:</p>
+<section id="example-1-using-host-and-port">
+<h4>Example 1 (using <cite>host</cite> and <cite>port</cite>):<a class="headerlink" href="#example-1-using-host-and-port" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_BROKERS</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;redis_1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;broker_type&quot;</span><span class="p">:</span> <span class="s2">&quot;redis&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;conn_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">6370</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="s2">&quot;my_channel&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="example-2-using-url">
+<h4>Example 2 (using <cite>url</cite>):<a class="headerlink" href="#example-2-using-url" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_BROKERS</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;redis_2&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;broker_type&quot;</span><span class="p">:</span> <span class="s2">&quot;redis&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;conn_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;localhost:6370&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="s2">&quot;my_channel&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In both configurations:
+- The Redis broker connects to <cite>localhost</cite> on port <cite>6370</cite>.
+- Messages will be sent to the <cite>my_channel</cite> channel.</p>
+</section>
+</section>
+</section>
+<section id="creating-a-redis-action">
+<h2>Creating a Redis Action<a class="headerlink" href="#creating-a-redis-action" title="Link to this heading"></a></h2>
+<p>Once Redis is configured, you can create a trigger that sends messages to the
+Redis broker whenever the trigger is activated.</p>
+<section id="scenario">
+<h3>Scenario<a class="headerlink" href="#scenario" title="Link to this heading"></a></h3>
+<p>Suppose you have the following Django models:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Customer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+  <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+  <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Sale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">customer</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Customer</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">product</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Product</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">quantity</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Let’s say you want to send a message to Redis when a new sale is created. You
+can achieve this by following these steps:</p>
+</section>
+<section id="step-1-create-a-config-model-instance-base-action">
+<h3>Step 1: Create a <cite>Config</cite> Model Instance (Base Action)<a class="headerlink" href="#step-1-create-a-config-model-instance-base-action" title="Link to this heading"></a></h3>
+<p>The <cite>Config</cite> model defines the base action, including the payload that will be
+sent when the trigger is activated.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.contenttypes.models</span> <span class="kn">import</span> <span class="n">ContentType</span>
+<span class="kn">from</span> <span class="nn">action_triggers.models</span> <span class="kn">import</span> <span class="n">Config</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">payload</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;customer_name&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ customer.name }}&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;product_name&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ product.name }}&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ quantity }}&quot;</span>
+  <span class="p">},</span>
+  <span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+  <span class="n">content_types</span><span class="o">=</span><span class="p">[</span>
+    <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_model</span><span class="p">(</span><span class="n">Sale</span><span class="p">)</span>
+  <span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>payload</cite> is designed to behave like a Django template. If the resulting
+value is JSON-serializable, the payload will be returned as JSON; otherwise,
+it will be returned as plain text.</p>
+</section>
+<section id="step-2-create-a-messagebrokerqueue-model-instance-redis-action">
+<h3>Step 2: Create a <cite>MessageBrokerQueue</cite> Model Instance (Redis Action)<a class="headerlink" href="#step-2-create-a-messagebrokerqueue-model-instance-redis-action" title="Link to this heading"></a></h3>
+<p>Now, create a <cite>MessageBrokerQueue</cite> instance to define the Redis action.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Hardcoding sensitive information such as connection details is not
+recommended. In the next section, we will explore how to dynamically set
+these values using callables or variables at runtime.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">action_triggers.models</span> <span class="kn">import</span> <span class="n">MessageBrokerQueue</span>
+
+<span class="n">redis_action</span> <span class="o">=</span> <span class="n">MessageBrokerQueue</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;redis_1&quot;</span><span class="p">,</span>
+    <span class="n">conn_details</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">6370</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">parameters</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="s2">&quot;my_channel&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example:
+- The Redis broker connects to <cite>localhost</cite> on port <cite>6370</cite>.
+- Messages will be sent to the <cite>my_channel</cite> channel.</p>
+</section>
+<section id="step-3-create-a-configsignal-model-instance-trigger">
+<h3>Step 3: Create a <cite>ConfigSignal</cite> Model Instance (Trigger)<a class="headerlink" href="#step-3-create-a-configsignal-model-instance-trigger" title="Link to this heading"></a></h3>
+<p>Finally, link the action to a trigger event, such as saving a model instance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">action_triggers.models</span> <span class="kn">import</span> <span class="n">ConfigSignal</span>
+<span class="kn">from</span> <span class="nn">action_triggers.enums</span> <span class="kn">import</span> <span class="n">SignalChoices</span>
+
+<span class="n">config_signal</span> <span class="o">=</span> <span class="n">ConfigSignal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+  <span class="n">signal</span><span class="o">=</span><span class="n">SignalChoices</span><span class="o">.</span><span class="n">POST_SAVE</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, whenever a new sale is created, the Redis action will be triggered.</p>
+</section>
+</section>
+<section id="dynamically-setting-conn-details-and-parameters">
+<h2>Dynamically Setting <cite>conn_details</cite> and <cite>parameters</cite><a class="headerlink" href="#dynamically-setting-conn-details-and-parameters" title="Link to this heading"></a></h2>
+<p>In the previous example, hardcoding connection details and parameters is
+insecure. Instead, you can dynamically set these values at runtime.</p>
+<p>To do this, we can use the <a class="reference internal" href="../dynamic_loading.html#dynamic-loading"><span class="std std-ref">dynamic loading</span></a> feature.
+This feature allows you to specify a path to a callable or variable that
+will be evaluated at runtime to retrieve the value.</p>
+<section id="replacing-hardcoded-values">
+<h3>Replacing Hardcoded Values<a class="headerlink" href="#replacing-hardcoded-values" title="Link to this heading"></a></h3>
+<p>Suppose you have the following variable:</p>
+<ul class="simple">
+<li><p><cite>myproject.settings.REDIS_HOST</cite>: Stores the Redis host.</p></li>
+</ul>
+<p>You can use this in the <cite>conn_details</cite> field as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">action_triggers.models</span> <span class="kn">import</span> <span class="n">MessageBrokerQueue</span>
+
+<span class="n">redis_action</span> <span class="o">=</span> <span class="n">MessageBrokerQueue</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;redis_1&quot;</span><span class="p">,</span>
+    <span class="n">conn_details</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ myproject.settings.REDIS_HOST }}&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">parameters</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="s2">&quot;my_channel&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-dynamic-import-paths-to-settings">
+<h3>Adding Dynamic Import Paths to Settings<a class="headerlink" href="#adding-dynamic-import-paths-to-settings" title="Link to this heading"></a></h3>
+<p>To enable dynamic loading, ensure that the callables or variables you are
+pecifying are defined in your Django settings.</p>
+<p>Any callable or variable that you wish to be evaluated at runtime must be
+defined in <cite>ACTION_TRIGGER_SETTINGS.ALLOWED_DYNAMIC_IMPORT_PATHS</cite>.</p>
+<p>In <cite>settings.py</cite>, add the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ACTION_TRIGGER_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;ALLOWED_DYNAMIC_IMPORT_PATHS&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s1">&#39;myproject.settings.REDIS_HOST&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This configuration ensures that the specified paths can be evaluated at
+runtime.</p>
+<p>—</p>
+<p>By following these steps, you can securely and effectively set up Redis as a
+message broker in <strong>Django Action Triggers</strong>. For more advanced configurations,
+refer to the related documentation sections.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../features_and_bugs.html" class="btn btn-neutral float-left" title="Don’t See What You’re Looking For?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="aws_sqs.html" class="btn btn-neutral float-right" title="AWS SQS (AWS Simple Queue Service)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

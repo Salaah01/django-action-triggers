@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Modules &mdash; django-action-triggers 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6c02275b"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Modules" href="api.html" />
+    <link rel="prev" title="Module Documentation" href="../modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.4.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Module Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Admin Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.autocomplete_fields"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.autocomplete_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.date_hierarchy"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.date_hierarchy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.inlines"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.inlines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.list_display</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.list_filter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.media"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.media</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.ordering</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.readonly_fields"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.readonly_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">ConfigAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.autocomplete_fields"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.autocomplete_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.list_display</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.list_filter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.media"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.media</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigSignalAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">ConfigSignalAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.ConfigSignalInline"><code class="docutils literal notranslate"><span class="pre">ConfigSignalInline</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigSignalInline.extra"><code class="docutils literal notranslate"><span class="pre">ConfigSignalInline.extra</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigSignalInline.media"><code class="docutils literal notranslate"><span class="pre">ConfigSignalInline.media</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.ConfigSignalInline.model"><code class="docutils literal notranslate"><span class="pre">ConfigSignalInline.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin.autocomplete_fields"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin.autocomplete_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin.list_display</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin.media"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin.media</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueInline"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueInline</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueInline.extra"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueInline.extra</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueInline.media"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueInline.media</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.MessageBrokerQueueInline.model"><code class="docutils literal notranslate"><span class="pre">MessageBrokerQueueInline.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.autocomplete_fields"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.autocomplete_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.list_display</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.list_filter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.media"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.media</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.WebhookAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">WebhookAdmin.search_fields</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.admin.WebhookInline"><code class="docutils literal notranslate"><span class="pre">WebhookInline</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.WebhookInline.extra"><code class="docutils literal notranslate"><span class="pre">WebhookInline.extra</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.WebhookInline.media"><code class="docutils literal notranslate"><span class="pre">WebhookInline.media</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.admin.WebhookInline.model"><code class="docutils literal notranslate"><span class="pre">WebhookInline.model</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">API Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps.html">Apps Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="checks.html">Checks Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conf.html">Conf Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_required_fields.html">Config Required Fields Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_loading.html">Dynamic Loading Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html">Enums Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.html">Error Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message_broker.html">Message Broker Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg_broker_queues.html">Message Broker Queues Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="registry.html">Registry Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signals.html">Signals Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="urls.html">URLs Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webhooks.html">Webhooks Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Module Documentation</a></li>
+      <li class="breadcrumb-item active">Admin Modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/admin.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-action_triggers.admin">
+<span id="admin-modules"></span><h1>Admin Modules<a class="headerlink" href="#module-action_triggers.admin" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">ConfigAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/admin.html#ConfigAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.ConfigAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Admin interface for the <cite>Config</cite> model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.autocomplete_fields">
+<span class="sig-name descname"><span class="pre">autocomplete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('created_by',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.autocomplete_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.date_hierarchy">
+<span class="sig-name descname"><span class="pre">date_hierarchy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'created_on'</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.date_hierarchy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.inlines">
+<span class="sig-name descname"><span class="pre">inlines</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'action_triggers.admin.ConfigSignalInline'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'action_triggers.admin.WebhookInline'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'action_triggers.admin.MessageBrokerQueueInline'&gt;)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.inlines" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'created_on',</span> <span class="pre">'created_by',</span> <span class="pre">'active')</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.list_filter">
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('active',</span> <span class="pre">'created_on',</span> <span class="pre">'content_types')</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.list_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('-created_on',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.ordering" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.readonly_fields">
+<span class="sig-name descname"><span class="pre">readonly_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('created_on',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.readonly_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'created_by__username')</span></em><a class="headerlink" href="#action_triggers.admin.ConfigAdmin.search_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">ConfigSignalAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/admin.html#ConfigSignalAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Admin interface for the <cite>ConfigSignal</cite> model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.autocomplete_fields">
+<span class="sig-name descname"><span class="pre">autocomplete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.autocomplete_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'config',</span> <span class="pre">'signal')</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.list_filter">
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('signal',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.list_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config__id',)</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalAdmin.search_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalInline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">ConfigSignalInline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/admin.html#ConfigSignalInline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.ConfigSignalInline" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TabularInline</span></code></p>
+<p>Support for inlining <cite>ConfigSignal</cite> objects.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalInline.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#action_triggers.admin.ConfigSignalInline.extra" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalInline.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.ConfigSignalInline.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.ConfigSignalInline.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.admin.ConfigSignalInline.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#action_triggers.models.ConfigSignal" title="action_triggers.models.ConfigSignal"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSignal</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">MessageBrokerQueueAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/admin.html#MessageBrokerQueueAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Admin interface for the <cite>MessageBrokerQueue</cite> model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin.autocomplete_fields">
+<span class="sig-name descname"><span class="pre">autocomplete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config',)</span></em><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin.autocomplete_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'name',</span> <span class="pre">'config',</span> <span class="pre">'timeout_secs')</span></em><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config__id',)</span></em><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueAdmin.search_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueInline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">MessageBrokerQueueInline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/admin.html#MessageBrokerQueueInline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueInline" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StackedInline</span></code></p>
+<p>Support for inlining <cite>MessageBrokerQueue</cite> objects.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueInline.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueInline.extra" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueInline.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueInline.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.MessageBrokerQueueInline.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.admin.MessageBrokerQueueInline.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#action_triggers.models.MessageBrokerQueue" title="action_triggers.models.MessageBrokerQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBrokerQueue</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">WebhookAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/admin.html#WebhookAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.WebhookAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Admin interface for the <cite>Webhook</cite> model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.autocomplete_fields">
+<span class="sig-name descname"><span class="pre">autocomplete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config',)</span></em><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.autocomplete_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'config',</span> <span class="pre">'url',</span> <span class="pre">'http_method',</span> <span class="pre">'timeout_secs')</span></em><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.list_filter">
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('http_method',)</span></em><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.list_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('config__id',)</span></em><a class="headerlink" href="#action_triggers.admin.WebhookAdmin.search_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookInline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.admin.</span></span><span class="sig-name descname"><span class="pre">WebhookInline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/admin.html#WebhookInline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.admin.WebhookInline" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StackedInline</span></code></p>
+<p>Support for inlining <cite>Webhook</cite> objects.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookInline.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#action_triggers.admin.WebhookInline.extra" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookInline.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#action_triggers.admin.WebhookInline.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.admin.WebhookInline.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#action_triggers.admin.WebhookInline.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="models.html#action_triggers.models.Webhook" title="action_triggers.models.Webhook"><code class="xref py py-class docutils literal notranslate"><span class="pre">Webhook</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../modules.html" class="btn btn-neutral float-left" title="Module Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

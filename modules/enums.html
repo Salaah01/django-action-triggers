@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enums Module &mdash; django-action-triggers 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6c02275b"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Error Modules" href="error.html" />
+    <link rel="prev" title="Dynamic Loading Module" href="dynamic_loading.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            django-action-triggers
+          </a>
+              <div class="version">
+                0.4.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../action_trigger_settings.html">Action Trigger Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dynamic_loading.html">Dynamically Loading Values at Runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../webhooks.html">Webhooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers.html">Message Brokers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/kafka.html">Kafka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Module Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="admin.html">Admin Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">API Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apps.html">Apps Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="checks.html">Checks Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conf.html">Conf Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_required_fields.html">Config Required Fields Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_loading.html">Dynamic Loading Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Enums Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.enums.HTTPMethodChoices"><code class="docutils literal notranslate"><span class="pre">HTTPMethodChoices</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.HTTPMethodChoices.DELETE"><code class="docutils literal notranslate"><span class="pre">HTTPMethodChoices.DELETE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.HTTPMethodChoices.GET"><code class="docutils literal notranslate"><span class="pre">HTTPMethodChoices.GET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.HTTPMethodChoices.PATCH"><code class="docutils literal notranslate"><span class="pre">HTTPMethodChoices.PATCH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.HTTPMethodChoices.POST"><code class="docutils literal notranslate"><span class="pre">HTTPMethodChoices.POST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.HTTPMethodChoices.PUT"><code class="docutils literal notranslate"><span class="pre">HTTPMethodChoices.PUT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action_triggers.enums.SignalChoices"><code class="docutils literal notranslate"><span class="pre">SignalChoices</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.SignalChoices.POST_DELETE"><code class="docutils literal notranslate"><span class="pre">SignalChoices.POST_DELETE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.SignalChoices.POST_SAVE"><code class="docutils literal notranslate"><span class="pre">SignalChoices.POST_SAVE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.SignalChoices.PRE_DELETE"><code class="docutils literal notranslate"><span class="pre">SignalChoices.PRE_DELETE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.SignalChoices.PRE_SAVE"><code class="docutils literal notranslate"><span class="pre">SignalChoices.PRE_SAVE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action_triggers.enums.SignalChoices.for_signal"><code class="docutils literal notranslate"><span class="pre">SignalChoices.for_signal()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="error.html">Error Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message_broker.html">Message Broker Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg_broker_queues.html">Message Broker Queues Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="registry.html">Registry Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signals.html">Signals Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="urls.html">URLs Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webhooks.html">Webhooks Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">django-action-triggers</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Module Documentation</a></li>
+      <li class="breadcrumb-item active">Enums Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/enums.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-action_triggers.enums">
+<span id="enums-module"></span><h1>Enums Module<a class="headerlink" href="#module-action_triggers.enums" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.enums.HTTPMethodChoices">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.enums.</span></span><span class="sig-name descname"><span class="pre">HTTPMethodChoices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/enums.html#HTTPMethodChoices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.enums.HTTPMethodChoices" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TextChoices</span></code></p>
+<p>Represents the supported HTTP methods for webhooks.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.HTTPMethodChoices.DELETE">
+<span class="sig-name descname"><span class="pre">DELETE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DELETE'</span></em><a class="headerlink" href="#action_triggers.enums.HTTPMethodChoices.DELETE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.HTTPMethodChoices.GET">
+<span class="sig-name descname"><span class="pre">GET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GET'</span></em><a class="headerlink" href="#action_triggers.enums.HTTPMethodChoices.GET" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.HTTPMethodChoices.PATCH">
+<span class="sig-name descname"><span class="pre">PATCH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PATCH'</span></em><a class="headerlink" href="#action_triggers.enums.HTTPMethodChoices.PATCH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.HTTPMethodChoices.POST">
+<span class="sig-name descname"><span class="pre">POST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'POST'</span></em><a class="headerlink" href="#action_triggers.enums.HTTPMethodChoices.POST" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.HTTPMethodChoices.PUT">
+<span class="sig-name descname"><span class="pre">PUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PUT'</span></em><a class="headerlink" href="#action_triggers.enums.HTTPMethodChoices.PUT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="action_triggers.enums.SignalChoices">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">action_triggers.enums.</span></span><span class="sig-name descname"><span class="pre">SignalChoices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/action_triggers/enums.html#SignalChoices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.enums.SignalChoices" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TextChoices</span></code></p>
+<p>Represents the supported signals for action triggers.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.SignalChoices.POST_DELETE">
+<span class="sig-name descname"><span class="pre">POST_DELETE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'post_delete'</span></em><a class="headerlink" href="#action_triggers.enums.SignalChoices.POST_DELETE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.SignalChoices.POST_SAVE">
+<span class="sig-name descname"><span class="pre">POST_SAVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'post_save'</span></em><a class="headerlink" href="#action_triggers.enums.SignalChoices.POST_SAVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.SignalChoices.PRE_DELETE">
+<span class="sig-name descname"><span class="pre">PRE_DELETE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pre_delete'</span></em><a class="headerlink" href="#action_triggers.enums.SignalChoices.PRE_DELETE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="action_triggers.enums.SignalChoices.PRE_SAVE">
+<span class="sig-name descname"><span class="pre">PRE_SAVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pre_save'</span></em><a class="headerlink" href="#action_triggers.enums.SignalChoices.PRE_SAVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="action_triggers.enums.SignalChoices.for_signal">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">for_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ModelSignal</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#action_triggers.enums.SignalChoices" title="action_triggers.enums.SignalChoices"><span class="pre">SignalChoices</span></a></span></span><a class="reference internal" href="../_modules/action_triggers/enums.html#SignalChoices.for_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#action_triggers.enums.SignalChoices.for_signal" title="Link to this definition"></a></dt>
+<dd><p>Return the SignalChoices instance for the given signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>signal</strong> (<em>signals.ModelSignal</em>) – The signal to map to a SignalChoices instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The SignalChoices instance for the given signal.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#action_triggers.enums.SignalChoices" title="action_triggers.enums.SignalChoices">SignalChoices</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dynamic_loading.html" class="btn btn-neutral float-left" title="Dynamic Loading Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="error.html" class="btn btn-neutral float-right" title="Error Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Salaah01.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

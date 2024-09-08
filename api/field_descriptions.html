@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; django-action-triggers 0.3.0 documentation</title>
+  <title>&lt;no title&gt; &mdash; django-action-triggers 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=e259d695"></script>
+        <script src="../_static/documentation_options.js?v=6c02275b"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -35,7 +35,7 @@
             django-action-triggers
           </a>
               <div class="version">
-                0.3.0
+                0.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -56,10 +56,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../features_and_bugs.html">Don’t See What You’re Looking For?</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Message Broker Integrations</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../message_brokers/kafka.html">Kafka</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../message_brokers/rabbitmq.html">RabbitMQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/redis.html">Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sqs.html">AWS SQS (AWS Simple Queue Service)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_brokers/aws_sns.html">AWS SNS (AWS Simple Notification Service)</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Module Documentation</a></li>
 </ul>
@@ -128,21 +133,29 @@
 <td><p><cite>object[]</cite> (optional)</p></td>
 <td><p>A key-value pair of headers that will be sent with the webhook. The value can receive the path to a callable that will be evaluated at runtime.</p></td>
 </tr>
-<tr class="row-even"><td><p><cite>msg_broker_queues</cite></p></td>
+<tr class="row-even"><td><p><cite>webhooks.timeout_secs</cite></p></td>
+<td><p><cite>float</cite></p></td>
+<td><p>The timeout in seconds for the webhook to respond before aborting the request.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>msg_broker_queues</cite></p></td>
 <td><p><cite>object[]</cite> (optional)</p></td>
 <td><p>The list of queues that will be receive the message.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>msg_broker_queues.name</cite></p></td>
+<tr class="row-even"><td><p><cite>msg_broker_queues.name</cite></p></td>
 <td><p><cite>string</cite></p></td>
 <td><p>The name of the queue as defined in <cite>settings.py.ACTION_TRIGGERS.brokers</cite></p></td>
 </tr>
-<tr class="row-even"><td><p><cite>msg_broker_queues.connection_details</cite></p></td>
+<tr class="row-odd"><td><p><cite>msg_broker_queues.connection_details</cite></p></td>
 <td><p><cite>object[]</cite> (optional)</p></td>
 <td><p>A key-value pair of connection details that will be used to connect to the broker. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;name&gt;.conn_details</cite> will be used instead.</p></td>
 </tr>
-<tr class="row-odd"><td><p><cite>msg_broker_queues.parameters</cite></p></td>
+<tr class="row-even"><td><p><cite>msg_broker_queues.parameters</cite></p></td>
 <td><p><cite>object[]</cite> (optional)</p></td>
 <td><p>A key-value pair of parameters that will be sent with the message. The value can receive the path to a callable that will be evaluated at runtime. If not provided, then <cite>settings.ACTION_TRIGGERS.brokers.&lt;name&gt;.params</cite> will be used instead.</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>msg_broker_queues.timeout_secs</cite></p></td>
+<td><p><cite>float</cite></p></td>
+<td><p>The timeout in seconds for the message broker to respond before aborting the request.</p></td>
 </tr>
 <tr class="row-even"><td><p><cite>active</cite></p></td>
 <td><p><cite>boolean</cite></p></td>
