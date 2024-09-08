@@ -4,6 +4,7 @@ import json
 from copy import deepcopy
 from functools import partial
 
+from asgiref.sync import sync_to_async
 import pytest
 from model_bakery import baker
 
@@ -83,10 +84,13 @@ class TestParsePayload:
             (One2OneModel, "age"),
         ),
     )
-    def test_parse_support_non_json_serializable_objects(
-        self, model_class, field_name
+    @pytest.mark.asyncio
+    async def test_parse_support_non_json_serializable_objects(
+        self,
+        model_class,
+        field_name,
     ):
-        instance = baker.make(model_class)
+        instance = await sync_to_async(baker.make)(model_class)
         payload = f"{{{{ instance.{field_name} }}}}"
         result = parse_payload(instance, payload)
 

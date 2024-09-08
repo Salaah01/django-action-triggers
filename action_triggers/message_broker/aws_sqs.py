@@ -76,7 +76,7 @@ class AwsSqsBroker(BrokerBase):
         """
 
         loop = asyncio.get_event_loop()
-        loop.run_in_executor(
+        await loop.run_in_executor(
             None,
             partial(
                 conn.conn.send_message,
