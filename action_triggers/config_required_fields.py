@@ -60,8 +60,11 @@ class HasField(RequiredFieldBase):
         :param context: The context to check.
         :return: True if the field is present, False otherwise.
         """
-        self._error_msg = f"The field '{self.field}' must be provided."
-        return self.field in context.keys()
+        if self.field in context.keys():
+            return True
+        else:
+            self._error_msg = f"The field '{self.field}' must be provided."
+            return False
 
     def check_type_from_args(self, context: dict) -> bool:
         """Check if the field type is provided in the first positional
