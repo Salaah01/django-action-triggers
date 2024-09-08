@@ -143,7 +143,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+REDIS_PORT = os.getenv("REDIS_PORT", 6380)
 
 # Action triggers configuration
 ACTION_TRIGGERS = {
@@ -171,7 +171,7 @@ ACTION_TRIGGERS = {
         "kafka_1": {
             "broker_type": "kafka",
             "conn_details": {
-                "bootstrap.servers": "localhost:29092",
+                "bootstrap_servers": "localhost:29092",
             },
             "params": {
                 "topic": "test_topic_1",

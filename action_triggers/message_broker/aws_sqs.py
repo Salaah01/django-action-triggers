@@ -3,6 +3,10 @@
 import asyncio
 from functools import partial
 
+from action_triggers.config_required_fields import (
+    HasAtLeastOneOffField,
+    HasField,
+)
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
@@ -16,37 +20,10 @@ except ImportError:  # pragma: no cover
 class AwsSqsConnection(ConnectionBase):
     """Connection class for AWS SQS."""
 
-    def validate_endpoint_url_provided(self) -> None:
-        """Validate that the endpoint url is provided in the connection
-        details.
-        """
-
-        if "endpoint_url" not in self.conn_details.keys():
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "endpoint_url",
-                "An endpoint_url must be provided.",
-            )
-
-    def validate_queue_provided(self) -> None:
-        """Validate that the queue url or name is provided in the
-        parameters.
-        """
-
-        # TODO: change to `queue_arn` and `queue_name`
-        if not self.params.get("queue_url") and not self.params.get(
-            "queue_name"
-        ):
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "queue",
-                "Either a queue URL or name must be provided.",
-            )
-
-    def validate(self) -> None:
-        """Validate the connection details."""
-
-        self.validate_endpoint_url_provided()
-        self.validate_queue_provided()
-        super().validate()
+    required_conn_detail_fields = (HasField("endpoint_url", str),)
+    required_params_fields = (
+        HasAtLeastOneOffField(fields=("queue_url", "queue_name")),
+    )
 
     def get_queue_url(self) -> str:
         """Get the queue URL from the parameters or fetch it from AWS using the
@@ -99,7 +76,7 @@ class AwsSqsBroker(BrokerBase):
         """
 
         loop = asyncio.get_event_loop()
-        loop.run_in_executor(
+        await loop.run_in_executor(
             None,
             partial(
                 conn.conn.send_message,

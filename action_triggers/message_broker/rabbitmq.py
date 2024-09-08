@@ -3,6 +3,7 @@
 import typing as _t
 from copy import deepcopy
 
+from action_triggers.config_required_fields import HasField
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
@@ -16,24 +17,14 @@ except ImportError:  # pragma: no cover
 class RabbitMQConnection(ConnectionBase):
     """Connection class for RabbitMQ."""
 
-    def validate_queue_exists(self) -> None:
-        """Validate the the queue exists either in the base configuration or
-        the user provided parameters.
-        """
-
-        if not self.config.get("queue") and not self.params.get("queue"):
-            self._errors.add_params_error(  # type: ignore[attr-defined]
-                "queue",
-                "Queue name must be provided.",
-            )
+    required_conn_detail_fields = ()
+    required_params_fields = (HasField("queue", str),)
 
     def validate(self) -> None:
-        self.validate_queue_exists()
-        super().validate()
-
         # Python 3.8 requires the port to be an integer.
         # Resetting the cached connection details to ensure that when the lazy
         # property is accessed, the updated port is used.
+        super().validate()
         self._conn_details = None
         if "port" in self._user_conn_details:
             self._user_conn_details = deepcopy(self._user_conn_details)

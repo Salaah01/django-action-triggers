@@ -17,8 +17,12 @@ be configured in the Django settings.
 Kafka Configuration
 -------------------
 
-In the Kafka configuration, you must set the `params.topic` to specify the
-topic where messages will be sent when a trigger is activated.
+The following configuration options must be set in the Django settings to
+configure the Kafka message broker:
+
+- `conn_details.bootstrap_servers`: The list of Kafka brokers to connect to.
+- `params.topic`: The topic where messages will be sent when a trigger is
+  activated.
 
 Example Configuration in `settings.py`
 --------------------------------------

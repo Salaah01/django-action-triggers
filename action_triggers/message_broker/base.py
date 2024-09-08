@@ -3,10 +3,14 @@ from abc import ABC, abstractmethod, abstractproperty
 
 from django.conf import settings
 
+from action_triggers.config_required_fields import RequiredFieldBase
 from action_triggers.dynamic_loading import replace_dict_values_with_results
 from action_triggers.message_broker.error import MessageBrokerError
 
 
+# TODO: The following class seems to hav two responsibilities. It should be
+# split into two classes: one for managing the config details and the other
+# for validating the connection details and parameters.
 class ConnectionBase(ABC):
     """Base class for establishing a connection to a message broker. This class
     provides the capability to marry the configuration provided in the settings
@@ -22,6 +26,16 @@ class ConnectionBase(ABC):
     :param params: Additional parameters to use for the message broker provided
         by the user.
     """
+
+    @abstractproperty
+    def required_conn_detail_fields(self) -> _t.Sequence[RequiredFieldBase]:
+        """The required connection detail fields that must be provided by the
+        user.
+        """
+
+    @abstractproperty
+    def required_params_fields(self) -> _t.Sequence[RequiredFieldBase]:
+        """The required parameters fields that must be provided by the user."""
 
     def __init__(self, config: dict, conn_details: dict, params: dict):
         self.config = config
@@ -80,6 +94,8 @@ class ConnectionBase(ABC):
         """
         self.validate_connection_details_not_overwritten()
         self.validate_params_not_overwritten()
+        self.validate_required_conn_details()
+        self.validate_required_params()
         self._errors.is_valid(raise_exception=True)
 
     @abstractmethod
@@ -118,6 +134,40 @@ class ConnectionBase(ABC):
                 self._errors.add_params_error(  # type: ignore[attr-defined]
                     key, f"{key} cannot be overwritten."
                 )
+
+    @staticmethod
+    def validate_required_keys(
+        required_fields: _t.Sequence[RequiredFieldBase],
+        settings_context: _t.Dict[str, _t.Any],
+        err_fn: _t.Callable[[str, str], None],
+    ) -> None:
+        """Validate that the required keys are present in the connection
+        details and parameters.
+
+        :param required_fields: The required fields to check.
+        :param settings_context: The context to check.
+        :param err_fn: The function to call if the required fields are not
+        """
+
+        for field in required_fields:
+            if not field.check(settings_context):
+                err_fn(field.key_repr, field.error_msg)
+
+    def validate_required_conn_details(self) -> None:
+        """Validate that the required connection details are present."""
+        self.validate_required_keys(
+            self.required_conn_detail_fields,
+            self.conn_details,
+            self._errors.add_connection_params_error,  # type: ignore[attr-defined]  # noqa: E501
+        )
+
+    def validate_required_params(self) -> None:
+        """Validate that the required parameters are present."""
+        self.validate_required_keys(
+            self.required_params_fields,
+            self.params,
+            self._errors.add_params_error,  # type: ignore[attr-defined]
+        )
 
 
 class BrokerBase(ABC):

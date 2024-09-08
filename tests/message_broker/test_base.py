@@ -1,15 +1,18 @@
 """Tests for `action_triggers.message_broker.base` module."""
 
-import os
 from types import SimpleNamespace
 
 import pytest
+from django.conf import settings
 
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.exceptions import ConnectionValidationError
 
 
 class MockConnection(ConnectionBase):
+    required_conn_detail_fields = []
+    required_params_fields = []
+
     async def connect(self):
         pass
 
@@ -30,17 +33,11 @@ class TestConnectionBase:
     """Tests for the `ConnectionBase` class."""
 
     def test_on_init_validation_is_run(self):
-        class TestConnection(ConnectionBase):
+        class TestConnection(MockConnection):
             i = 1
 
             def validate(self):
                 self.i += 1
-
-            async def connect(self):
-                pass
-
-            async def close(self):
-                pass
 
         conn = TestConnection({}, {}, {})
 
@@ -48,7 +45,7 @@ class TestConnectionBase:
 
     @pytest.mark.asyncio
     async def test_can_be_used_as_a_context_manager(self):
-        class TestConnection(ConnectionBase):
+        class TestConnection(MockConnection):
             connected = False
             closed = False
 
@@ -116,18 +113,14 @@ class TestBrokerBase:
             (
                 {},
                 {},
-                {
-                    "host": "localhost",
-                    "port": os.getenv("RABBIT_MQ_PORT", 5672),
-                },
+                settings.DEFAULT_RABBIT_MQ_CONN_DETAILS,
                 {"queue": "test_queue_1"},
             ),
             (
                 {"host": "hijacked-host", "name": "rabbitmq"},
                 {"queue": "quirky-queue", "exchange": "test_exchange"},
                 {
-                    "host": "localhost",
-                    "port": os.getenv("RABBIT_MQ_PORT", 5672),
+                    **settings.DEFAULT_RABBIT_MQ_CONN_DETAILS,
                     "name": "rabbitmq",
                 },
                 {"queue": "test_queue_1", "exchange": "test_exchange"},

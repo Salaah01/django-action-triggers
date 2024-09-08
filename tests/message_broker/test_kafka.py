@@ -16,15 +16,26 @@ class TestKafkaConnection:
         with pytest.raises(ConnectionValidationError):
             KafkaConnection(
                 config={},
-                conn_details={},
+                conn_details={
+                    "conn_details": {"bootstrap_servers": "localhost:9092"},
+                },
                 params={},
             )
 
     @pytest.mark.parametrize(
         "config,params",
         (
-            ({"topic": "test_topic_1"}, {}),
-            ({}, {"topic": "test_topic_1"}),
+            (
+                {
+                    "params": {"topic": "test_topic_1"},
+                    "conn_details": {"bootstrap_servers": "localhost:9092"},
+                },
+                {},
+            ),
+            (
+                {"conn_details": {"bootstrap_servers": "localhost:9092"}},
+                {"topic": "test_topic_1"},
+            ),
         ),
     )
     def test_passes_when_topic_exists(self, config, params):
@@ -41,7 +52,7 @@ class TestKafkaConnection:
     )
     async def test_connection_and_close_mechanism(self):
         conn = KafkaConnection(
-            config={"topic": "test_topic_1"},
+            config={"params": {"topic": "test_topic_1"}},
             conn_details=settings.KAFKA_CONN_DETAILS,
             params={},
         )

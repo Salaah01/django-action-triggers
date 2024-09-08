@@ -51,7 +51,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 DEFAULT_RABBIT_MQ_CONN_DETAILS = {
     "host": os.getenv("RABBIT_MQ_HOST", "localhost"),
-    "port": os.getenv("RABBIT_MQ_PORT", 5672),
+    "port": os.getenv("RABBIT_MQ_PORT", "5680"),
 }
 RABBIT_MQ_CONN_DETAILS = (
     json.loads(os.getenv("RABBIT_MQ_CONN_DETAILS", "{}"))
@@ -65,7 +65,7 @@ KAFKA_CONN_DETAILS = (
     or DEFAULT_KAFKA_CONN_DETAILS
 )
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+REDIS_PORT = os.getenv("REDIS_PORT", 6380)
 
 AWS_ENDPOINT = os.getenv("AWS_ENDPOINT", "http://localhost:4566")
 AWS_REGION = os.getenv("AWS_REGION", "eu-west-1")

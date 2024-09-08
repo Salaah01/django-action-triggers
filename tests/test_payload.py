@@ -84,7 +84,9 @@ class TestParsePayload:
         ),
     )
     def test_parse_support_non_json_serializable_objects(
-        self, model_class, field_name
+        self,
+        model_class,
+        field_name,
     ):
         instance = baker.make(model_class)
         payload = f"{{{{ instance.{field_name} }}}}"

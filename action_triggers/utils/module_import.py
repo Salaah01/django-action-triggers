@@ -18,4 +18,4 @@ class MissingImportWrapper:
         self.import_path = import_path
 
     def __getattr__(self, item):
-        importlib.import_module(self.import_path)[item]
+        return getattr(importlib.import_module(self.import_path), item)

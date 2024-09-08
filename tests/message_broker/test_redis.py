@@ -29,7 +29,10 @@ class TestRedisConnection:
     def test_passes_when_channel_exists(self, config, params):
         RedisConnection(
             config=config,
-            conn_details={"host": "localhost", "port": 6379},
+            conn_details={
+                "host": settings.REDIS_HOST,
+                "port": settings.REDIS_PORT,
+            },
             params=params,
         )
 
