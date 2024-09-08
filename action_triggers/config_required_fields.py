@@ -1,5 +1,9 @@
-from abc import ABC, abstractmethod, abstractproperty
+"""Provides classes to represent required fields for key/value pairs that must
+be presenting in the `settings.ACTION_TRIGGERS` dictionary for a given action.
+"""
+
 import typing as _t
+from abc import ABC, abstractmethod, abstractproperty
 
 
 class RequiredFieldBase(ABC):
@@ -56,7 +60,7 @@ class HasField(RequiredFieldBase):
         :param context: The context to check.
         :return: True if the field is present, False otherwise.
         """
-        self._error_msg = f"The field {self.field} must be provided."
+        self._error_msg = f"The field '{self.field}' must be provided."
         return self.field in context.keys()
 
     def check_type_from_args(self, context: dict) -> bool:
@@ -80,7 +84,7 @@ class HasField(RequiredFieldBase):
 
         if not isinstance(context[self.field], arg_0):
             self._error_msg = (
-                f"The field {self.field} must be of type {arg_0.__name__}."
+                f"The field '{self.field}' must be of type {arg_0.__name__}."
             )
             return False
 
@@ -100,7 +104,7 @@ class HasField(RequiredFieldBase):
         arg_0 = self.kwargs["type"]
         if not isinstance(context[self.field], arg_0):
             self._error_msg = (
-                f"The field {self.field} must be of type {arg_0.__name__}."
+                f"The field '{self.field}' must be of type {arg_0.__name__}."
             )
             return False
 
@@ -138,14 +142,14 @@ class HasAtLeastOneOffField(RequiredFieldBase):
     def _validate_init_params(self) -> None:
         if self.field:
             raise ValueError(
-                "`field` parameter not supported for this class. Use "
-                "`fields` keyword argument instead."
+                "'field' parameter not supported for this class. Use "
+                "'fields' keyword argument instead."
             )
 
         self.fields = self.kwargs.get("fields")
         if not self.fields or not isinstance(self.fields, _t.Sequence):
             raise ValueError(
-                "`fields` keyword argument must be a non-empty sequence."
+                "'fields' keyword argument must be a non-empty sequence."
             )
 
     def check(self, context: dict) -> bool:
@@ -156,7 +160,9 @@ class HasAtLeastOneOffField(RequiredFieldBase):
             False otherwise.
         """
 
-        return set(self.fields).intersection(context.keys())
+        return bool(
+            set(_t.cast(_t.Sequence, self.fields)).intersection(context.keys())
+        )
 
     @property
     def error_msg(self) -> str:
@@ -170,4 +176,4 @@ class HasAtLeastOneOffField(RequiredFieldBase):
     def key_repr(self) -> str:
         """The key representation of the field."""
 
-        return ", ".join(self.fields)
+        return ", ".join(_t.cast(_t.Sequence, self.fields))

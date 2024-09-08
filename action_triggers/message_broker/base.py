@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod, abstractproperty
 
 from django.conf import settings
 
+from action_triggers.config_required_fields import RequiredFieldBase
 from action_triggers.dynamic_loading import replace_dict_values_with_results
 from action_triggers.message_broker.error import MessageBrokerError
-from action_triggers.config_required_fields import RequiredFieldBase
 
 
 # TODO: The following class seems to hav two responsibilities. It should be
@@ -28,13 +28,13 @@ class ConnectionBase(ABC):
     """
 
     @abstractproperty
-    def required_conn_detail_fields(self) -> _t.List[RequiredFieldBase]:
+    def required_conn_detail_fields(self) -> _t.Sequence[RequiredFieldBase]:
         """The required connection detail fields that must be provided by the
         user.
         """
 
     @abstractproperty
-    def required_params_fields(self) -> _t.List[RequiredFieldBase]:
+    def required_params_fields(self) -> _t.Sequence[RequiredFieldBase]:
         """The required parameters fields that must be provided by the user."""
 
     def __init__(self, config: dict, conn_details: dict, params: dict):
@@ -137,7 +137,7 @@ class ConnectionBase(ABC):
 
     @staticmethod
     def validate_required_keys(
-        required_fields: _t.List[RequiredFieldBase],
+        required_fields: _t.Sequence[RequiredFieldBase],
         settings_context: _t.Dict[str, _t.Any],
         err_fn: _t.Callable[[str, str], None],
     ) -> None:

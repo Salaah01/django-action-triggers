@@ -32,7 +32,7 @@ class TestRabbitMQConnection:
         assert json.dumps(exc.value.as_dict()) == json.dumps(
             {
                 "connection_params": {},
-                "params": {"queue": ["The field queue must be provided."]},
+                "params": {"queue": ["The field 'queue' must be provided."]},
             }
         )
 

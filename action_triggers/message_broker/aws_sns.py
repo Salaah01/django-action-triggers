@@ -3,10 +3,10 @@
 import asyncio
 from functools import partial
 
+from action_triggers.config_required_fields import HasField
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.enums import BrokerType
 from action_triggers.utils.module_import import MissingImportWrapper
-from action_triggers.config_required_fields import HasField
 
 try:
     import boto3  # type: ignore[import]

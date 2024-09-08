@@ -2,8 +2,8 @@
 
 from types import SimpleNamespace
 
-from django.conf import settings
 import pytest
+from django.conf import settings
 
 from action_triggers.message_broker.base import BrokerBase, ConnectionBase
 from action_triggers.message_broker.exceptions import ConnectionValidationError
