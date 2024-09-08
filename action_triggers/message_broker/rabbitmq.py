@@ -16,6 +16,9 @@ except ImportError:  # pragma: no cover
 class RabbitMQConnection(ConnectionBase):
     """Connection class for RabbitMQ."""
 
+    required_conn_detail_fields = []
+    required_params_fields = []
+
     def validate_queue_exists(self) -> None:
         """Validate the the queue exists either in the base configuration or
         the user provided parameters.

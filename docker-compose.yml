@@ -17,6 +17,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
 
   mysql:
     image: mysql:oraclelinux9
@@ -31,6 +32,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
 
   rabbitmq:
     image: rabbitmq:4.0.0-beta.5-management-alpine
@@ -42,6 +44,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4
@@ -54,6 +57,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
 
   kafka:
     image: confluentinc/cp-kafka:7.4.4
@@ -72,11 +76,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
 
   redis:
     image: redis:7.4.0-alpine
     ports:
       - "6380:6379"
+    restart: always
 
   localstack:
     # It's unconventional to use the latest tag, but we are using localstack
@@ -85,11 +91,12 @@ services:
     image: localstack/localstack
     container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
     ports:
-      - "4566:4566"            # LocalStack Gateway
-      - "4510-4559:4510-4559"  # external services port range
+      - "4566:4566" # LocalStack Gateway
+      - "4510-4559:4510-4559" # external services port range
     environment:
       # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
       - DEBUG=${DEBUG:-0}
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume/localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: always

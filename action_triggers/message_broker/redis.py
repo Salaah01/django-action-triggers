@@ -13,6 +13,9 @@ except ImportError:  # pragma: no cover
 class RedisConnection(ConnectionBase):
     """Connection class for Redis."""
 
+    required_conn_detail_fields = []
+    required_params_fields = []
+
     def validate_either_url_or_host_provided(self) -> None:
         """Validate that either a URL or host is provided in the connection
         details.

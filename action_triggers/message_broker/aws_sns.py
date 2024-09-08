@@ -16,6 +16,9 @@ except ImportError:  # pragma: no cover
 class AwsSnsConnection(ConnectionBase):
     """Connection class for AWS SNS."""
 
+    required_conn_detail_fields = []
+    required_params_fields = []
+
     def validate_endpoint_url_provided(self) -> None:
         """Validate that the endpoint url is provided in the connection
         details.
