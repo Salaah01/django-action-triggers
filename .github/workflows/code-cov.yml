@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Docker Compose
-        run: docker compose -f docker-compose.tox.yml up -d --wait
+        run: docker compose up -d --wait
 
       - name: Set up Python
         uses: actions/setup-python@v2
