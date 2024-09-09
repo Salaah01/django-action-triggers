@@ -26,7 +26,7 @@
 
 ## Description
 
-![Django Action Triggers Animation](./docs/source/_static/django-action-triggers-animation.gif)
+![Django Action Triggers Animation](./docs/source/_static/img/django-action-triggers-animation-dark.gif)
 
 In Django, signals are a powerful tool for responding to changes in your models or other parts of the application. Typically, you define signals in a signals.py file, specifying actions to take when certain events occur, like saving or deleting an object. While this approach works well in many cases, it can have some limitations:
 

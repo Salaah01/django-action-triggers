@@ -2,6 +2,9 @@
 Django Action Triggers Documentation
 ====================================
 
+.. role:: raw-html(raw)
+    :format: html
+
 .. image:: https://img.shields.io/badge/license-MIT-blue
    :alt: License MIT
 
@@ -25,6 +28,12 @@ in the database.
 Overview
 ========
 
+.. image:: ./_static/img/django-action-triggers-animation-light.gif
+   :alt: Django Action Triggers Animation
+   :align: center
+   :class: light-mode-logo
+
+:raw-html:`<br />`
 In **Django Action Triggers**, a **"trigger"** refers to an event that
 initiates a corresponding **"action"**. Triggers are typically associated with
 database changes, such as creating, updating, or deleting records,

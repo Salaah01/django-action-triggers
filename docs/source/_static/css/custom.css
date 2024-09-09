@@ -1,0 +1,19 @@
+@media (prefers-color-scheme: dark) {
+  .light-mode-logo {
+    display: none;
+  }
+
+  .dark-mode-logo {
+    display: block;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .light-mode-logo {
+    display: block;
+  }
+
+  .dark-mode-logo {
+    display: none;
+  }
+}
