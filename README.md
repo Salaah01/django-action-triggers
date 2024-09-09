@@ -4,7 +4,6 @@
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue) [![PyPI version](https://badge.fury.io/py/django-action-triggers.svg)](https://badge.fury.io/py/django-action-triggers) [![codecov](https://codecov.io/github/Salaah01/django-action-triggers/graph/badge.svg?token=ROHNEE9D4X)](https://codecov.io/github/Salaah01/django-action-triggers) ![PyPI - Supported Python Versions](https://img.shields.io/pypi/pyversions/django-action-triggers) ![Supported Django Versions](https://img.shields.io/badge/django-3.2%20%7C%204.2%20%7C%205.1-blue)
 
 
-
 ## Table of Contents
 - [Django Action Triggers](#django-action-triggers)
   - [Table of Contents](#table-of-contents)
@@ -26,6 +25,8 @@
 
 
 ## Description
+
+![Django Action Triggers Animation](./docs/source/_static/django-action-triggers-animation.gif)
 
 In Django, signals are a powerful tool for responding to changes in your models or other parts of the application. Typically, you define signals in a signals.py file, specifying actions to take when certain events occur, like saving or deleting an object. While this approach works well in many cases, it can have some limitations:
 
