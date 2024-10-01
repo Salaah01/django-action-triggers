@@ -101,7 +101,10 @@ class TestHandleAction:
     ):
         config = customer_webhook_post_save_signal.config
         webhook = baker.make(Webhook, config=config, url="https://bad-url.com")
-        baker.make(CustomerModel)
+        with aioresponses() as mocked:
+            mocked.post("https://bad-url.com", status=500)
+            mocked.post("https://example.com", status=200)
+            baker.make(CustomerModel)
 
         assert len(caplog.records) == 1
         assert caplog.records[0].levelname == "ERROR"
@@ -119,7 +122,9 @@ class TestHandleAction:
         msg_broker_queue = baker.make(
             MessageBrokerQueue, config=config, conn_details={"host": "bad"}
         )
-        baker.make(CustomerModel)
+        with aioresponses() as mocked:
+            mocked.post("https://example.com", status=200)
+            baker.make(CustomerModel)
 
         assert len(caplog.records) == 1
         assert caplog.records[0].levelname == "ERROR"

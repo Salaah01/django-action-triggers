@@ -16,7 +16,7 @@ from tests.models import CustomerModel
 class TestProcessMsgBrokerQueues:
     """Tests for the `process_msg_broker_queue` function."""
 
-    @patch("action_triggers.msg_broker_queues.get_broker_class")
+    @patch("action_triggers.message_broker.queue.get_broker_class")
     def test_flow_calls_the_right_functions(self, mock_get_broker_class):
         config = baker.make(Config)
         mock_get_broker_class.return_value = MagicMock()
