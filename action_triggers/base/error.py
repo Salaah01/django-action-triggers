@@ -1,6 +1,6 @@
-"""Base module containing the logic for handling bespoke error classes.
+"""Base module containing the logic for handling of bespoke error classes.
 Note: An error class is different from an `Exception` class. An `Exception`
-class is for handling exception and they can be raised. This module contains
+class is for handling exceptions and they can be raised. This module contains
 what are fundamentally classes for storing and managing error messages.
 """
 
@@ -11,7 +11,7 @@ from action_triggers.descriptors.error import ErrorField
 
 class MetaError(type):
     """A metaclass for the `Error` class. This metaclass generates and
-    attaches methods for adding errors to the fields of the `Error` class.
+    attaches methods to aid in adding errors to the fields of the class.
     """
 
     def __new__(cls, name, bases, dct):
@@ -21,38 +21,43 @@ class MetaError(type):
             if isinstance(value, ErrorField)
         }
 
-        def make_add_error(
-            field_name: str,
-        ) -> _t.Callable[[_t.Any, str, str], None]:
-            """Generate a method for adding an error to a field.
-
-            :param field_name: The name of the field to add the error to.
-            :return: A method for adding an error to a field.
-            """
-
-            def add_error_wrapper(self, key: str, message: str) -> None:
-                getattr(self.__class__, field_name).add_error(
-                    self,
-                    key,
-                    message,
-                )
-
-            return add_error_wrapper
-
         for field_name in fields:
-            dct[f"add_{field_name}_error"] = make_add_error(field_name)
+            dct[f"add_{field_name}_error"] = cls.make_add_error(field_name)
 
         dct["_fields"] = fields
 
         return super().__new__(cls, name, bases, dct)
 
+    @staticmethod
+    def make_add_error(
+        field_name: str,
+    ) -> _t.Callable[[_t.Any, str, str], None]:
+        """Generate a method for adding an error to a field.
+
+        :param field_name: The name of the field to add the error to.
+        :return: A method for adding an error to a field.
+        """
+
+        def add_error_wrapper(
+            self: "ErrorBase",
+            key: str,
+            message: str,
+        ) -> None:
+            getattr(self.__class__, field_name).add_error(
+                self,
+                key,
+                message,
+            )
+
+        return add_error_wrapper
+
 
 class ErrorBase(metaclass=MetaError):
     """A base class for storing errors for a set of fields. For each field, an
-    error can be added using teh `add_<field_name>_error` method.
+    error can be added using the `add_<field_name>_error` method.
 
-    :param error_class: The class of the error to raise when the error is not
-        valid.
+    :param error_class: The associated Exception class to raise when there are
+        errors. (default: Exception)
 
     Example:
     --------
