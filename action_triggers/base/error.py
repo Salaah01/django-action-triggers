@@ -21,7 +21,9 @@ class MetaError(type):
             if isinstance(value, ErrorField)
         }
 
-        def make_add_error(field_name: str) -> _t.Callable[[str, str], None]:
+        def make_add_error(
+            field_name: str,
+        ) -> _t.Callable[[_t.Any, str, str], None]:
             """Generate a method for adding an error to a field.
 
             :param field_name: The name of the field to add the error to.

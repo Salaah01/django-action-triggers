@@ -17,10 +17,9 @@ class ErrorField:
         instance: object,
         owner: type,
     ) -> _t.Union[dict, "ErrorField"]:
-    
         if instance is None:
             return self
-    
+
         # Ensure instance-specific storage for errors
         if self.name not in instance.__dict__:
             instance.__dict__[self.name] = defaultdict(list)
@@ -34,5 +33,8 @@ class ErrorField:
         :param message: The error message.
         """
 
-        errors = self.__get__(instance, type(instance))
+        errors = _t.cast(
+            _t.Dict[str, _t.List[str]],
+            self.__get__(instance, type(instance)),
+        )
         errors[key].append(message)
