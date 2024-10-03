@@ -7,9 +7,12 @@ Module Documentation
       modules/admin
       modules/api
       modules/apps
+      modules/base
       modules/checks
       modules/conf
       modules/config_required_fields
+      modules/core
+      modules/descriptors
       modules/dispatch
       modules/dynamic_loading
       modules/enums
@@ -17,7 +20,6 @@ Module Documentation
       modules/exceptions
       modules/message_broker
       modules/models
-      modules/msg_broker_queues
       modules/payload
       modules/registry
       modules/signals
