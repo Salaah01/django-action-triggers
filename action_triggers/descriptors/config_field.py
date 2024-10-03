@@ -1,9 +1,12 @@
 """Module for defining descriptors related to defining the fields that appear
 for a given config in `settings.ACTION_TRIGGERS`.
+
+Note: This is not used in the current implementation. It is a work in progress
+and a placeholder for future work.
 """
 
 
-class ConfigField:
+class ConfigField:  # pragma: no cover
     """Descriptor representing a particular config element that appears in the
     Action Triggers settings (`settings.ACTION_TRIGGERS`).
 

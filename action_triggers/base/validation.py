@@ -1,14 +1,18 @@
-"""Module containing logic for handling the validation."""
+"""Module containing logic for handling the validation.
 
-import typing as _t
+Note: This is not used in the current implementation. It is a work in progress
+and a placeholder for future work.
+"""
 
-T_Validators = _t.Sequence[_t.Callable[[_t.Any], _t.Any]]
+import typing as _t  # pragma: no cover
+
+T_Validators = _t.Sequence[_t.Callable[[_t.Any], _t.Any]]  # pragma: no cover
 
 
-class ConfigValidationMeta(type):
+class ConfigValidationMeta(type):  # pragma: no cover
     """Metaclass for `ConfigValidationBase`. The metaclass checks that the
     class has been setup correctly. Specifically, it will check to ensure that
-    either `validators` vis not `None` or the `get_validators` method has been
+    either `validators` are not `None` or the `get_validators` method has been
     overwritten.
 
     Technically, this can be done without the use of a metaclass and can be
@@ -33,7 +37,7 @@ class ConfigValidationMeta(type):
         )
 
 
-class ConfigValidationBase(metaclass=ConfigValidationMeta):
+class ConfigValidationBase(metaclass=ConfigValidationMeta):  # pragma: no cover
     """Handles teh validation of the configuration (from
     `settings.ACTION_TRIGGERS`).
     """
