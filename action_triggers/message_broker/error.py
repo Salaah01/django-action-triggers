@@ -4,7 +4,7 @@ connection and parameters.
 
 from action_triggers.base.error import ErrorBase
 from action_triggers.descriptors.error import ErrorField
-from action_triggers.message_broker.exceptions import ConnectionValidationError
+from action_triggers.exceptions import ConnectionValidationError
 
 
 class MessageBrokerError(ErrorBase):

@@ -22,11 +22,6 @@ Message Broker Modules
    :undoc-members:
    :show-inheritance:
 
-.. automodule:: action_triggers.message_broker.exceptions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 .. automodule:: action_triggers.message_broker.kafka
    :members:
    :undoc-members:

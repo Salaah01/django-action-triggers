@@ -4,7 +4,7 @@ from action_triggers.message_broker.aws_sns import (
     AwsSnsBroker,
     AwsSnsConnection,
 )
-from action_triggers.message_broker.exceptions import ConnectionValidationError
+from action_triggers.exceptions import ConnectionValidationError
 from tests.utils.aws import CONN_DETAILS, TOPIC_ARN, can_connect_to_localstack
 
 try:

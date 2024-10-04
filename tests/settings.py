@@ -145,6 +145,21 @@ ACTION_TRIGGERS = {
             },
         },
     },
+    "actions": {
+        "aws_lambda": {
+            "action_type": "aws_lambda",
+            "conn_details": {
+                "endpoint_url": AWS_ENDPOINT,
+                "region_name": AWS_REGION,
+                "aws_access_key_id": "test-key",
+                "aws_secret_access_key": "test-secret",
+            },
+            "params": {
+                "FunctionName": "test_lambda",
+                "InvocationType": "RequestResponse",
+            },
+        }
+    },
     "whitelisted_content_types": (
         "tests.customermodel",
         "tests.customerordermodel",
