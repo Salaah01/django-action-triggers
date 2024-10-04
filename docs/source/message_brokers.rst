@@ -100,11 +100,14 @@ Broker Configuration Guides
 
 This guide should help you configure message brokers within
 **Django Action Triggers**. For more advanced configurations, refer to the
-specific guides for Kafka and RabbitMQ.
+specific guides for the supported message brokers.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Message Brokers:
-
+   :maxdepth: 1
+   :caption: Message Brokers
+   
    message_brokers/kafka
    message_brokers/rabbitmq
+   message_brokers/redis
+   message_brokers/aws_sqs
+   message_brokers/aws_sns

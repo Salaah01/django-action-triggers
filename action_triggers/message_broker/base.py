@@ -43,7 +43,7 @@ class ConnectionBase(ABC):
         self._user_params = params
 
         self._conn_details: _t.Optional[dict] = None
-        self._parmas: _t.Optional[dict] = None
+        self._params: _t.Optional[dict] = None
 
         self._errors = MessageBrokerError()
         self.validate()
@@ -81,12 +81,12 @@ class ConnectionBase(ABC):
         :return: The merged parameters.
         """
 
-        if self._parmas is None:
-            self._parmas = {
+        if self._params is None:
+            self._params = {
                 **self.config.get("params", {}),
                 **self._user_params,
             }
-        return self._parmas
+        return self._params
 
     def validate(self) -> None:
         """Validate the connection parameters. Raise an exception if

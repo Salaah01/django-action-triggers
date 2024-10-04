@@ -51,3 +51,8 @@ Message Broker Modules
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. automodule:: action_triggers.message_broker.queue
+   :members:
+   :undoc-members:
+   :show-inheritance:
