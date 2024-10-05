@@ -5,10 +5,10 @@ from django.db import transaction
 from rest_framework import serializers  # type: ignore[import-untyped]
 
 from action_triggers.models import (
+    Action,
     Config,
     ConfigSignal,
     MessageBrokerQueue,
-    Action,
     Webhook,
 )
 

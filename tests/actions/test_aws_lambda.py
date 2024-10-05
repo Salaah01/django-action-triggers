@@ -1,17 +1,15 @@
 import pytest
 
-from action_triggers.exceptions import ConnectionValidationError
 from action_triggers.actions.aws.aws_lambda import (
-    AwsLambdaConnection,
     AwsLambdaAction,
+    AwsLambdaConnection,
 )
-
+from action_triggers.exceptions import ConnectionValidationError
 from tests.utils.aws import (
     CONN_DETAILS,
-    can_connect_to_localstack,
     LAMBDA_FUNCTION_NAME,
+    can_connect_to_localstack,
 )
-
 
 try:
     import boto3  # type: ignore[import-untyped]

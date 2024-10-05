@@ -10,12 +10,12 @@ from model_bakery import baker
 
 from action_triggers.enums import SignalChoices
 from action_triggers.models import (
+    Action,
     BaseAction,
     Config,
     ConfigSignal,
     MessageBrokerQueue,
     Webhook,
-    Action,
 )
 from tests.models import CustomerModel, CustomerOrderModel
 

@@ -6,8 +6,8 @@ import typing as _t
 
 from django.db.models import Model
 
-from action_triggers.message_broker.queue import process_msg_broker_queue
 from action_triggers.actions.action import process_action
+from action_triggers.message_broker.queue import process_msg_broker_queue
 from action_triggers.models import Config, Webhook
 from action_triggers.payload import get_payload_generator
 from action_triggers.webhooks import WebhookProcessor

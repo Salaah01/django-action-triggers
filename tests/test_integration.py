@@ -3,7 +3,7 @@
 import asyncio
 import json
 
-import boto3
+import boto3  # type: ignore[import]
 import pytest
 
 try:
@@ -504,7 +504,7 @@ class TestIntegrationActionAwsLambda:
     Lambda function.
     """
 
-    ACTION_CONFIG = settings.ACTION_TRIGGERS["actions"][
+    ACTION_CONFIG = settings.ACTION_TRIGGERS["actions"][  # type: ignore[index]  # noqa: E501
         "aws_lambda_forward_to_sqs"
     ]
     QUEUE_NAME = "echo-back-queue"

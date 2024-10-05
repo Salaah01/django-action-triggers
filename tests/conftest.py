@@ -19,11 +19,11 @@ from model_bakery import baker  # noqa: E402
 
 from action_triggers.enums import SignalChoices  # noqa: E402
 from action_triggers.models import (  # noqa: E402
+    Action,
     Config,
     ConfigSignal,
     MessageBrokerQueue,
     Webhook,
-    Action,
 )
 from tests.models import CustomerModel, CustomerOrderModel  # noqa: E402
 from tests.utils.aws import (  # noqa: E402

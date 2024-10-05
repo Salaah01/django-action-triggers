@@ -6,11 +6,11 @@ from model_bakery import baker
 
 from action_triggers.api.serializers import ConfigSerializer
 from action_triggers.models import (
+    Action,
     Config,
     ConfigSignal,
     MessageBrokerQueue,
     Webhook,
-    Action,
 )
 from tests.models import CustomerModel, CustomerOrderModel, M2MModel
 

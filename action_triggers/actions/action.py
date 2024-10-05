@@ -7,15 +7,14 @@ import typing as _t
 from django.conf import settings
 
 from action_triggers.actions.aws.aws_lambda import AwsLambdaAction
-from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.actions.enums import ActionType
+from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.models import Action
-
 
 logger = logging.getLogger(__name__)
 
 
-def get_action_class(action_name: str) -> _t.Type[AwsLambdaAction]:
+def get_action_class(action_name: str) -> _t.Type[ActionTriggerActionBase]:
     """Get the action class based on the action name.
 
     :param action_name: The name of the action.

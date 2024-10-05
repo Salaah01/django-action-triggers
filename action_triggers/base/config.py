@@ -11,8 +11,8 @@ from django.conf import settings
 
 from action_triggers.base.error import ErrorBase
 from action_triggers.config_required_fields import RequiredFieldBase
-from action_triggers.enums import ActionTriggerType
 from action_triggers.dynamic_loading import replace_dict_values_with_results
+from action_triggers.enums import ActionTriggerType
 
 
 class ConnectionBase(ABC):

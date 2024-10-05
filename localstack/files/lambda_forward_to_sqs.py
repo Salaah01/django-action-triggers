@@ -1,6 +1,7 @@
 import json
-import boto3
 import logging
+
+import boto3  # type: ignore[import]
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

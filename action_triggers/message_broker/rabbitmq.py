@@ -3,9 +3,9 @@
 import typing as _t
 from copy import deepcopy
 
+from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.config_required_fields import HasField
 from action_triggers.core.config import ConnectionCore
-from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.enums import ActionTriggerType
 from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.utils.module_import import MissingImportWrapper

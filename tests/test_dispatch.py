@@ -9,7 +9,7 @@ from aioresponses import aioresponses
 from model_bakery import baker
 
 from action_triggers.dispatch import handle_action
-from action_triggers.models import Config, MessageBrokerQueue, Webhook, Action
+from action_triggers.models import Action, Config, MessageBrokerQueue, Webhook
 from tests.models import (
     CustomerModel,
     CustomerOrderModel,
