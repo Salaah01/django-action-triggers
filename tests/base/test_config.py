@@ -5,8 +5,8 @@ from types import SimpleNamespace
 import pytest
 from django.conf import settings
 
-from action_triggers.message_broker.base import BrokerBase
 from action_triggers.base.config import ConnectionBase
+from action_triggers.message_broker.base import BrokerBase
 from action_triggers.message_broker.error import MessageBrokerError
 
 

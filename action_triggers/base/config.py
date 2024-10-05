@@ -5,10 +5,10 @@ and a placeholder for future work.
 """
 
 import typing as _t
-from abc import ABC, abstractproperty, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 
-from action_triggers.config_required_fields import RequiredFieldBase
 from action_triggers.base.error import ErrorBase
+from action_triggers.config_required_fields import RequiredFieldBase
 
 
 class ConnectionBase(ABC):
@@ -99,10 +99,3 @@ class ConnectionBase(ABC):
                 **self._user_params,
             }
         return self._params
-
-    # def validate(self):
-    #     """Validate the connection details and parameters provided by the
-    #     user.
-    #     """
-
-    #     self.validator(self).validate()

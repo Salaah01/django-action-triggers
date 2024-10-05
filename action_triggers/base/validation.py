@@ -53,7 +53,7 @@ class ConfigValidationBase(metaclass=ConfigValidationMeta):
 
     def __init__(
         self,
-        instance: "action_triggers.base.config.ConnectionBase",
+        instance: object,
         error_handler: _t.Callable[[str, str], None],
     ):
         self.instance = instance

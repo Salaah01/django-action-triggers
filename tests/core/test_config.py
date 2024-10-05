@@ -4,14 +4,14 @@ from unittest.mock import Mock, patch
 
 import pytest
 
+from action_triggers.config_required_fields import HasField
 from action_triggers.core.config import (
     ConnectionCore,
-    validate_required_keys,
     validate_context_not_overwritten,
+    validate_required_keys,
 )
-from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.exceptions import ConnectionValidationError
-from action_triggers.config_required_fields import HasField
+from action_triggers.message_broker.error import MessageBrokerError
 
 
 class MockConnection(ConnectionCore):
