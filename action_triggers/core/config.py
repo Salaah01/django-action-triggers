@@ -50,6 +50,14 @@ class ConnectionValidationMixin:
     cover the basic validation requirements for any connection.
     """
 
+    required_conn_detail_fields: _t.Sequence[RequiredFieldBase]
+    required_params_fields: _t.Sequence[RequiredFieldBase]
+    config: _t.Dict[str, _t.Any]
+    conn_details: _t.Dict[str, _t.Any]
+    params: _t.Dict[str, _t.Any]
+    _user_conn_details: _t.Dict[str, _t.Any]
+    _user_params: _t.Dict[str, _t.Any]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.validate()
@@ -61,7 +69,7 @@ class ConnectionValidationMixin:
         self.validate_connection_details_not_overwritten()
         self.validate_params_not_overwritten()
 
-        self._errors.is_valid(raise_exception=True)
+        self._errors.is_valid(raise_exception=True)  # type: ignore[attr-defined]  # noqa: E501
 
     def validate_connection_details_not_overwritten(self) -> None:
         """Validate that the base connection details are not overwritten."""

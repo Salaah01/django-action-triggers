@@ -41,15 +41,7 @@ class RedisConnection(ConnectionCore):
 
 
 class RedisBroker(ActionTriggerActionBase):
-    """Broker class for Redis.
-
-    :param broker_key: The key for the broker (must existing in
-        `settings.ACTION_TRIGGERS`).
-    :param conn_params: The connection parameters to use for establishing the
-        connection.
-    :param params: Additional parameters to use for the message broker.
-    :param kwargs: Additional keyword arguments to pass to the subclass.
-    """
+    """Broker class for Redis."""
 
     conn_class = RedisConnection
     action_trigger_type = ActionTriggerType.BROKERS

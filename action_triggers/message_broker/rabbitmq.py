@@ -49,8 +49,8 @@ class RabbitMQConnection(ConnectionCore):
 class RabbitMQBroker(ActionTriggerActionBase):
     """Broker class for RabbitMQ.
 
-    :param broker_key: The key for the broker (must existing in
-        `settings.ACTION_TRIGGERS`).
+    :param hey: The key for the broker (must existing in
+        `settings.ACTION_TRIGGERS["brokers"]`).
     :param conn_params: The connection parameters to use for establishing the
         connection.
     :param params: Additional parameters to use for the message broker.
@@ -62,12 +62,12 @@ class RabbitMQBroker(ActionTriggerActionBase):
 
     def __init__(
         self,
-        broker_key: str,
+        key: str,
         conn_params: _t.Union[dict, None],
         params: _t.Union[dict, None],
         **kwargs,
     ):
-        super().__init__(broker_key, conn_params, params, **kwargs)
+        super().__init__(key, conn_params, params, **kwargs)
         self.queue = self.params.get("queue")
         self.exchange = self.params.get("exchange", "")
 

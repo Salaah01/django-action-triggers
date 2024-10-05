@@ -42,7 +42,7 @@ class ConnectionBase(ABC):
         """The required parameters fields that must be provided by the user."""
 
     @abstractproperty
-    def error_class(self) -> ErrorBase:
+    def error_class(self) -> _t.Type[ErrorBase]:
         """The error class to use for storing errors."""
 
     @abstractmethod

@@ -35,13 +35,7 @@ class AwsSnsConnection(ConnectionCore):
 
 
 class AwsSnsBroker(ActionTriggerActionBase):
-    """Broker class for AWS SQS.
-
-    :param broker_key: The key for the broker (must exist in the
-        `settings.ACTION_TRIGGERS["brokers"]` dictionary)).
-    :param conn_params: The connection parameters to use for establishing the
-        connection to the broker.
-    """
+    """Broker class for AWS SQS."""
 
     conn_class = AwsSnsConnection
     action_trigger_type = ActionTriggerType.BROKERS

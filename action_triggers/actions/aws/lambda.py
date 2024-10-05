@@ -28,3 +28,7 @@ class AwsLambdaConnection(ConnectionCore):
         """Close the connection to the AWS Lambda service."""
 
         self.conn = None
+
+
+# class AwsLambdaAction(ActionTriggerActionBase):
+#     pass
