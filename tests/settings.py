@@ -68,7 +68,7 @@ REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6380)
 
 AWS_ENDPOINT = os.getenv("AWS_ENDPOINT", "http://localhost:4566")
-AWS_REGION = os.getenv("AWS_REGION", "eu-west-1")
+AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 
 ACTION_TRIGGERS = {
     "brokers": {
@@ -155,10 +155,25 @@ ACTION_TRIGGERS = {
                 "aws_secret_access_key": "test-secret",
             },
             "params": {
-                "FunctionName": "test_lambda",
+                "FunctionName": "echo-back-lambda",
                 "InvocationType": "RequestResponse",
+                "LogType": "Tail",
             },
-        }
+        },
+        "aws_lambda_forward_to_sqs": {
+            "action_type": "aws_lambda",
+            "conn_details": {
+                "endpoint_url": AWS_ENDPOINT,
+                "region_name": AWS_REGION,
+                "aws_access_key_id": "test-key",
+                "aws_secret_access_key": "test-secret",
+            },
+            "params": {
+                "FunctionName": "forward-to-sqs-lambda",
+                "InvocationType": "RequestResponse",
+                "LogType": "Tail",
+            },
+        },
     },
     "whitelisted_content_types": (
         "tests.customermodel",

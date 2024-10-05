@@ -18,6 +18,8 @@ QUEUE_NAME = settings.ACTION_TRIGGERS["brokers"]["aws_sqs"]["params"][  # type: 
 TOPIC_NAME = "test_topic"
 
 TOPIC_ARN = BROKER_SETTINGS["params"]["topic_arn"]  # type: ignore[index]
+LAMBDA_SETTINGS = settings.ACTION_TRIGGERS["actions"]["aws_lambda"]  # type: ignore[index]  # noqa E501
+LAMBDA_FUNCTION_NAME = LAMBDA_SETTINGS["params"]["FunctionName"]  # type: ignore[index]  # noqa E501
 
 
 class PolicyEnum(Enum):

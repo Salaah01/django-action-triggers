@@ -1,6 +1,9 @@
 """Module to support sending messages to AWS Lambda."""
 
 import asyncio
+from functools import partial
+import json
+
 from action_triggers.utils.module_import import MissingImportWrapper
 from action_triggers.core.config import ConnectionCore
 from action_triggers.base.config import ActionTriggerActionBase
@@ -19,7 +22,7 @@ class AwsLambdaConnection(ConnectionCore):
 
     error_class = ActionError
     required_conn_detail_fields = (HasField("endpoint_url", str),)
-    required_param_fields = (HasField("FunctionName", str),)
+    required_params_fields = (HasField("FunctionName", str),)
 
     async def connect(self) -> None:
         """Connect to the AWS Lambda service."""
@@ -50,10 +53,20 @@ class AwsLambdaAction(ActionTriggerActionBase):
         """
 
         loop = asyncio.get_event_loop()
+
+        # res = conn.conn.invoke(
+        #     Payload=json.dumps(message),
+        #     FunctionName="forward-to-sqs-lambda",
+        #     InvocationType="RequestResponse",
+        #     LogType="Tail",
+        # )
+        # breakpoint()
+
         await loop.run_in_executor(
             None,
-            conn.conn.invoke,
-            FunctionName=conn.params["FunctionName"],
-            InvocationType="Event",
-            Payload=message,
+            partial(
+                conn.conn.invoke,
+                Payload=json.dumps(message),
+                **conn.params,
+            ),
         )

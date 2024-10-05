@@ -302,3 +302,11 @@ def sns_client():
         "sns",
         **settings.ACTION_TRIGGERS["brokers"]["aws_sns"]["conn_details"],
     )
+
+
+@pytest.fixture
+def aws_lambda_client():
+    return boto3.client(
+        "lambda",
+        **settings.ACTION_TRIGGERS["actions"]["aws_lambda"]["conn_details"],
+    )
