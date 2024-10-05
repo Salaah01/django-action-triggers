@@ -5,8 +5,8 @@ from copy import deepcopy
 
 from action_triggers.config_required_fields import HasField
 from action_triggers.core.config import ConnectionCore
-from action_triggers.message_broker.base import BrokerBase
-from action_triggers.message_broker.enums import BrokerType
+from action_triggers.base.config import ActionTriggerActionBase
+from action_triggers.enums import ActionTriggerType
 from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.utils.module_import import MissingImportWrapper
 
@@ -46,7 +46,7 @@ class RabbitMQConnection(ConnectionCore):
         self.conn = None
 
 
-class RabbitMQBroker(BrokerBase):
+class RabbitMQBroker(ActionTriggerActionBase):
     """Broker class for RabbitMQ.
 
     :param broker_key: The key for the broker (must existing in
@@ -57,8 +57,8 @@ class RabbitMQBroker(BrokerBase):
     :param kwargs: Additional keyword arguments to pass to the subclass.
     """
 
-    broker_type = BrokerType.RABBITMQ
     conn_class = RabbitMQConnection
+    action_trigger_type = ActionTriggerType.BROKERS
 
     def __init__(
         self,

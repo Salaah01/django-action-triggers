@@ -4,8 +4,9 @@ import typing as _t
 
 from action_triggers.config_required_fields import HasField
 from action_triggers.core.config import ConnectionCore
-from action_triggers.message_broker.base import BrokerBase
-from action_triggers.message_broker.enums import BrokerType
+from action_triggers.base.config import ActionTriggerActionBase
+from action_triggers.enums import ActionTriggerType
+
 from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.utils.module_import import MissingImportWrapper
 
@@ -32,11 +33,11 @@ class KafkaConnection(ConnectionCore):
         self.conn = None
 
 
-class KafkaBroker(BrokerBase):
+class KafkaBroker(ActionTriggerActionBase):
     """Broker class for Kafka."""
 
-    broker_type = BrokerType.KAFKA
     conn_class = KafkaConnection
+    action_trigger_type = ActionTriggerType.BROKERS
 
     def __init__(
         self,
