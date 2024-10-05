@@ -1,9 +1,12 @@
-"""Tests for `action_triggers.message_broker.base` module."""
+"""Tests for `action_triggers.base.config` module."""
+
+from types import SimpleNamespace
 
 import pytest
 from django.conf import settings
 
-from action_triggers.message_broker.base import BrokerBase, ConnectionBase
+from action_triggers.message_broker.base import BrokerBase
+from action_triggers.base.config import ConnectionBase
 from action_triggers.message_broker.error import MessageBrokerError
 
 
@@ -25,6 +28,41 @@ class MockBroker(BrokerBase):
 
     async def _send_message_impl(self, conn, message):
         self.sent_message = message
+
+
+@pytest.mark.django_db
+class TestConnectionBase:
+    """Tests for the `ConnectionBase` class."""
+
+
+
+    @pytest.mark.asyncio
+    async def test_can_be_used_as_a_context_manager(self):
+        class TestConnection(MockConnection):
+            connected = False
+            closed = False
+
+            def __init__(self, config, conn_details, params):
+                super().__init__(config, conn_details, params)
+                self._conn = SimpleNamespace(
+                    close=lambda: setattr(self, "closed", True)
+                )
+
+            async def connect(self):
+                self.connected = True
+
+            async def close(self):
+                self.closed = True
+
+            def validate(self):
+                pass
+
+        async with TestConnection({}, {}, {}) as conn:
+            assert conn.connected is True
+
+        assert conn.closed is True
+
+    
 
 
 @pytest.mark.django_db

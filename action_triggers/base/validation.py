@@ -4,12 +4,14 @@ Note: This is not used in the current implementation. It is a work in progress
 and a placeholder for future work.
 """
 
-import typing as _t  # pragma: no cover
+import typing as _t
 
-T_Validators = _t.Sequence[_t.Callable[[_t.Any], _t.Any]]  # pragma: no cover
+T_Validators = _t.Sequence[
+    _t.Tuple[_t.Callable[[_t.Any], _t.Any], _t.Dict[str, str]]
+]
 
 
-class ConfigValidationMeta(type):  # pragma: no cover
+class ConfigValidationMeta(type):
     """Metaclass for `ConfigValidationBase`. The metaclass checks that the
     class has been setup correctly. Specifically, it will check to ensure that
     either `validators` are not `None` or the `get_validators` method has been
@@ -37,8 +39,8 @@ class ConfigValidationMeta(type):  # pragma: no cover
         )
 
 
-class ConfigValidationBase(metaclass=ConfigValidationMeta):  # pragma: no cover
-    """Handles teh validation of the configuration (from
+class ConfigValidationBase(metaclass=ConfigValidationMeta):
+    """Handles the validation of the configuration (from
     `settings.ACTION_TRIGGERS`).
     """
 
@@ -48,6 +50,14 @@ class ConfigValidationBase(metaclass=ConfigValidationMeta):  # pragma: no cover
     # validator to some field and key?
     validators: _t.Optional[T_Validators] = None
     get_validators: _t.Optional[_t.Callable[[], T_Validators]]
+
+    def __init__(
+        self,
+        instance: "action_triggers.base.config.ConnectionBase",
+        error_handler: _t.Callable[[str, str], None],
+    ):
+        self.instance = instance
+        self.error_handler = error_handler
 
     def validate(self):
         pass

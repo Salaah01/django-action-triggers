@@ -7,8 +7,10 @@ from action_triggers.config_required_fields import (
     HasAtLeastOneOffField,
     HasField,
 )
-from action_triggers.message_broker.base import BrokerBase, ConnectionBase
+from action_triggers.message_broker.base import BrokerBase
 from action_triggers.message_broker.enums import BrokerType
+from action_triggers.message_broker.error import MessageBrokerError
+from action_triggers.core.config import ConnectionCore
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
@@ -17,9 +19,10 @@ except ImportError:  # pragma: no cover
     boto3 = MissingImportWrapper("boto3")  # type: ignore[assignment]
 
 
-class AwsSqsConnection(ConnectionBase):
+class AwsSqsConnection(ConnectionCore):
     """Connection class for AWS SQS."""
 
+    error_class = MessageBrokerError
     required_conn_detail_fields = (HasField("endpoint_url", str),)
     required_params_fields = (
         HasAtLeastOneOffField(fields=("queue_url", "queue_name")),

@@ -1,7 +1,7 @@
 """Module containing custom exceptions."""
 
-
 import json
+
 
 class DisallowedEndpointError(ValueError):
     """Exception raised when an endpoint is disallowed."""
