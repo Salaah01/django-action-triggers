@@ -7,8 +7,12 @@ and a placeholder for future work.
 import typing as _t
 from abc import ABC, abstractmethod, abstractproperty
 
+from django.conf import settings
+
 from action_triggers.base.error import ErrorBase
 from action_triggers.config_required_fields import RequiredFieldBase
+from action_triggers.enums import ActionTriggerType
+from action_triggers.dynamic_loading import replace_dict_values_with_results
 
 
 class ConnectionBase(ABC):
@@ -58,7 +62,6 @@ class ConnectionBase(ABC):
         self._params: _t.Optional[dict] = None
 
         self._errors = self.error_class()
-        # self.validate()
         self.conn: _t.Any = None
 
     async def __aenter__(self):
@@ -99,3 +102,93 @@ class ConnectionBase(ABC):
                 **self._user_params,
             }
         return self._params
+
+
+class ActionTriggerActionBase(ABC):
+    """Base class for triggering an action. This class should be subclassed to
+    implement the specific action for an action trigger.
+
+    :param key: The key for the action trigger (must exist in the
+        `settings.ACTION_TRIGGERS[self.action_trigger_type]` dictionary).
+    :param conn_details: The connection parameters to use for establishing the
+        connection.
+    :param params: Additional parameters to use for the action trigger.
+    :param kwargs: Additional keyword arguments to pass to the subclass.
+    """
+
+    @abstractproperty
+    def action_trigger_type(self) -> ActionTriggerType:
+        """The type of action trigger."""
+
+    @abstractproperty
+    def conn_class(self) -> _t.Type[ConnectionBase]:
+        """The connection class to use for establishing a connection to the
+        service which the action will interact with.
+        """
+
+    def __init__(
+        self,
+        key: str,
+        conn_details: _t.Union[dict, None],
+        params: _t.Union[dict, None],
+        **kwargs,
+    ):
+        self.key = key
+        self.config = _t.cast(
+            dict, settings.ACTION_TRIGGERS[self.action_trigger_type.value]
+        )[key]
+        self.conn_details = self._build_and_merge_config(
+            conn_details,
+            self.config.get("conn_details"),
+        )
+        self.params = self._build_and_merge_config(
+            params,
+            self.config.get("params"),
+        )
+        self.kwargs = kwargs
+        self._conn = self.conn_class(
+            self.config,
+            self.conn_details,
+            self.params,
+        )
+
+    def _build_and_merge_config(
+        self,
+        user_config: _t.Union[dict, None],
+        base_config: _t.Union[dict, None],
+    ) -> dict:
+        """Builds and merges the user provided configuration with the base
+        configuration. The building process involves computing certain values
+        in the merged configuration.
+        Note: The base configuration always takes precedence over the user
+        provided configuration.
+
+        :param user_config: The user provided configuration.
+        :param base_config: The base configuration.
+        :return: The merged configuration.
+        """
+
+        return replace_dict_values_with_results(
+            {
+                **(user_config or {}),
+                **(base_config or {}),
+            }
+        )
+
+    async def send_message(self, message: str) -> None:
+        """Starts a connection with the message broker and sends a message.
+
+        :param message: The message to send to the message broker.
+        """
+
+        async with self._conn as conn:
+            await self._send_message_impl(conn, message)
+
+    @abstractmethod
+    async def _send_message_impl(self, conn: _t.Any, message: str) -> None:
+        """Implementation of sending a message to the message broken given an
+        established connection.
+
+        :param conn: The established connection to the message broker.
+        :param message: The message to send to the message broker.
+        """

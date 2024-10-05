@@ -90,7 +90,7 @@ class TestAwsSnsBroker:
     @pytest.mark.asyncio
     async def test_send_message(self, sns_queue):
         broker = AwsSnsBroker(
-            broker_key="aws_sns",
+            key="aws_sns",
             conn_details={},
             params={},
         )

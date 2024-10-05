@@ -135,7 +135,7 @@ class TestAwsSqsBroker:
     @pytest.mark.asyncio
     async def test_message_can_be_sent(self):
         broker = AwsSqsBroker(
-            broker_key="aws_sqs",
+            key="aws_sqs",
             conn_details={},
             params={},
         )
