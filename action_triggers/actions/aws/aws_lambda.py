@@ -53,15 +53,6 @@ class AwsLambdaAction(ActionTriggerActionBase):
         """
 
         loop = asyncio.get_event_loop()
-
-        # res = conn.conn.invoke(
-        #     Payload=json.dumps(message),
-        #     FunctionName="forward-to-sqs-lambda",
-        #     InvocationType="RequestResponse",
-        #     LogType="Tail",
-        # )
-        # breakpoint()
-
         await loop.run_in_executor(
             None,
             partial(

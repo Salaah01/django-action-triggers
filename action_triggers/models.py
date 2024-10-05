@@ -220,6 +220,44 @@ class MessageBrokerQueue(BaseAction):
         return f"(Queue {self.id}) {self.name}"
 
 
+class Action(BaseAction):
+    """Model to represent the action to trigger."""
+
+    TIMEOUT_SETTING_KEY = "MAX_ACTION_TIMEOUT"
+
+    config = models.ForeignKey(
+        Config,
+        on_delete=models.CASCADE,
+        related_name="actions",
+        verbose_name=_("Configuration"),
+    )
+    name = models.CharField(
+        _("Name"),
+        max_length=255,
+        help_text=_("Corresponds to an action config in the settings."),
+    )
+    conn_details = models.JSONField(
+        _("Connection Details"),
+        blank=True,
+        null=True,
+        help_text=_("Connection details for the action."),
+    )
+    parameters = models.JSONField(
+        _("Parameters"),
+        blank=True,
+        null=True,
+        help_text=_("Additional parameters for the action."),
+    )
+
+    class Meta:
+        verbose_name = _("Action")
+        verbose_name_plural = _("Actions")
+        db_table = conf.DB_TABLE_PREFIX + "action"
+
+    def __str__(self) -> str:
+        return f"(Action {self.id}) {self.name}"
+
+
 class ConfigSignal(models.Model):
     """Model to represent the type of signals to trigger for."""
 

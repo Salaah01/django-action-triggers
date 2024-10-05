@@ -3,6 +3,7 @@
 import asyncio
 import json
 
+import boto3
 import pytest
 
 try:
@@ -488,3 +489,76 @@ class TestIntegrationMessageBrokerAwsSns:
         )
 
         sqs_client.delete_queue(QueueUrl=queue_url)
+
+
+@pytest.mark.skipif(
+    not can_connect_to_localstack(),
+    reason=(
+        "Cannot connect to AWS Lambda, localstack (AWS emulator) is not "
+        "running."
+    ),
+)
+@pytest.mark.django_db(transaction=True)
+class TestIntegrationActionAwsLambda:
+    """Integration tests where the action to be triggered is invoking an AWS
+    Lambda function.
+    """
+
+    ACTION_CONFIG = settings.ACTION_TRIGGERS["actions"][
+        "aws_lambda_forward_to_sqs"
+    ]
+    QUEUE_NAME = "echo-back-queue"
+
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self):
+        """Delete all messages in the SQS queue."""
+        self.sqs_client().purge_queue(QueueUrl=self.queue_url)
+
+    def sqs_client(self):
+        return boto3.client("sqs", **self.ACTION_CONFIG["conn_details"])
+
+    @property
+    def queue_url(self):
+        return self.sqs_client().get_queue_url(QueueName=self.QUEUE_NAME)[
+            "QueueUrl"
+        ]
+
+    def test_simple_basic_json_message(
+        self,
+        customer_aws_lambda_post_save_signal,
+    ):
+        baker.make(CustomerModel)
+        response = self.sqs_client().receive_message(
+            QueueUrl=self.queue_url,
+            MaxNumberOfMessages=1,
+            WaitTimeSeconds=10,
+        )
+
+        assert json.loads(json.loads(response["Messages"][0]["Body"])) == {
+            "message": "Hello, World!"
+        }
+
+    @pytest.fixture
+    def fixture_simple_basic_plain_message(
+        self,
+        customer_aws_lambda_post_save_signal,
+    ):
+        config = customer_aws_lambda_post_save_signal.config
+        config.payload = "Hello Plain World!"
+        config.save()
+
+    def test_simple_basic_plain_message(
+        self,
+        fixture_simple_basic_plain_message,
+    ):
+        baker.make(CustomerModel)
+        response = self.sqs_client().receive_message(
+            QueueUrl=self.queue_url,
+            MaxNumberOfMessages=1,
+            WaitTimeSeconds=10,
+        )
+
+        assert (
+            json.loads(json.loads(response["Messages"][0]["Body"]))
+            == "Hello Plain World!"
+        )

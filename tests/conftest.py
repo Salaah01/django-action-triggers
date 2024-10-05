@@ -23,6 +23,7 @@ from action_triggers.models import (  # noqa: E402
     ConfigSignal,
     MessageBrokerQueue,
     Webhook,
+    Action,
 )
 from tests.models import CustomerModel, CustomerOrderModel  # noqa: E402
 from tests.utils.aws import (  # noqa: E402
@@ -108,6 +109,15 @@ def aws_sns_trigger(config):
 
 
 @pytest.fixture
+def aws_lambda_trigger(config):
+    return baker.make(
+        Action,
+        name="aws_lambda_forward_to_sqs",
+        config=config,
+    )
+
+
+@pytest.fixture
 def customer_post_save_signal(config):
     return baker.make(
         ConfigSignal,
@@ -187,6 +197,20 @@ def customer_aws_sns_post_save_signal(
 
 
 @pytest.fixture
+def customer_aws_lambda_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    aws_lambda_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        aws_lambda_trigger,
+    )
+
+
+@pytest.fixture
 def customer_webhook_post_save_signal(
     config,
     config_add_customer_ct,
@@ -228,6 +252,13 @@ def full_loaded_config(config):
         parameters={"queue": "test_queue_1"},
         _quantity=2,
     )
+    action_1, action_2 = baker.make(
+        Action,
+        config=config,
+        conn_details={"host": "localhost", "port": 5672},
+        parameters={"queue": "test_queue_1"},
+        _quantity=2,
+    )
     config_signal_1, config_signal_2 = baker.make(
         ConfigSignal,
         config=config,
@@ -236,11 +267,18 @@ def full_loaded_config(config):
 
     return namedtuple(
         "ConfigContext",
-        ["config", "webhooks", "mesage_broker_queues", "config_signals"],
+        [
+            "config",
+            "webhooks",
+            "mesage_broker_queues",
+            "actions",
+            "config_signals",
+        ],
     )(
         config,
         [webhook_1, webhook_2],
         [message_broker_queue_1, message_broker_queue_2],
+        [action_1, action_2],
         [config_signal_1, config_signal_2],
     )
 

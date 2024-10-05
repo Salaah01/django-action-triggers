@@ -9,7 +9,7 @@ from aioresponses import aioresponses
 from model_bakery import baker
 
 from action_triggers.dispatch import handle_action
-from action_triggers.models import Config, MessageBrokerQueue, Webhook
+from action_triggers.models import Config, MessageBrokerQueue, Webhook, Action
 from tests.models import (
     CustomerModel,
     CustomerOrderModel,
@@ -155,3 +155,47 @@ class TestHandleAction:
         assert len(caplog.records) == 1
         assert caplog.records[0].levelname == "ERROR"
         assert isinstance(caplog.records[0].args[2], TimeoutError)
+
+    @patch("action_triggers.dispatch.process_action")
+    @pytest.mark.parametrize(
+        "model_class",
+        (CustomerModel, CustomerOrderModel, M2MModel, One2OneModel),
+    )
+    @pytest.mark.parametrize("config_payload", (None, {"foo": "bar"}))
+    def test_for_all_actions_process_action_called(
+        self,
+        mock_process_action,
+        model_class,
+        config_payload,
+    ):
+        config = baker.make(Config, payload=config_payload)
+        actions = baker.make(Action, config=config, _quantity=2)
+        baker.make(Action)
+        model_instance = baker.make(model_class)
+        handle_action(config, model_instance)
+
+        assert mock_process_action.call_count == 2
+        assert mock_process_action.call_args_list[0][0][0] in actions
+        assert mock_process_action.call_args_list[1][0][0] in actions
+
+    def test_skips_over_actions_with_errors(
+        self,
+        customer_webhook_post_save_signal,
+        caplog,
+    ):
+        config = customer_webhook_post_save_signal.config
+        action = baker.make(
+            Action,
+            config=config,
+            conn_details={"host": "bad"},
+        )
+        with aioresponses() as mocked:
+            mocked.post("https://example.com", status=200)
+            baker.make(CustomerModel)
+
+        assert len(caplog.records) == 1
+        assert caplog.records[0].levelname == "ERROR"
+        assert (
+            f"Error processing action {action.id} for config {config.id}"
+            in caplog.records[0].message
+        )

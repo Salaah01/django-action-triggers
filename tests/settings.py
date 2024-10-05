@@ -141,7 +141,7 @@ ACTION_TRIGGERS = {
                 "aws_secret_access_key": "test-secret",
             },
             "params": {
-                "topic_arn": "arn:aws:sns:eu-west-1:000000000000:test_topic_1",
+                "topic_arn": f"arn:aws:sns:{AWS_REGION}:000000000000:test_topic_1",  # noqa E501
             },
         },
     },

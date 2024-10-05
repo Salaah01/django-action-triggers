@@ -184,6 +184,7 @@ def warning_timeout_settings_set(app_configs, **kwargs):
     keys = (
         "MAX_BROKER_TIMEOUT",
         "MAX_WEBHOOK_TIMEOUT",
+        "MAX_ACTION_TIMEOUT",
     )
     errors = []
     msg = (

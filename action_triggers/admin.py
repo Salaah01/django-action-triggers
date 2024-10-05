@@ -17,6 +17,13 @@ class MessageBrokerQueueInline(admin.StackedInline):
     extra = 0
 
 
+class ActionInline(admin.StackedInline):
+    """Support for inlining `Action` objects."""
+
+    model = action_triggers_models.Action
+    extra = 0
+
+
 class ConfigSignalInline(admin.TabularInline):
     """Support for inlining `ConfigSignal` objects."""
 
@@ -35,7 +42,12 @@ class ConfigAdmin(admin.ModelAdmin):
     ordering = ("-created_on",)
     date_hierarchy = "created_on"
     autocomplete_fields = ("created_by",)
-    inlines = (ConfigSignalInline, WebhookInline, MessageBrokerQueueInline)
+    inlines = (
+        ConfigSignalInline,
+        WebhookInline,
+        MessageBrokerQueueInline,
+        ActionInline,
+    )
 
 
 @admin.register(action_triggers_models.Webhook)
@@ -51,6 +63,20 @@ class WebhookAdmin(admin.ModelAdmin):
 @admin.register(action_triggers_models.MessageBrokerQueue)
 class MessageBrokerQueueAdmin(admin.ModelAdmin):
     """Admin interface for the `MessageBrokerQueue` model."""
+
+    list_display = (
+        "id",
+        "name",
+        "config",
+        "timeout_secs",
+    )
+    search_fields = ("config__id",)
+    autocomplete_fields = ("config",)
+
+
+@admin.register(action_triggers_models.Action)
+class ActionAdmin(admin.ModelAdmin):
+    """Admin interface for the `Action` model."""
 
     list_display = (
         "id",

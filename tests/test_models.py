@@ -15,6 +15,7 @@ from action_triggers.models import (
     ConfigSignal,
     MessageBrokerQueue,
     Webhook,
+    Action,
 )
 from tests.models import CustomerModel, CustomerOrderModel
 
@@ -40,6 +41,7 @@ class TestBaseAction:
         ACTION_TRIGGER_SETTINGS={
             "MAX_BROKER_TIMEOUT": 10.0,
             "MAX_WEBHOOK_TIMEOUT": 20.0,
+            "MAX_ACTION_TIMEOUT": 30.0,
         }
     )
     @pytest.mark.parametrize("model_class", BaseAction.__subclasses__())
@@ -161,6 +163,14 @@ class TestMessageBrokerQueue:
 
     def test_str_returns_a_string_representation_of_the_instance(self):
         assert isinstance(str(baker.make(MessageBrokerQueue)), str)
+
+
+@pytest.mark.django_db
+class TestAction:
+    """Tests for the `Action` model."""
+
+    def test_str_returns_a_string_representation_of_the_instance(self):
+        assert isinstance(str(baker.make(Action)), str)
 
 
 @pytest.mark.django_db

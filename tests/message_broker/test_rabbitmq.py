@@ -92,7 +92,7 @@ class TestRabbitMQBroker:
 
         async with get_rabbitmq_conn() as connection:
             broker = RabbitMQBroker(
-                broker_key="rabbitmq_1",
+                key="rabbitmq_1",
                 conn_params={},
                 params={"queue": "test_queue_1"},
             )
