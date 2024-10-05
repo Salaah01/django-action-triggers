@@ -99,4 +99,5 @@ services:
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume/localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./localstack/init_hooks:/docker-entrypoint-initaws.d"
     restart: always
