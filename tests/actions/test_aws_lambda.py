@@ -44,6 +44,10 @@ class TestAwsLambdaConnection:
         )
 
     @pytest.mark.asyncio
+    @pytest.mark.skipif(
+        not can_connect_to_localstack(),
+        reason="localstack (AWS emulator) is not running.",
+    )
     async def test_connection_and_close_mechanism_using_conn_details(self):
         conn = AwsLambdaConnection(
             config={},
@@ -56,6 +60,10 @@ class TestAwsLambdaConnection:
         assert not conn.conn
 
     @pytest.mark.asyncio
+    @pytest.mark.skipif(
+        not can_connect_to_localstack(),
+        reason="localstack (AWS emulator) is not running.",
+    )
     async def test_connection_and_close_mechanism_using_config(self):
         conn = AwsLambdaConnection(
             config={

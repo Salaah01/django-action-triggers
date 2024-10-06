@@ -7,6 +7,9 @@ import pytest
 
 try:
     from aio_pika.exceptions import QueueEmpty
+except ImportError:
+    pass
+try:
     import boto3  # type: ignore[import]
 except ImportError:
     pass
