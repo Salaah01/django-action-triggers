@@ -4,6 +4,7 @@ import django.core.validators
 import django.db.models.deletion
 from django.db import migrations, models
 
+from action_triggers.conf import DB_TABLE_PREFIX
 
 class Migration(migrations.Migration):
 
@@ -25,7 +26,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Action',
                 'verbose_name_plural': 'Actions',
-                'db_table': 'action_triggers_action',
+                'db_table': DB_TABLE_PREFIX + 'action',
             },
         ),
     ]
