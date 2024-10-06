@@ -3,11 +3,11 @@
 import asyncio
 import json
 
-import boto3  # type: ignore[import]
 import pytest
 
 try:
     from aio_pika.exceptions import QueueEmpty
+    import boto3  # type: ignore[import]
 except ImportError:
     pass
 from aioresponses import aioresponses
