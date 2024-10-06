@@ -87,6 +87,6 @@ def field_descriptions():
     ]
 
     with open(
-        os.path.join(SOURCE_DIR, "api/field_descriptions.rst"), "w"
+        os.path.join(SOURCE_DIR, "api/field_descriptions.rst"), "w+"
     ) as f:
         f.write(tabulate(data, headers, tablefmt="rst"))

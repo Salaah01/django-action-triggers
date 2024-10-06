@@ -1,3 +1,5 @@
+.. _kafka:
+
 =====
 Kafka
 =====
@@ -161,7 +163,7 @@ You can use this in the `conn_details` field as follows:
 
     kafka_action = MessageBrokerQueue.objects.create(
         config=config,
-        name="my_kafka_broker",
+        name="my_kafka_broker",  # This needs to correspond to the key in the `ACTION_BROKERS.message_brokers` dictionary
         conn_details={
             "bootstrap_servers": "{{ myproject.settings.KAFKA_BOOTSTRAP_SERVERS }}",
         },

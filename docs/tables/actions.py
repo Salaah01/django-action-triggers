@@ -14,28 +14,28 @@ def config_options():
 
     data = [
         [
-            "`broker_config_name`",
+            "`action_config_name`",
             "`string`",
-            "A unique name for the broker configuration.",
+            "A unique name for the action configuration.",
         ],
         [
-            "`broker_type`",
+            "`action_type`",
             "`string`",
-            "The type of the broker (e.g: `rabbitmq`,  `kafka`, etc.)",
+            "The type of the action (e.g: `aws_lambda`, etc.)",
         ],
         [
             "`conn_details`",
             "`dict`",
-            "Connection details required to establish a connection with the broker, such as host, port, username, and password.",
+            "Connection details required to establish a connection with the action, such as host, port, username, and password.",
         ],
         [
             "`params`",
             "`dict`",
-            "Additional parameters specific to the broker, such as the name of the queue for RabbitMQ or the topic for Kafka.",
+            "Additional parameters specific to the action, such as the function name for AWS Lambda.",
         ],
     ]
 
     with open(
-        os.path.join(SOURCE_DIR, "message_brokers", "config_options.rst"), "w+"
+        os.path.join(SOURCE_DIR, "actions", "config_options.rst"), "w+"
     ) as f:
         f.write(tabulate(data, headers=headers, tablefmt="rst"))

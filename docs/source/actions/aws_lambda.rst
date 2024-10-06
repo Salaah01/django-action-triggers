@@ -1,48 +1,50 @@
-=========================================
-AWS SNS (AWS Simple Notification Service)
-=========================================
+==========
+AWS Lambda
+==========
 
-**Django Action Triggers** supports sending messages to an AWS SNS (Simple
-Notification Service) message broker. This section guides you through
-configuring AWS SNS and creating triggers that send messages to an AWS SNS
-broker.
+**Django Action Triggers** supports invoking AWS Lambda functions. This section
+guides you through configuring AWS Lambda into the project and creating
+triggers that invoke AWS Lambda functions.
 
 Configuration
 =============
 
-Before messages can be sent to an AWS SNS message broker, the broker needs to
-be configured in the Django settings.
+Before AWS Lambda functions can be invoked, the AWS Lambda action needs to be
+configured in the Django settings.
 
-.. include:: ../partials/note_ref_message_brokers_configuration_guide.rst
+.. include:: ../partials/note_ref_actions_configuration_guide.rst
 
-AWS SNS Configuration
----------------------
+AWS Lambda Configuration
+------------------------
 
 The following configuration options must be set in the Django settings to
-configure the AWS SNS message broker:
+configure the AWS Lambda action:
 
-- `conn_details.endpoint_url`: The endpoint URL of the AWS SNS service. If you
-  are using AWS' SNS service, you can set this to `None`. Otherwise, you can
-  set this to the endpoint URL of the AWS SNS service/emulator you are using.
+- `conn_details.endpoint_url`: The endpoint URL of the AWS Lambda service. If
+  you are using AWS' Lambda service, you can set this to `None`. Otherwise, you
+  can set this to the endpoint URL of the AWS Lambda service/emulator you are
+  using.
 
-- `params.topic_arn`: The Amazon Resource Name (ARN) of the topic where
-  messages will be sent when a trigger is activated.
+- `params.FunctionName`: The name of the Lambda function to invoke.
 
-Example Configuration in `settings.py` using `topic_arn`
---------------------------------------------------------
 
-Here is an example configuration for AWS SNS:
+Example Configuration in `settings.py`
+--------------------------------------
+
+Here is an example configuration for AWS Lambda:
 
 .. code-block:: python
 
-  ACTION_BROKERS = {
-    "aws_sns_1": {
-      "broker_type": "aws_sns",
-      "conn_details": {
-        "endpoint_url": None
-      },
-      "params": {
-        "topic_arn": "arn:aws:sns:us-east-1:123456789012:my_topic"
+  ACTION_TRIGGERS = {
+    "actions": {
+      "my_lambda_action": {
+        "action_type": "aws_lambda",
+        "conn_details": {
+          "endpoint_url": None
+        },
+        "params": {
+          "FunctionName": "my_lambda_function"
+        }
       }
     }
   }
@@ -50,28 +52,32 @@ Here is an example configuration for AWS SNS:
 Example Configuration in `settings.py` using `endpoint_url`
 -----------------------------------------------------------
 
-Here is an example configuration for AWS SNS using the endpoint URL. This can
-be useful when using a local instance of the AWS SNS service:
+Here is an example configuration for AWS Lambda using the endpoint URL. This
+can be useful when using a local instance of the AWS Lambda service:
 
 .. code-block:: python
 
-  ACTION_BROKERS = {
-    "aws_sns_3": {
-      "broker_type": "aws_sns",
-      "conn_details": {
-        "endpoint_url": "http://localhost:4566"
-      },
-      "params": {
-        "topic_arn": "arn:aws:sns:us-east-1:123456789012:my_topic"
+  ACTION_TRIGGERS = {
+    "actions": {
+      "my_lambda_action": {
+        "action_type": "aws_lambda",
+        "conn_details": {
+          "endpoint_url": "localhost:4566",
+          "region_name": "us-east-1",
+        },
+        "params": {
+          "FunctionName": "my_lambda_function"
+        }
       }
     }
   }
 
-Creating an AWS SNS Action
-==========================
 
-Once AWS SNS is configured, you can create a trigger that sends messages to the
-AWS SNS broker whenever the trigger is activated.
+Creating an AWS Lambda Action
+=============================
+
+Once AWS Lambda is configured, you can create a trigger that invokes the AWS
+Lambda function whenever the trigger is activated.
 
 Scenario
 --------
@@ -80,8 +86,8 @@ Suppose you have the following Django models:
 
 .. include:: ../partials/django_models_for_scenarios.rst
 
-Let's say you want to send a message to AWS SNS when a new sale is created. You
-can achieve this by following these steps:
+Suppose you have an AWS Lambda function that sends an email to a user when a
+trigger is activated. We'll call this function `send_email_to_user`.
 
 Step 1: Create a `Config` Model Instance (Base Action)
 ------------------------------------------------------
@@ -110,8 +116,8 @@ The `payload` is designed to behave like a Django template. If the resulting
 value is JSON-serializable, the payload will be returned as JSON; otherwise,
 it will be returned as plain text.
 
-Step 2: Create a `MessageBrokerQueue` Model Instance (AWS SNS Action)
----------------------------------------------------------------------
+Step 2: Create an `Action` Model Instance (AWS Lambda Action)
+-------------------------------------------------------------
 
 .. warning::
   Hardcoding sensitive information such as connection details is not
@@ -119,26 +125,27 @@ Step 2: Create a `MessageBrokerQueue` Model Instance (AWS SNS Action)
   these values using callables or variables at runtime.
 
 .. code-block:: python
-
-    from action_triggers.models import MessageBrokerQueue
-
-    aws_sns_action = MessageBrokerQueue.objects.create(
+  
+    from action_triggers.models import Action
+  
+    aws_lambda_action = Action.objects.create(
         config=config,
-        name="aws_sns_1",  # This needs to correspond to the key in the `ACTION_BROKERS.message_brokers` dictionary
+        name="my_lambda_action",  # This needs to correspond to a key in the `ACTION_TRIGGERS.actions` dictionary
+        action_type="aws_lambda",
         conn_details={
           "endpoint_url": None,
           "aws_access_key_id": "my_access_key_id",
           "aws_secret_access_key": "my_secret_access_key",
           "region_name": "us-east-1"
         },
-        parameters={
-          "topic_arn": "arn:aws:sns:us-east-1:123456789012:my_topic"
+        params={
+            "FunctionName": "send_email_to_user"
         }
     )
 
 In this example, the `conn_details` dictionary contains the connection details
-required to connect to the AWS SNS service. The `parameters` dictionary
-contains the topic ARN where messages will be sent.
+required to connect to the AWS Lambda service. The `params` dictionary contains
+the name of the Lambda function to invoke.
 
 Step 3: Create a `ConfigSignal` Model Instance (Trigger)
 ---------------------------------------------------------
@@ -155,7 +162,7 @@ Finally, link the action to a trigger event, such as saving a model instance.
     signal=SignalChoices.POST_SAVE,
   )
 
-Now, whenever a new sale is created, the AQS SNS action will be triggered.
+Now, whenever a new sale is created, the AWS Lambda function will be invoked.
 
 Dynamically Setting `conn_details` and `parameters`
 ===================================================
@@ -175,25 +182,26 @@ Suppose you have the following variable:
 - `myproject.settings.AWS_ACCESS_KEY_ID`: Stores the AWS access key ID.
 - `myproject.settings.AWS_SECRET_ACCESS_KEY`: Stores the AWS secret access key.
 - `myproject.settings.AWS_REGION_NAME`: Stores the AWS region name.
-- `myproject.settings.AWS_SNS_TOPIC_ARN`: Stores the AWS SNS topic ARN.
+- `myproject.settings.AWS_FUNCTION_NAME`: Stores the AWS Lambda function name.
 
 You can use these in the `conn_details` field as follows:
 
 .. code-block:: python
 
-    from action_triggers.models import MessageBrokerQueue
+    from action_triggers.models import Action
 
-    aws_sns_action = MessageBrokerQueue.objects.create(
+    aws_lambda_action = Action.objects.create(
         config=config,
-        name="aws_sns_1",
+        name="my_lambda_action",
+        action_type="aws_lambda",
         conn_details={
           "endpoint_url": None,
           "aws_access_key_id": "{{ myproject.settings.AWS_ACCESS_KEY_ID }}",
           "aws_secret_access_key": "{{ myproject.settings.AWS_SECRET_ACCESS_KEY }}",
           "region_name": "{{ myproject.settings.AWS_REGION_NAME }}"
         },
-        parameters={
-          "topic_arn": "{{ myproject.settings.AWS_SNS_TOPIC_ARN }}"
+        params={
+            "FunctionName": "{{ myproject.settings.AWS_FUNCTION_NAME }}"
         }
     )
 
@@ -216,15 +224,14 @@ In `settings.py`, add the following:
             'myproject.settings.AWS_ACCESS_KEY_ID',
             'myproject.settings.AWS_SECRET_ACCESS_KEY',
             'myproject.settings.AWS_REGION_NAME',
-            'myproject.settings.AWS_SNS_TOPIC_ARN',
+            'myproject.settings.AWS_FUNCTION_NAME',
         ),
-    }
 
 This configuration ensures that the specified paths can be evaluated at
 runtime.
 
 ---
 
-By following these steps, you can securely and effectively set up AWS SNS as a
-message broker in **Django Action Triggers**. For more advanced configurations,
+By following these steps, you can securely and effectively set up AWS Lambda as
+an action in **Django Action Triggers**. For more advanced configurations,
 refer to the related documentation sections.

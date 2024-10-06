@@ -21,8 +21,8 @@ The following configuration options must be set in the Django settings to
 configure the AWS SQS message broker:
 
 - `conn_details.endpoint_url`: The endpoint URL of the AWS SQS service. If you
-  are using the AWS SQS service, you can set this to `None`. Otherwise, you can
-  set this to the endpoint URL of the AWS SQS service you are using.
+  are using AWS' SQS service, you can set this to `None`. Otherwise, you can
+  set this to the endpoint URL of the AWS SQS service/emulator you are using.
 
 - `params.queue_url` or `params.queue_name`: The URL or name of the queue where
   messages will be sent when a trigger is activated.
@@ -148,7 +148,7 @@ Step 2: Create a `MessageBrokerQueue` Model Instance (AWS SQS Action)
 
     aws_sqs_action = MessageBrokerQueue.objects.create(
         config=config,
-        name="aws_sqs_1",
+        name="aws_sqs_1",  # This needs to correspond to the key in the `ACTION_BROKERS.message_brokers` dictionary
         conn_details={
           "endpoint_url": None,
           "aws_access_key_id": "my_access_key_id",
@@ -179,7 +179,7 @@ Finally, link the action to a trigger event, such as saving a model instance.
     signal=SignalChoices.POST_SAVE,
   )
 
-Now, whenever a new sale is created, the Redis action will be triggered.
+Now, whenever a new sale is created, the AWS SQS action will be triggered.
 
 Dynamically Setting `conn_details` and `parameters`
 ===================================================

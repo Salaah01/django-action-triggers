@@ -2,11 +2,6 @@
 Message Broker Modules
 ======================
 
-.. automodule:: action_triggers.message_broker.base
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 .. automodule:: action_triggers.message_broker.broker
    :members:
    :undoc-members:
