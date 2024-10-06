@@ -27,7 +27,7 @@ class TestProcessMsgBrokerQueues:
         mock_get_broker_class.assert_called_once()
         mock_get_broker_class.return_value.assert_called_once()
 
-    @patch("action_triggers.message_broker.base.BrokerBase.send_message")
+    @patch("action_triggers.base.config.ActionTriggerActionBase.send_message")
     def test_kills_job_if_it_exceeds_timeout(
         self,
         mock_send_message,

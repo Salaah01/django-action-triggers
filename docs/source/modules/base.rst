@@ -11,8 +11,3 @@ Base Modules
    :members:
    :undoc-members:
    :show-inheritance:
-
-.. automodule:: action_triggers.base.validation
-   :members:
-   :undoc-members:
-   :show-inheritance:

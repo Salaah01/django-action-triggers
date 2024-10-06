@@ -3,9 +3,11 @@
 import typing as _t
 from copy import deepcopy
 
+from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.config_required_fields import HasField
-from action_triggers.message_broker.base import BrokerBase, ConnectionBase
-from action_triggers.message_broker.enums import BrokerType
+from action_triggers.core.config import ConnectionCore
+from action_triggers.enums import ActionTriggerType
+from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
@@ -14,9 +16,10 @@ except ImportError:  # pragma: no cover
     aio_pika = MissingImportWrapper("aio_pika")  # type: ignore[assignment]
 
 
-class RabbitMQConnection(ConnectionBase):
+class RabbitMQConnection(ConnectionCore):
     """Connection class for RabbitMQ."""
 
+    error_class = MessageBrokerError
     required_conn_detail_fields = ()
     required_params_fields = (HasField("queue", str),)
 
@@ -43,28 +46,28 @@ class RabbitMQConnection(ConnectionBase):
         self.conn = None
 
 
-class RabbitMQBroker(BrokerBase):
+class RabbitMQBroker(ActionTriggerActionBase):
     """Broker class for RabbitMQ.
 
-    :param broker_key: The key for the broker (must existing in
-        `settings.ACTION_TRIGGERS`).
+    :param hey: The key for the broker (must existing in
+        `settings.ACTION_TRIGGERS["brokers"]`).
     :param conn_params: The connection parameters to use for establishing the
         connection.
     :param params: Additional parameters to use for the message broker.
     :param kwargs: Additional keyword arguments to pass to the subclass.
     """
 
-    broker_type = BrokerType.RABBITMQ
     conn_class = RabbitMQConnection
+    action_trigger_type = ActionTriggerType.BROKERS
 
     def __init__(
         self,
-        broker_key: str,
+        key: str,
         conn_params: _t.Union[dict, None],
         params: _t.Union[dict, None],
         **kwargs,
     ):
-        super().__init__(broker_key, conn_params, params, **kwargs)
+        super().__init__(key, conn_params, params, **kwargs)
         self.queue = self.params.get("queue")
         self.exchange = self.params.get("exchange", "")
 

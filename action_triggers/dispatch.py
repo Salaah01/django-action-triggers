@@ -6,6 +6,7 @@ import typing as _t
 
 from django.db.models import Model
 
+from action_triggers.actions.action import process_action
 from action_triggers.message_broker.queue import process_msg_broker_queue
 from action_triggers.models import Config, Webhook
 from action_triggers.payload import get_payload_generator
@@ -53,11 +54,15 @@ def handle_action(config: Config, instance: Model) -> None:
     payload_gen = get_payload_generator(config)
     payload = payload_gen(instance)
     tasks = []
+
     for webhook in config.webhooks.all():
         tasks.append(process_webhook(config, webhook, payload))
 
     for msg_broker_queue in config.message_broker_queues.all():
         tasks.append(process_msg_broker_queue(msg_broker_queue, payload))
+
+    for action in config.actions.all():
+        tasks.append(process_action(action, payload))
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)

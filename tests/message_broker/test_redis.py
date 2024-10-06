@@ -3,7 +3,7 @@
 import pytest
 from django.conf import settings
 
-from action_triggers.message_broker.exceptions import ConnectionValidationError
+from action_triggers.exceptions import ConnectionValidationError
 from action_triggers.message_broker.redis import RedisBroker, RedisConnection
 from tests.utils.redis import can_connect_to_redis
 

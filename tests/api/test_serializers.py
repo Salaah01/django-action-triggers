@@ -6,6 +6,7 @@ from model_bakery import baker
 
 from action_triggers.api.serializers import ConfigSerializer
 from action_triggers.models import (
+    Action,
     Config,
     ConfigSignal,
     MessageBrokerQueue,
@@ -25,6 +26,7 @@ class TestConfigSerializer:
         message_broker_queue_1, message_broker_queue_2 = (
             full_loaded_config.mesage_broker_queues
         )
+        action_1, action_2 = full_loaded_config.actions
 
         serializer = ConfigSerializer(config)
 
@@ -73,6 +75,20 @@ class TestConfigSerializer:
                     "timeout_secs": message_broker_queue_2.timeout_secs,
                 },
             ],
+            "actions": [
+                {
+                    "name": action_1.name,
+                    "conn_details": action_1.conn_details,
+                    "parameters": action_1.parameters,
+                    "timeout_secs": action_1.timeout_secs,
+                },
+                {
+                    "name": action_2.name,
+                    "conn_details": action_2.conn_details,
+                    "parameters": action_2.parameters,
+                    "timeout_secs": action_2.timeout_secs,
+                },
+            ],
             "payload": config.payload,
         }
 
@@ -89,6 +105,7 @@ class TestConfigSerializer:
             "content_types": [],
             "webhooks": [],
             "message_broker_queues": [],
+            "actions": [],
             "payload": config.payload,
         }
 
@@ -130,6 +147,19 @@ class TestConfigSerializer:
                 },
                 {
                     "name": "test_queue_2",
+                    "conn_details": {"host": "localhost", "port": 5672},
+                    "parameters": {"queue": "test_queue_2"},
+                },
+            ],
+            "actions": [
+                {
+                    "name": "test_action_1",
+                    "conn_details": {"host": "localhost", "port": 5672},
+                    "parameters": {"queue": "test_queue_1"},
+                    "timeout_secs": 30,
+                },
+                {
+                    "name": "test_action_2",
                     "conn_details": {"host": "localhost", "port": 5672},
                     "parameters": {"queue": "test_queue_2"},
                 },
@@ -187,6 +217,13 @@ class TestConfigSerializer:
             parameters={"queue": "test_queue_1"},
             _quantity=2,
         )
+        action_1, action_2 = baker.make(
+            Action,
+            config=config,
+            conn_details={"host": "localhost", "port": 5672},
+            parameters={"queue": "test_queue_1"},
+            _quantity=2,
+        )
         baker.make(
             ConfigSignal,
             config=config,
@@ -227,6 +264,13 @@ class TestConfigSerializer:
                     "parameters": {"queue": "new_test_queue_1"},
                 },
             ],
+            "actions": [
+                {
+                    "name": "test_action_1",
+                    "conn_details": {"host": "localhost", "port": 5672},
+                    "parameters": {"queue": "new_test_queue_1"},
+                }
+            ],
             "payload": {"key": "new value"},
         }
 
@@ -251,4 +295,11 @@ class TestConfigSerializer:
         assert config.message_broker_queues.first().parameters == {
             "queue": "new_test_queue_1"
         }
+
+        assert config.actions.count() == 1
+        assert config.actions.first().name == "test_action_1"
+        assert config.actions.first().parameters == {
+            "queue": "new_test_queue_1"
+        }
+
         assert config.payload == {"key": "new value"}

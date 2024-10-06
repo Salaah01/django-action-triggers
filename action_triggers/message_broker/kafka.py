@@ -2,9 +2,11 @@
 
 import typing as _t
 
+from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.config_required_fields import HasField
-from action_triggers.message_broker.base import BrokerBase, ConnectionBase
-from action_triggers.message_broker.enums import BrokerType
+from action_triggers.core.config import ConnectionCore
+from action_triggers.enums import ActionTriggerType
+from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
@@ -13,9 +15,10 @@ except ImportError:  # pragma: no cover
     AIOKafkaProducer = MissingImportWrapper("AIOKafkaProducer")
 
 
-class KafkaConnection(ConnectionBase):
+class KafkaConnection(ConnectionCore):
     """Connection class for Kafka."""
 
+    error_class = MessageBrokerError
     required_conn_detail_fields = (HasField("bootstrap_servers", str),)
     required_params_fields = (HasField("topic", str),)
 
@@ -29,11 +32,11 @@ class KafkaConnection(ConnectionBase):
         self.conn = None
 
 
-class KafkaBroker(BrokerBase):
+class KafkaBroker(ActionTriggerActionBase):
     """Broker class for Kafka."""
 
-    broker_type = BrokerType.KAFKA
     conn_class = KafkaConnection
+    action_trigger_type = ActionTriggerType.BROKERS
 
     def __init__(
         self,

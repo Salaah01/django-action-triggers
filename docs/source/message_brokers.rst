@@ -9,7 +9,8 @@ to a message broker when a trigger is activated. This is useful for integrating
 with distributed systems, event-driven architectures, and asynchronous
 processing.
 
-Currently, the supported message brokers are **Kafka** and **RabbitMQ**.
+Navigate to the :ref:`message_brokers_configuration_guides` section to learn
+how to configure specific message brokers in your Django settings.
 
 Support for other message brokers are planned for future releases. If you would
 like to see support for a specific message broker, please open an issue on the
@@ -21,8 +22,8 @@ Configuration
 =============
 
 Before you can send messages to a message broker, you must configure the broker
-in your Django settings. This involves specifying the connection details and
-any necessary parameters for the broker.
+in your Django settings. This involves specifying the broker type, connection
+details and any necessary parameters for the broker.
 
 For more information, refer to the :ref:`action_trigger_settings` guide.
 
@@ -84,7 +85,7 @@ Below is an example configuration for setting up a RabbitMQ broker:
 Best Practices for Configuration
 ================================
 
-- **Security**: Avoid hardcoding sensitive information, such as passwords, in
+- **Security**: Avoid hardcoding sensitive information, such as passwords in
   your `settings.py` file. Use environment variables or a secure vault to
   manage these credentials.
 - **Testing**: Before deploying to production, thoroughly test your broker
@@ -95,12 +96,13 @@ Best Practices for Configuration
   done by setting `ACTION_TRIGGER_SETTINGS.MAX_BROKER_TIMEOUT` in your
   settings.
 
+.. _message_brokers_configuration_guides:
+
 Broker Configuration Guides
 ===========================
 
-This guide should help you configure message brokers within
-**Django Action Triggers**. For more advanced configurations, refer to the
-specific guides for the supported message brokers.
+The following guides will help you configure specific message brokers within
+your Django project using **Django Action Triggers**:
 
 .. toctree::
    :maxdepth: 1

@@ -82,8 +82,9 @@ offering a more flexible and maintainable approach.
 Supported Actions
 -----------------
 
-- **Webhook Actions**: Send HTTP requests to specified URLs when triggers are activated.
-- **Message Broker Actions**: Send messages to messaging brokers like Kafka and RabbitMQ.
+- **Webhooks**: Send HTTP requests to specified URLs when triggers are activated.
+- **Message Brokers**: Send messages to messaging brokers like Kafka and RabbitMQ.
+- **Actions**: Execute other actions such as invoking an AWS Lambda function.
 
 Key Features
 ============
@@ -108,11 +109,12 @@ This documentation is organised into the following sections:
    dynamic_loading
    webhooks
    message_brokers
+   actions
    testing
    features_and_bugs
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Message Broker Integrations
    
    message_brokers/kafka
@@ -120,6 +122,12 @@ This documentation is organised into the following sections:
    message_brokers/redis
    message_brokers/aws_sqs
    message_brokers/aws_sns
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Action Integrations
+
+   actions/aws_lambda
 
 .. toctree::
    :maxdepth: 1

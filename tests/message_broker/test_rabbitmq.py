@@ -10,7 +10,7 @@ except ImportError:  # pragma: no cover
 import pytest
 from django.conf import settings
 
-from action_triggers.message_broker.exceptions import ConnectionValidationError
+from action_triggers.exceptions import ConnectionValidationError
 from action_triggers.message_broker.rabbitmq import (
     RabbitMQBroker,
     RabbitMQConnection,
@@ -92,7 +92,7 @@ class TestRabbitMQBroker:
 
         async with get_rabbitmq_conn() as connection:
             broker = RabbitMQBroker(
-                broker_key="rabbitmq_1",
+                key="rabbitmq_1",
                 conn_params={},
                 params={"queue": "test_queue_1"},
             )

@@ -16,7 +16,6 @@ Module Documentation
       modules/dispatch
       modules/dynamic_loading
       modules/enums
-      modules/error
       modules/exceptions
       modules/message_broker
       modules/models

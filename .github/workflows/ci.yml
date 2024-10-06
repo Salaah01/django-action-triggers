@@ -9,7 +9,7 @@ on:
       - master
 jobs:
   setup:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ubuntu-latest]
 
     steps:
       - name: Checkout code
@@ -20,13 +20,13 @@ jobs:
 
   test:
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ubuntu-latest]
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         django-version: [32, 42, 51]
         db: [postgres, mysql, sqlite]
-        broker: [rabbitmq, kafka, redis, aws_sqs, aws_sns]
+        action: [rabbitmq, kafka, redis, aws]
         exclude:
           # Django 5.1 does not support Python <3.10
           - python-version: "3.8"
@@ -52,11 +52,11 @@ jobs:
 
       - name: Run tests with Tox
         run: |
-          tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}-${{ matrix.db }}-${{ matrix.broker }}
+          tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}-${{ matrix.db }}-${{ matrix.action }}
 
   type-check:
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ubuntu-latest]
 
     steps:
       - name: Checkout code
@@ -75,7 +75,7 @@ jobs:
 
   lint:
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ubuntu-latest]
 
     steps:
       - name: Checkout code

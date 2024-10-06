@@ -1,10 +1,10 @@
 import pytest
 
+from action_triggers.exceptions import ConnectionValidationError
 from action_triggers.message_broker.aws_sns import (
     AwsSnsBroker,
     AwsSnsConnection,
 )
-from action_triggers.message_broker.exceptions import ConnectionValidationError
 from tests.utils.aws import CONN_DETAILS, TOPIC_ARN, can_connect_to_localstack
 
 try:
@@ -90,7 +90,7 @@ class TestAwsSnsBroker:
     @pytest.mark.asyncio
     async def test_send_message(self, sns_queue):
         broker = AwsSnsBroker(
-            broker_key="aws_sns",
+            key="aws_sns",
             conn_details={},
             params={},
         )

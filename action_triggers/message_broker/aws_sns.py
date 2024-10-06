@@ -3,9 +3,11 @@
 import asyncio
 from functools import partial
 
+from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.config_required_fields import HasField
-from action_triggers.message_broker.base import BrokerBase, ConnectionBase
-from action_triggers.message_broker.enums import BrokerType
+from action_triggers.core.config import ConnectionCore
+from action_triggers.enums import ActionTriggerType
+from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
@@ -14,9 +16,10 @@ except ImportError:  # pragma: no cover
     boto3 = MissingImportWrapper("boto3")  # type: ignore[assignment]
 
 
-class AwsSnsConnection(ConnectionBase):
+class AwsSnsConnection(ConnectionCore):
     """Connection class for AWS SNS."""
 
+    error_class = MessageBrokerError
     required_conn_detail_fields = (HasField("endpoint_url", str),)
     required_params_fields = (HasField("topic_arn", str),)
 
@@ -31,17 +34,11 @@ class AwsSnsConnection(ConnectionBase):
         self.conn = None
 
 
-class AwsSnsBroker(BrokerBase):
-    """Broker class for AWS SQS.
+class AwsSnsBroker(ActionTriggerActionBase):
+    """Broker class for AWS SQS."""
 
-    :param broker_key: The key for the broker (must exist in the
-        `settings.ACTION_TRIGGERS["brokers"]` dictionary)).
-    :param conn_params: The connection parameters to use for establishing the
-        connection to the broker.
-    """
-
-    broker_type = BrokerType.AWS_SNS
     conn_class = AwsSnsConnection
+    action_trigger_type = ActionTriggerType.BROKERS
 
     async def _send_message_impl(
         self,

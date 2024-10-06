@@ -15,6 +15,7 @@
   - [Key Features](#key-features)
   - [Documentation](#documentation)
   - [Supported Message Brokers](#supported-message-brokers)
+  - [Supported Actions](#supported-actions)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Example Scenarios](#example-scenarios)
@@ -67,6 +68,7 @@ In summary, Django Action Triggers provides a **dynamic**, **maintainable** and 
 - **Database-Driven Triggers**: Automatically trigger actions based on model events (e.g., save, delete).
 - **Webhook Integration**: Send HTTP requests to external services when triggers are activated.
 - **Message Broker Integration**: Send messages to messaging brokers like Kafka and RabbitMQ.
+- **Actions Integration**: Trigger actions like AWS Lambda functions based on model events.
 - **Extensible**: Easily extend to support custom triggers and actions.
 - **Secure Dynamic Configuration**: Dynamically set values at runtime for secure and flexible configuration.
 
@@ -82,7 +84,11 @@ For detailed documentation, including setup, configuration options, API specific
 * AWS SQS (Amazon Simple Queue Service)
 * AWS SNS (Amazon Simple Notification Service)
 
-Need support for another message broker? Please submit a feature request on the [GitHub repository](https://github.com/Salaah01/django-action-triggers/issues).
+## Supported Actions
+
+* AWS Lambda
+
+Need support for another message broker or action? Please submit a feature request on the [GitHub repository](https://github.com/Salaah01/django-action-triggers/issues).
 
 ## Installation
 

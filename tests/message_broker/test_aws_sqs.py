@@ -1,11 +1,11 @@
 import pytest
 from django.conf import settings
 
+from action_triggers.exceptions import ConnectionValidationError
 from action_triggers.message_broker.aws_sqs import (
     AwsSqsBroker,
     AwsSqsConnection,
 )
-from action_triggers.message_broker.exceptions import ConnectionValidationError
 from tests.utils.aws import QUEUE_NAME, SQSQueue, can_connect_to_localstack
 
 try:
@@ -135,7 +135,7 @@ class TestAwsSqsBroker:
     @pytest.mark.asyncio
     async def test_message_can_be_sent(self):
         broker = AwsSqsBroker(
-            broker_key="aws_sqs",
+            key="aws_sqs",
             conn_details={},
             params={},
         )

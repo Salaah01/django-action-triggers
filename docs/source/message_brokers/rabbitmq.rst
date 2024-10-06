@@ -109,7 +109,7 @@ action.
 
     message_broker_queue = MessageBrokerQueue.objects.create(
         config=config,
-        name="my_rabbit_mq_broker",
+        name="my_rabbit_mq_broker",  # This needs to correspond to the key in the `ACTION_BROKERS.message_brokers` dictionary
         conn_details={
             "host": "localhost",
             "port": 5672,

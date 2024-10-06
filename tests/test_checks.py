@@ -189,7 +189,7 @@ class TestWarningTimeoutSettingsSet:
     def test_unset_timeout_settings_shows_warning(self):
         result = warning_timeout_settings_set(app_configs=None)
 
-        assert len(result) == 2
+        assert len(result) == 3
         assert isinstance(result[0], Warning)
         assert result[0].id == "action_triggers.W003"
 
@@ -197,6 +197,7 @@ class TestWarningTimeoutSettingsSet:
         ACTION_TRIGGER_SETTINGS={
             "MAX_BROKER_TIMEOUT": 10.0,
             "MAX_WEBHOOK_TIMEOUT": 20.0,
+            "MAX_ACTION_TIMEOUT": 30.0,
         }
     )
     def test_set_timeout_settings_no_warning(self):

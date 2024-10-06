@@ -143,7 +143,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-REDIS_PORT = os.getenv("REDIS_PORT", 6380)
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 
 # Action triggers configuration
 ACTION_TRIGGERS = {
@@ -230,5 +230,6 @@ ACTION_TRIGGER_SETTINGS = {
         "tests.test_dynamic_loading.get_api_token",
     ),
     "MAX_BROKER_TIMEOUT": 5,
+    "MAX_ACTION_TIMEOUT": 10,
     "MAX_WEBHOOK_TIMEOUT": 30,
 }

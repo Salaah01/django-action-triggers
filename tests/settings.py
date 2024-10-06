@@ -65,10 +65,10 @@ KAFKA_CONN_DETAILS = (
     or DEFAULT_KAFKA_CONN_DETAILS
 )
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-REDIS_PORT = os.getenv("REDIS_PORT", 6380)
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 
 AWS_ENDPOINT = os.getenv("AWS_ENDPOINT", "http://localhost:4566")
-AWS_REGION = os.getenv("AWS_REGION", "eu-west-1")
+AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 
 ACTION_TRIGGERS = {
     "brokers": {
@@ -141,7 +141,37 @@ ACTION_TRIGGERS = {
                 "aws_secret_access_key": "test-secret",
             },
             "params": {
-                "topic_arn": "arn:aws:sns:eu-west-1:000000000000:test_topic_1",
+                "topic_arn": f"arn:aws:sns:{AWS_REGION}:000000000000:test_topic_1",  # noqa E501
+            },
+        },
+    },
+    "actions": {
+        "aws_lambda": {
+            "action_type": "aws_lambda",
+            "conn_details": {
+                "endpoint_url": AWS_ENDPOINT,
+                "region_name": AWS_REGION,
+                "aws_access_key_id": "test-key",
+                "aws_secret_access_key": "test-secret",
+            },
+            "params": {
+                "FunctionName": "echo-back-lambda",
+                "InvocationType": "RequestResponse",
+                "LogType": "Tail",
+            },
+        },
+        "aws_lambda_forward_to_sqs": {
+            "action_type": "aws_lambda",
+            "conn_details": {
+                "endpoint_url": AWS_ENDPOINT,
+                "region_name": AWS_REGION,
+                "aws_access_key_id": "test-key",
+                "aws_secret_access_key": "test-secret",
+            },
+            "params": {
+                "FunctionName": "forward-to-sqs-lambda",
+                "InvocationType": "RequestResponse",
+                "LogType": "Tail",
             },
         },
     },

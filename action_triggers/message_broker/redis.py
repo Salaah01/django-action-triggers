@@ -1,11 +1,13 @@
 """Module to support sending messages to Redis."""
 
+from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.config_required_fields import (
     HasAtLeastOneOffField,
     HasField,
 )
-from action_triggers.message_broker.base import BrokerBase, ConnectionBase
-from action_triggers.message_broker.enums import BrokerType
+from action_triggers.core.config import ConnectionCore
+from action_triggers.enums import ActionTriggerType
+from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
@@ -14,9 +16,10 @@ except ImportError:  # pragma: no cover
     redis = MissingImportWrapper("redis")  # type: ignore[assignment]
 
 
-class RedisConnection(ConnectionBase):
+class RedisConnection(ConnectionCore):
     """Connection class for Redis."""
 
+    error_class = MessageBrokerError
     required_conn_detail_fields = (
         HasAtLeastOneOffField(fields=("url", "host")),
     )
@@ -37,19 +40,11 @@ class RedisConnection(ConnectionBase):
         self.conn = None
 
 
-class RedisBroker(BrokerBase):
-    """Broker class for Redis.
+class RedisBroker(ActionTriggerActionBase):
+    """Broker class for Redis."""
 
-    :param broker_key: The key for the broker (must existing in
-        `settings.ACTION_TRIGGERS`).
-    :param conn_params: The connection parameters to use for establishing the
-        connection.
-    :param params: Additional parameters to use for the message broker.
-    :param kwargs: Additional keyword arguments to pass to the subclass.
-    """
-
-    broker_type = BrokerType.REDIS
     conn_class = RedisConnection
+    action_trigger_type = ActionTriggerType.BROKERS
 
     async def _send_message_impl(
         self,

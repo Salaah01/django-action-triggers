@@ -1,4 +1,15 @@
+from enum import Enum
+
 from django.db.models import TextChoices, signals
+
+
+class ActionTriggerType(Enum):
+    """Represents the top level action trigger types supported by the
+    application.
+    """
+
+    ACTIONS = "actions"
+    BROKERS = "brokers"
 
 
 class HTTPMethodChoices(TextChoices):

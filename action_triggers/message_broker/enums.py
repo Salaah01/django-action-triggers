@@ -1,3 +1,6 @@
+"""Enums specific to Action Trigger message brokers."""
+
+
 from enum import Enum
 
 

@@ -21,7 +21,7 @@ def config_options():
         [
             "`broker_type`",
             "`string`",
-            "The type of the broker. Can be either `rabbitmq` or `kafka`.",
+            "The type of the broker (e.g: `rabbitmq`,  `kafka`, etc.)",
         ],
         [
             "`conn_details`",
@@ -36,6 +36,6 @@ def config_options():
     ]
 
     with open(
-        os.path.join(SOURCE_DIR, "message_brokers", "config_options.rst"), "a+"
+        os.path.join(SOURCE_DIR, "message_brokers", "config_options.rst"), "w+"
     ) as f:
         f.write(tabulate(data, headers=headers, tablefmt="rst"))

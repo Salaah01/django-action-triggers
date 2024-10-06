@@ -5,6 +5,7 @@ from django.db import transaction
 from rest_framework import serializers  # type: ignore[import-untyped]
 
 from action_triggers.models import (
+    Action,
     Config,
     ConfigSignal,
     MessageBrokerQueue,
@@ -44,11 +45,20 @@ class MessageBrokerQueueSerializer(serializers.ModelSerializer):
         fields = ("name", "conn_details", "parameters", "timeout_secs")
 
 
+class ActionSerializer(serializers.ModelSerializer):
+    """Serializer for the `Action` model."""
+
+    class Meta:
+        model = Action
+        fields = ("name", "conn_details", "parameters", "timeout_secs")
+
+
 class ConfigSerializer(serializers.ModelSerializer):
     """Serializer for the `Config` model."""
 
     config_signals = ConfigSignalSerializer(many=True)
     message_broker_queues = MessageBrokerQueueSerializer(many=True)
+    actions = ActionSerializer(many=True)
     webhooks = WebhookSerializer(many=True)
     content_types = ContentTypeSerializer(many=True)
 
@@ -62,6 +72,7 @@ class ConfigSerializer(serializers.ModelSerializer):
             "content_types",
             "webhooks",
             "message_broker_queues",
+            "actions",
         )
 
     @staticmethod
@@ -93,6 +104,7 @@ class ConfigSerializer(serializers.ModelSerializer):
 
         config_signals = validate_data.pop("config_signals")
         message_broker_queues = validate_data.pop("message_broker_queues")
+        actions = validate_data.pop("actions")
         webhooks = validate_data.pop("webhooks")
         content_types = self.get_content_types_from_data(
             validate_data.pop("content_types")
@@ -110,6 +122,9 @@ class ConfigSerializer(serializers.ModelSerializer):
         for queue in message_broker_queues:
             MessageBrokerQueue.objects.create(config=config, **queue)
 
+        for action in actions:
+            Action.objects.create(config=config, **action)
+
         return config
 
     @transaction.atomic
@@ -123,6 +138,7 @@ class ConfigSerializer(serializers.ModelSerializer):
 
         config_signals = validate_data.pop("config_signals")
         message_broker_queues = validate_data.pop("message_broker_queues")
+        actions = validate_data.pop("actions")
         webhooks = validate_data.pop("webhooks")
         content_types = self.get_content_types_from_data(
             validate_data.pop("content_types")
@@ -132,6 +148,7 @@ class ConfigSerializer(serializers.ModelSerializer):
 
         instance.config_signals.all().delete()
         instance.message_broker_queues.all().delete()
+        instance.actions.all().delete()
         instance.webhooks.all().delete()
         instance.content_types.set(content_types)
 
@@ -143,5 +160,8 @@ class ConfigSerializer(serializers.ModelSerializer):
 
         for queue in message_broker_queues:
             MessageBrokerQueue.objects.create(config=instance, **queue)
+
+        for action in actions:
+            Action.objects.create(config=instance, **action)
 
         return instance

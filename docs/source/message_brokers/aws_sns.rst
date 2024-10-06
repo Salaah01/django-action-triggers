@@ -22,8 +22,8 @@ The following configuration options must be set in the Django settings to
 configure the AWS SNS message broker:
 
 - `conn_details.endpoint_url`: The endpoint URL of the AWS SNS service. If you
-  are using the AWS SNS service, you can set this to `None`. Otherwise, you can
-  set this to the endpoint URL of the AWS SNS service you are using.
+  are using AWS' SNS service, you can set this to `None`. Otherwise, you can
+  set this to the endpoint URL of the AWS SNS service/emulator you are using.
 
 - `params.topic_arn`: The Amazon Resource Name (ARN) of the topic where
   messages will be sent when a trigger is activated.
@@ -124,7 +124,7 @@ Step 2: Create a `MessageBrokerQueue` Model Instance (AWS SNS Action)
 
     aws_sns_action = MessageBrokerQueue.objects.create(
         config=config,
-        name="aws_sns_1",
+        name="aws_sns_1",  # This needs to correspond to the key in the `ACTION_BROKERS.message_brokers` dictionary
         conn_details={
           "endpoint_url": None,
           "aws_access_key_id": "my_access_key_id",
@@ -155,7 +155,7 @@ Finally, link the action to a trigger event, such as saving a model instance.
     signal=SignalChoices.POST_SAVE,
   )
 
-Now, whenever a new sale is created, the Redis action will be triggered.
+Now, whenever a new sale is created, the AQS SNS action will be triggered.
 
 Dynamically Setting `conn_details` and `parameters`
 ===================================================

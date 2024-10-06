@@ -1,15 +1,17 @@
-"""Tests for `action_triggers.message_broker.base` module."""
+"""Tests for `action_triggers.base.config` module."""
 
 from types import SimpleNamespace
 
 import pytest
 from django.conf import settings
 
-from action_triggers.message_broker.base import BrokerBase, ConnectionBase
-from action_triggers.message_broker.exceptions import ConnectionValidationError
+from action_triggers.base.config import ActionTriggerActionBase, ConnectionBase
+from action_triggers.enums import ActionTriggerType
+from action_triggers.message_broker.error import MessageBrokerError
 
 
 class MockConnection(ConnectionBase):
+    error_class = MessageBrokerError
     required_conn_detail_fields = []
     required_params_fields = []
 
@@ -20,8 +22,9 @@ class MockConnection(ConnectionBase):
         pass
 
 
-class MockBroker(BrokerBase):
+class MockBroker(ActionTriggerActionBase):
     conn_class = MockConnection
+    action_trigger_type = ActionTriggerType.BROKERS
     sent_message = None
 
     async def _send_message_impl(self, conn, message):
@@ -31,17 +34,6 @@ class MockBroker(BrokerBase):
 @pytest.mark.django_db
 class TestConnectionBase:
     """Tests for the `ConnectionBase` class."""
-
-    def test_on_init_validation_is_run(self):
-        class TestConnection(MockConnection):
-            i = 1
-
-            def validate(self):
-                self.i += 1
-
-        conn = TestConnection({}, {}, {})
-
-        assert conn.i == 2
 
     @pytest.mark.asyncio
     async def test_can_be_used_as_a_context_manager(self):
@@ -69,38 +61,10 @@ class TestConnectionBase:
 
         assert conn.closed is True
 
-    def test_validate_connection_details_cannot_be_overwritten(self):
-        with pytest.raises(ConnectionValidationError) as exc:
-            MockConnection(
-                {"conn_details": {"host": "localhost"}},
-                {"host": "new_localhost"},
-                {},
-            )
-
-        assert exc.value.as_dict() == {
-            "connection_params": {
-                "host": ["Connection details for host cannot be overwritten."]
-            },
-            "params": {},
-        }
-
-    def test_validate_params_cannot_be_overwritten(self):
-        with pytest.raises(ConnectionValidationError) as exc:
-            MockConnection(
-                {"params": {"queue": "test_queue"}},
-                {},
-                {"queue": "new_queue"},
-            )
-
-        assert exc.value.as_dict() == {
-            "connection_params": {},
-            "params": {"queue": ["queue cannot be overwritten."]},
-        }
-
 
 @pytest.mark.django_db
-class TestBrokerBase:
-    """Tests for the `BrokerBase` class."""
+class TestActionTriggerActionBase:
+    """Tests for the `ActionTriggerActionBase` class."""
 
     @pytest.mark.parametrize(
         (

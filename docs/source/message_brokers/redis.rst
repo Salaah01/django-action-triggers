@@ -179,7 +179,7 @@ You can use this in the `conn_details` field as follows:
 
     redis_action = MessageBrokerQueue.objects.create(
         config=config,
-        name="redis_1",
+        name="redis_1",  # This needs to correspond to the key in the `ACTION_BROKERS.message_brokers` dictionary
         conn_details={
             "host": "{{ myproject.settings.REDIS_HOST }}",
         },
