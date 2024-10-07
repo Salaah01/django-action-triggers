@@ -9,9 +9,6 @@ build:
   os: ubuntu-22.04
   tools:
     python: "3.12"
-  commands:
-    - pip install poetry
-    - poetry install --all-extras --no-root
 
 sphinx:
   configuration: docs/conf.py
@@ -20,4 +17,4 @@ python:
   version: 3.12
   install:
     - method: pip
-    - path: docs
+    - path: .
