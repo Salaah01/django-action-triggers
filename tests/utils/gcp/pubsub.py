@@ -1,5 +1,6 @@
-from django.conf import settings
 from functools import lru_cache
+
+from django.conf import settings
 
 try:
     from google.cloud import pubsub_v1

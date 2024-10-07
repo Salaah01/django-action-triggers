@@ -6,6 +6,7 @@ from django.db import migrations, models
 
 from action_triggers.conf import DB_TABLE_PREFIX
 
+
 class Migration(migrations.Migration):
 
     dependencies = [

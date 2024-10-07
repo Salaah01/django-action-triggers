@@ -2,8 +2,8 @@ import pytest
 
 from action_triggers.exceptions import ConnectionValidationError
 from action_triggers.message_broker.gcp_pubsub import (
-    GCPPubSubConnection,
     GCPPubSubBroker,
+    GCPPubSubConnection,
 )
 from tests.utils.gcp.pubsub import CONN_DETAILS, can_connect_to_pubsub
 

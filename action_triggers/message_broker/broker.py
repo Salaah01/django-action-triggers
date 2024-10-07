@@ -6,10 +6,10 @@ from action_triggers.base.config import ActionTriggerActionBase
 from action_triggers.message_broker.aws_sns import AwsSnsBroker
 from action_triggers.message_broker.aws_sqs import AwsSqsBroker
 from action_triggers.message_broker.enums import BrokerType
+from action_triggers.message_broker.gcp_pubsub import GCPPubSubBroker
 from action_triggers.message_broker.kafka import KafkaBroker
 from action_triggers.message_broker.rabbitmq import RabbitMQBroker
 from action_triggers.message_broker.redis import RedisBroker
-from action_triggers.message_broker.gcp_pubsub import GCPPubSubBroker
 
 
 def get_broker_class(broker_name: str) -> _t.Type[ActionTriggerActionBase]:
