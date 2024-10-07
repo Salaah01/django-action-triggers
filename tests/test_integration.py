@@ -578,22 +578,12 @@ class TestIntegrationGCPPubSub:
     CONN_DETAILS = CONFIG["conn_details"]  # type: ignore[index]
 
     @pytest.fixture(autouse=True)
-    def purge_all_messages(self):
-        """Delete all messages in the Pub/Sub topic."""
-        publisher = pubsub_v1.PublisherClient()
-        topic_path = publisher.topic_path(**self.CONN_DETAILS)
-        publisher.delete_topic(request={"topic": topic_path})
-        publisher.create_topic(request={"name": topic_path})
-        subscriber = pubsub_v1.SubscriberClient()
-        subscription_path = subscriber.subscription_path(
-            *self.CONN_DETAILS.values(),
-        )
-        subscriber.delete_subscription(
-            request={"subscription": subscription_path}
-        )
-        subscriber.create_subscription(
-            request={"name": subscription_path, "topic": topic_path}
-        )
+    def refresh_topic_and_subscriber(
+        self,
+        gcp_pubsub_topic_refresh,
+        gcp_pubsub_refresh_subscription,
+    ):
+        """Deletes and recreates the topic and subscription."""
 
     def get_next_message(self):
         subscriber = pubsub_v1.SubscriberClient()

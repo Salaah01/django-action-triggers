@@ -68,7 +68,7 @@ class TestGCPPubSubBroker:
     """Tests for the `GCPPubSubBroker` class."""
 
     @pytest.mark.asyncio
-    async def test_send_message(self):
+    async def test_send_message(self, gcp_pubsub_topic_refresh):
         broker = GCPPubSubBroker(
             key="gcp_pubsub_test_topic",
             conn_details={},

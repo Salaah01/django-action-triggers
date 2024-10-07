@@ -8,6 +8,11 @@ try:
 except ImportError:
     boto3 = None  # type: ignore[assignment]
 
+try:
+    from google.cloud import pubsub_v1
+except ImportError:
+    pubsub_v1 = None
+
 
 django.setup()
 
@@ -362,4 +367,44 @@ def sns_client():
     return boto3.client(
         "sns",
         **settings.ACTION_TRIGGERS["brokers"]["aws_sns"]["conn_details"],
+    )
+
+
+@pytest.fixture
+def gcp_pubsub_topic_path():
+    publisher = pubsub_v1.PublisherClient()
+    conn_details = settings.ACTION_TRIGGERS["brokers"][
+        "gcp_pubsub_test_topic"
+    ]["conn_details"]
+    return publisher.topic_path(**conn_details)
+
+
+@pytest.fixture
+def gcp_pubsub_topic_refresh(gcp_pubsub_topic_path):
+    publisher = pubsub_v1.PublisherClient()
+    try:
+        publisher.delete_topic(request={"topic": gcp_pubsub_topic_path})
+    except Exception:
+        pass
+    return publisher.create_topic(request={"name": gcp_pubsub_topic_path})
+
+
+@pytest.fixture
+def gcp_pubsub_refresh_subscription(gcp_pubsub_topic_path):
+    subscription = pubsub_v1.SubscriberClient()
+    conn_details = settings.ACTION_TRIGGERS["brokers"][
+        "gcp_pubsub_test_topic"
+    ]["conn_details"]
+    subscription_path = subscription.subscription_path(*conn_details.values())
+    try:
+        subscription.delete_subscription(
+            request={"subscription": subscription_path}
+        )
+    except Exception:
+        pass
+    return subscription.create_subscription(
+        request={
+            "name": subscription_path,
+            "topic": gcp_pubsub_topic_path,
+        }
     )
