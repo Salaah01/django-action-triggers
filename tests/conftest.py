@@ -118,6 +118,15 @@ def aws_lambda_trigger(config):
 
 
 @pytest.fixture
+def gcp_pubsub_trigger(config):
+    return baker.make(
+        MessageBrokerQueue,
+        name="gcp_pubsub_test_topic",
+        config=config,
+    )
+
+
+@pytest.fixture
 def customer_post_save_signal(config):
     return baker.make(
         ConfigSignal,
@@ -207,6 +216,20 @@ def customer_aws_lambda_post_save_signal(
         config,
         customer_post_save_signal,
         aws_lambda_trigger,
+    )
+
+
+@pytest.fixture
+def customer_gcp_pubsub_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    gcp_pubsub_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        gcp_pubsub_trigger,
     )
 
 

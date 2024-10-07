@@ -9,6 +9,7 @@ from action_triggers.message_broker.enums import BrokerType
 from action_triggers.message_broker.kafka import KafkaBroker
 from action_triggers.message_broker.rabbitmq import RabbitMQBroker
 from action_triggers.message_broker.redis import RedisBroker
+from action_triggers.message_broker.gcp_pubsub import GCPPubSubBroker
 
 
 def get_broker_class(broker_name: str) -> _t.Type[ActionTriggerActionBase]:
@@ -25,6 +26,7 @@ def get_broker_class(broker_name: str) -> _t.Type[ActionTriggerActionBase]:
         BrokerType.REDIS.name: RedisBroker,
         BrokerType.AWS_SQS.name: AwsSqsBroker,
         BrokerType.AWS_SNS.name: AwsSnsBroker,
+        BrokerType.GCP_PUBSUB.name: GCPPubSubBroker,
     }
 
     return broker_type_to_class_map[

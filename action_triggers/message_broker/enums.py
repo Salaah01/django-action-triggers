@@ -12,3 +12,4 @@ class BrokerType(Enum):
     REDIS = "redis"
     AWS_SQS = "aws_sqs"
     AWS_SNS = "aws_sns"
+    GCP_PUBSUB = "gcp_pubsub"

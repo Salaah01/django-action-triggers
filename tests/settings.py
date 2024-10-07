@@ -144,6 +144,14 @@ ACTION_TRIGGERS = {
                 "topic_arn": f"arn:aws:sns:{AWS_REGION}:000000000000:test_topic_1",  # noqa E501
             },
         },
+        "gcp_pubsub_test_topic": {
+            "broker_type": "gcp_pubsub",
+            "conn_details": {
+                "project": "django-action-triggers",
+                "topic": "test-topic",
+            },
+            "params": {},
+        },
     },
     "actions": {
         "aws_lambda": {

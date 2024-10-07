@@ -13,6 +13,10 @@ try:
     import boto3  # type: ignore[import]
 except ImportError:
     pass
+try:
+    from google.cloud import pubsub_v1
+except ImportError:
+    pass
 from aioresponses import aioresponses
 from asgiref.sync import sync_to_async
 from django.conf import settings
@@ -565,3 +569,64 @@ class TestIntegrationActionAwsLambda:
             json.loads(json.loads(response["Messages"][0]["Body"]))
             == "Hello Plain World!"
         )
+
+
+class TestIntegrationGCPPubSub:
+    """Tests for the Google Cloud Pub/Sub integration."""
+
+    CONFIG = settings.ACTION_TRIGGERS["brokers"]["gcp_pubsub_test_topic"]  # type: ignore[index]  # noqa: E501
+    CONN_DETAILS = CONFIG["conn_details"]  # type: ignore[index]
+
+    @pytest.fixture(autouse=True)
+    def purge_all_messages(self):
+        """Delete all messages in the Pub/Sub topic."""
+        publisher = pubsub_v1.PublisherClient()
+        topic_path = publisher.topic_path(**self.CONN_DETAILS)
+        publisher.delete_topic(request={"topic": topic_path})
+        publisher.create_topic(request={"name": topic_path})
+        subscriber = pubsub_v1.SubscriberClient()
+        subscription_path = subscriber.subscription_path(
+            *self.CONN_DETAILS.values(),
+        )
+        subscriber.delete_subscription(
+            request={"subscription": subscription_path}
+        )
+        subscriber.create_subscription(
+            request={"name": subscription_path, "topic": topic_path}
+        )
+
+    def get_next_message(self):
+        subscriber = pubsub_v1.SubscriberClient()
+        subscription_path = subscriber.subscription_path(
+            *self.CONN_DETAILS.values(),
+        )
+        response = subscriber.pull(
+            request={"subscription": subscription_path, "max_messages": 1},
+            timeout=5,
+        )
+        return response.received_messages[0].message.data
+
+    def test_simple_basic_json_message(
+        self,
+        customer_gcp_pubsub_post_save_signal,
+    ):
+        baker.make(CustomerModel)
+        message = self.get_next_message()
+        assert json.loads(message) == {"message": "Hello, World!"}
+
+    @pytest.fixture
+    def fixture_simple_basic_plain_message(
+        self,
+        customer_gcp_pubsub_post_save_signal,
+    ):
+        config = customer_gcp_pubsub_post_save_signal.config
+        config.payload = "Hello Plain World!"
+        config.save()
+
+    def test_simple_basic_plain_message(
+        self,
+        fixture_simple_basic_plain_message,
+    ):
+        baker.make(CustomerModel)
+        message = self.get_next_message()
+        assert json.loads(message) == "Hello Plain World!"
