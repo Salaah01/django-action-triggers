@@ -136,7 +136,7 @@ tailer==0.4.1
 tomlkit==0.13.2
 tox==4.21.2
 trove-classifiers==2024.9.12
-types-PyYAML==6.0.12.20240808
+types-PyYAML==6.0.12.20240917
 typing_extensions==4.12.2
 urllib3==2.2.3
 virtualenv==20.26.6
