@@ -26,10 +26,10 @@ from model_bakery import baker
 
 from tests.models import CustomerModel
 from tests.utils.aws import can_connect_to_localstack
+from tests.utils.gcp.pubsub import can_connect_to_pubsub
 from tests.utils.kafka import can_connect_to_kafka, get_kafka_consumer
 from tests.utils.rabbitmq import can_connect_to_rabbitmq, get_rabbitmq_conn
 from tests.utils.redis import can_connect_to_redis, get_redis_conn
-from tests.utils.gcp.pubsub import can_connect_to_pubsub
 
 
 @pytest.fixture(autouse=True, scope="module")
