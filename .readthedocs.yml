@@ -17,4 +17,5 @@ python:
   version: 3.12
   install:
     - method: poetry
+      path: .
     - requirements: docs/requirements.txt
