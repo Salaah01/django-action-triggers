@@ -14,7 +14,7 @@ try:
 except ImportError:
     pass
 try:
-    from google.cloud import pubsub_v1
+    from google.cloud import pubsub_v1  # type: ignore[import-untyped]
 except ImportError:
     pass
 from aioresponses import aioresponses

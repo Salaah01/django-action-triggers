@@ -3,7 +3,7 @@ from functools import lru_cache
 from django.conf import settings
 
 try:
-    from google.cloud import pubsub_v1
+    from google.cloud import pubsub_v1  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
     pubsub_v1 = None
 

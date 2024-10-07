@@ -8,7 +8,7 @@ from action_triggers.message_broker.gcp_pubsub import (
 from tests.utils.gcp.pubsub import CONN_DETAILS, can_connect_to_pubsub
 
 try:
-    from google.cloud import pubsub_v1
+    from google.cloud import pubsub_v1  # type: ignore[import-untyped]
 except ImportError:
     pubsub_v1 = None  # type: ignore[assignment]
 

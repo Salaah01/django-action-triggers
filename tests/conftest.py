@@ -9,7 +9,7 @@ except ImportError:
     boto3 = None  # type: ignore[assignment]
 
 try:
-    from google.cloud import pubsub_v1
+    from google.cloud import pubsub_v1  # type: ignore[import-untyped]
 except ImportError:
     pubsub_v1 = None
 

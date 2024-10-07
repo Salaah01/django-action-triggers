@@ -19,7 +19,7 @@ from action_triggers.message_broker.error import MessageBrokerError
 from action_triggers.utils.module_import import MissingImportWrapper
 
 try:
-    from google.cloud import pubsub_v1
+    from google.cloud import pubsub_v1  # type: ignore[import-untyped]
 except ImportError:  # pragma: no cover
     pubsub_v1 = MissingImportWrapper("pubsub_v1")
 
