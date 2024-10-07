@@ -111,6 +111,10 @@ redis = "^5.0.8"
 localstack = "^3.7.1"
 boto3 = "^1.35.12"
 
+
+[tool.poetry.group.gcp.dependencies]
+google-cloud-pubsub = "^2.25.2"
+
 [tool.poetry.extras]
 postgres = ["psycopg2"]
 rabbitmq = ["aio-pika"]
@@ -118,6 +122,7 @@ kafka = ["aiokafka"]
 redis = ["redis"]
 webhooks = ["aiohttp"]
 aws = ["boto3"]
+gcp = ["google-cloud-pubsub"]
 
 [build-system]
 requires = ["poetry-core"]

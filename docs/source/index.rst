@@ -122,6 +122,7 @@ This documentation is organised into the following sections:
    message_brokers/redis
    message_brokers/aws_sqs
    message_brokers/aws_sns
+   message_brokers/gcp_pubsub
 
 .. toctree::
    :maxdepth: 1

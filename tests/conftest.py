@@ -8,6 +8,11 @@ try:
 except ImportError:
     boto3 = None  # type: ignore[assignment]
 
+try:
+    from google.cloud import pubsub_v1  # type: ignore[import-untyped]
+except ImportError:
+    pubsub_v1 = None
+
 
 django.setup()
 
@@ -118,6 +123,15 @@ def aws_lambda_trigger(config):
 
 
 @pytest.fixture
+def gcp_pubsub_trigger(config):
+    return baker.make(
+        MessageBrokerQueue,
+        name="gcp_pubsub_test_topic",
+        config=config,
+    )
+
+
+@pytest.fixture
 def customer_post_save_signal(config):
     return baker.make(
         ConfigSignal,
@@ -207,6 +221,20 @@ def customer_aws_lambda_post_save_signal(
         config,
         customer_post_save_signal,
         aws_lambda_trigger,
+    )
+
+
+@pytest.fixture
+def customer_gcp_pubsub_post_save_signal(
+    config,
+    config_add_customer_ct,
+    customer_post_save_signal,
+    gcp_pubsub_trigger,
+):
+    return namedtuple("ConfigContext", ["config", "signal", "trigger"])(
+        config,
+        customer_post_save_signal,
+        gcp_pubsub_trigger,
     )
 
 
@@ -339,4 +367,44 @@ def sns_client():
     return boto3.client(
         "sns",
         **settings.ACTION_TRIGGERS["brokers"]["aws_sns"]["conn_details"],
+    )
+
+
+@pytest.fixture
+def gcp_pubsub_topic_path():
+    publisher = pubsub_v1.PublisherClient()
+    conn_details = settings.ACTION_TRIGGERS["brokers"][
+        "gcp_pubsub_test_topic"
+    ]["conn_details"]
+    return publisher.topic_path(**conn_details)
+
+
+@pytest.fixture
+def gcp_pubsub_topic_refresh(gcp_pubsub_topic_path):
+    publisher = pubsub_v1.PublisherClient()
+    try:
+        publisher.delete_topic(request={"topic": gcp_pubsub_topic_path})
+    except Exception:
+        pass
+    return publisher.create_topic(request={"name": gcp_pubsub_topic_path})
+
+
+@pytest.fixture
+def gcp_pubsub_refresh_subscription(gcp_pubsub_topic_path):
+    subscription = pubsub_v1.SubscriberClient()
+    conn_details = settings.ACTION_TRIGGERS["brokers"][
+        "gcp_pubsub_test_topic"
+    ]["conn_details"]
+    subscription_path = subscription.subscription_path(*conn_details.values())
+    try:
+        subscription.delete_subscription(
+            request={"subscription": subscription_path}
+        )
+    except Exception:
+        pass
+    return subscription.create_subscription(
+        request={
+            "name": subscription_path,
+            "topic": gcp_pubsub_topic_path,
+        }
     )

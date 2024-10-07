@@ -79,7 +79,7 @@ class TestCheckBrokerTypesAreValid:
         assert result[0].msg == (
             "Invalid `broker_type` provided for broker broker_1: invalid. "
             "Valid broker types are: ['rabbitmq', 'kafka', 'redis', "
-            "'aws_sqs', 'aws_sns']"
+            "'aws_sqs', 'aws_sns', 'gcp_pubsub']"
         )
         assert (
             result[0].hint

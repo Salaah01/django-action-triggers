@@ -83,6 +83,7 @@ For detailed documentation, including setup, configuration options, API specific
 * Redis
 * AWS SQS (Amazon Simple Queue Service)
 * AWS SNS (Amazon Simple Notification Service)
+* GCP Pub/Sub (Google Cloud Pub/Sub)
 
 ## Supported Actions
 
