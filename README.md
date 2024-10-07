@@ -74,7 +74,7 @@ In summary, Django Action Triggers provides a **dynamic**, **maintainable** and 
 
 ## Documentation
 
-For detailed documentation, including setup, configuration options, API specifications, and more examples, please refer to the [official documentation](https://salaah01.github.io/django-action-triggers/).
+For detailed documentation, including setup, configuration options, API specifications, and more examples, please refer to the [official documentation](https://django-action-triggers.readthedocs.io/en/latest/).
 
 ## Supported Message Brokers
 
@@ -125,7 +125,7 @@ urlpatterns = [
 
 Once installed, you can create triggers and actions using the Django admin interface or programmatically through the API.
 
-For detailed usage instructions, configuration options, and examples, please refer to the [official documentation](https://salaah01.github.io/django-action-triggers/).
+For detailed usage instructions, configuration options, and examples, please refer to the [official documentation](https://django-action-triggers.readthedocs.io/en/latest/).
 
 ## Example Scenarios
 
