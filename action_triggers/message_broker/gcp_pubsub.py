@@ -1,7 +1,6 @@
 """Module to support sending messages to GCP Pub/Sub.
 
-Developer Notes
----------------
+Developer Notes:
 
 Make sure you use the Google Pub/Sub emulator for development and testing. The
 docs for the emulator can be found at
