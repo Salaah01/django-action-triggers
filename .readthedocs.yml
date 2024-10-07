@@ -20,4 +20,4 @@ python:
   version: 3.12
   install:
     - method: pip
-    - requirements: docs/requirements.txt
+    - path: docs
