@@ -16,6 +16,10 @@ sphinx:
 python:
   version: 3.12
   install:
-    - method: poetry
-      path: .
+    - method: pip
     - requirements: docs/requirements.txt
+
+build:
+  commands:
+    - pip install poetry
+    - poetry install --all-extras --no-root
