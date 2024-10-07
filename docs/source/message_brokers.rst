@@ -113,3 +113,4 @@ your Django project using **Django Action Triggers**:
    message_brokers/redis
    message_brokers/aws_sqs
    message_brokers/aws_sns
+   message_brokers/gcp_pubsub

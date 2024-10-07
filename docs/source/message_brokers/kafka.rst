@@ -52,7 +52,7 @@ In this configuration:
 Creating a Kafka Action
 =======================
 
-Once you’ve configured Kafka, you can create a trigger that sends messages to
+Once you have configured Kafka, you can create a trigger that sends messages to
 the Kafka broker whenever the trigger is activated.
 
 Scenario

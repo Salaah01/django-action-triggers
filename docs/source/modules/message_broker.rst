@@ -42,6 +42,11 @@ Message Broker Modules
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: action_triggers.message_broker.gcp_pubsub
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: action_triggers.message_broker.queue
    :members:
    :undoc-members:
