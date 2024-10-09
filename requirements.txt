@@ -62,7 +62,7 @@ jeepney==0.8.0
 Jinja2==3.1.4
 jmespath==1.0.1
 keyring==24.3.1
-localstack==3.7.1
+localstack==3.8.1
 localstack-core==3.7.1
 localstack-ext==3.7.1
 markdown-it-py==3.0.0
