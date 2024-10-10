@@ -6,6 +6,16 @@ RabbitMQ
 broker. This section will guide you through the process of configuring RabbitMQ
 as a message broker and creating actions that send messages to it.
 
+Installation
+============
+
+To use RabbitMQ as a message broker, you will need to install an additional
+package. This can be done by running the following command:
+
+.. code-block:: bash
+
+  pip install django-action-triggers[rabbitmq]
+
 Configuration
 =============
 

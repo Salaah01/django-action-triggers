@@ -7,6 +7,16 @@ Notification Service) message broker. This section guides you through
 configuring AWS SNS and creating triggers that send messages to an AWS SNS
 broker.
 
+Installation
+============
+
+To use AWS SNS as a message broker, you will need to install an additional
+package. This can be done by running the following command:
+
+.. code-block:: bash
+
+  pip install django-action-triggers[aws]
+
 Configuration
 =============
 

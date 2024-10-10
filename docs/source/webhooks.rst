@@ -9,6 +9,15 @@ specified URL whenever a trigger is activated. This can be useful for
 integrating your Django application with external services, such as notifying
 other systems when certain events occur.
 
+Installation
+============
+
+To use the webhooks integration, you will need to install an additional
+package. This can be done by running the following command:
+
+.. code-block:: bash
+
+  pip install django-action-triggers[webhooks]
 
 Creating a Webhook Action
 =========================

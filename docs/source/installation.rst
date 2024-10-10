@@ -25,37 +25,13 @@ Django Action Triggers can be installed directly from PyPI using pip:
 
   pip install django-action-triggers
 
-Optional: Install with Extras
------------------------------
+This command above will only install the base library, in order to support
+specific integrations, you can install the following extras:
 
-If you plan to use specific features (e.g., integration with messaging
-brokers), you can install the required dependencies at the same time:
-
-- To install with support for Kafka:
-
-  .. code-block:: bash
-
-    pip install django-action-triggers[kafka]
-
-- To install with support for RabbitMQ:
-
-  .. code-block:: bash
-
-    pip install django-action-triggers[rabbitmq]
-
-- To install with support for webhooks:
-
-  .. code-block:: bash
-
-    pip install django-action-triggers[webhooks]
-
-Alternatively, you can install all extras:
-
-.. code-block:: bash
-
-  pip install django-action-triggers[all]
+.. include:: partials/optional_installations.rst
 
 Next Steps
 ==========
 
-Once you've completed the installation, proceed to the :ref:`setup<setup>` guide to configure Django Action Triggers in your project.
+Once you've completed the installation, proceed to the :ref:`setup<setup>`
+guide to configure Django Action Triggers in your project.

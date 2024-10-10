@@ -94,6 +94,7 @@ Best Practices for Configuration
   setting `ACTION_TRIGGER_SETTINGS.MAX_ACTION_TIMEOUT` in your Django settings.
 
 .. _actions_configuration_guides:
+
 Action Configuration Guides
 ===========================
 

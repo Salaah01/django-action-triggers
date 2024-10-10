@@ -8,6 +8,16 @@ Kafka
 This section guides you through configuring Kafka and creating triggers that
 send messages to a Kafka broker.
 
+Installation
+============
+
+To use Kafka as a message broker, you will need to install an additional
+package. This can be done by running the following command:
+
+.. code-block:: bash
+
+  pip install django-action-triggers[kafka]
+
 Configuration
 =============
 

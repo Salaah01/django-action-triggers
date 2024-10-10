@@ -8,6 +8,16 @@ GCP Pub/Sub (Google Cloud Pub/Sub)
 This section guides you through configuring GCP Pub/Sub and creating triggers
 that send messages to a GCP Pub/Sub broker.
 
+Installation
+============
+
+To use GCP Pub/Sub as a message broker, you will need to install an additional
+package. This can be done by running the following command:
+
+.. code-block:: bash
+
+  pip install django-action-triggers[gcp]
+
 Configuration
 =============
 
