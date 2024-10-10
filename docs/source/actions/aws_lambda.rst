@@ -6,6 +6,16 @@ AWS Lambda
 guides you through configuring AWS Lambda into the project and creating
 triggers that invoke AWS Lambda functions.
 
+Installation
+============
+
+To the AWS Lambda integration, you will need to install an additional
+package. This can be done by running the following command:
+
+.. code-block:: bash
+
+  pip install django-action-triggers[aws]
+
 Configuration
 =============
 

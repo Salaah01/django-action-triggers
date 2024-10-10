@@ -6,6 +6,16 @@ AWS SQS (AWS Simple Queue Service)
 broker. This section guides you through configuring AWS SQS and creating
 triggers that send messages to an AWS SQS broker.
 
+Installation
+============
+
+To use AWS SQS as a message broker, you will need to install an additional
+package. This can be done by running the following command:
+
+.. code-block:: bash
+
+  pip install django-action-triggers[aws]
+
 Configuration
 =============
 

@@ -6,6 +6,16 @@ Redis
 This section guides you through configuring Redis and creating triggers that
 send messages to a Redis broker.
 
+Installation
+============
+
+To use Redis as a message broker, you will need to install an additional
+package. This can be done by running the following command:
+
+.. code-block:: bash
+
+  pip install django-action-triggers[redis]
+
 Configuration
 =============
 
