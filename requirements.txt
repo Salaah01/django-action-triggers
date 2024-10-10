@@ -70,7 +70,7 @@ mdurl==0.1.2
 model-bakery==1.19.5
 more-itertools==10.5.0
 msgpack==1.1.0
-multidict==6.0.5
+multidict==6.1.0
 mypy==1.11.2
 mypy-extensions==1.0.0
 opentelemetry-api==1.27.0
