@@ -1,5 +1,5 @@
 # Contains all the dependencies required for the project including for
-# generating the documentation.
+# generating the documentation in readthedocs.io.
 
 aio-pika==9.4.3
 aiohappyeyeballs==2.4.0
@@ -31,7 +31,6 @@ Deprecated==1.2.14
 dill==0.3.6
 distlib==0.3.8
 Django==4.2.16
-django-action-triggers==0.4.0
 django-coverage-plugin==3.1.0
 django-stubs==5.0.4
 django-stubs-ext==5.0.4
