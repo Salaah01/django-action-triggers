@@ -69,7 +69,7 @@ class WebhookProcessor:
 
         return fn_kwargs
 
-    def get_headers(self) -> dict:
+    def get_headers(self) -> _t.Optional[dict]:
         """Returns the headers to use for the webhook.
 
         :return: The headers to use for the webhook.
