@@ -58,7 +58,7 @@ installer==0.7.0
 isort==5.13.2
 jaraco.classes==3.4.0
 jeepney==0.8.0
-Jinja2==3.1.4
+Jinja2==3.1.5
 jmespath==1.0.1
 keyring==24.3.1
 localstack==3.7.1
