@@ -30,7 +30,7 @@ cryptography==43.0.1
 Deprecated==1.2.14
 dill==0.3.6
 distlib==0.3.8
-Django==4.2.17
+Django==4.2.20
 django-coverage-plugin==3.1.0
 django-stubs==5.0.4
 django-stubs-ext==5.0.4
