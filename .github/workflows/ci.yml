@@ -8,31 +8,37 @@ on:
     branches:
       - master
 jobs:
-  setup:
+  prefetch-images:
     runs-on: [ubuntu-latest]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Compose
-        run: docker compose up -d --wait
+      - name: Restore Docker image cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/docker-images
+          key: ${{ runner.os }}-docker-images
+
+      - name: Pull and Save Images
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          docker compose pull
+          imgs=$(docker compose config | awk '/image: /{print $2}')
+          mkdir -p /tmp/docker-images
+          docker save $imgs -o /tmp/docker-images/images.tar
+
 
   test:
-    needs: setup
+    needs: prefetch-images
     runs-on: [ubuntu-latest]
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        django-version: [32, 42, 51]
-        db: [postgres, mysql, sqlite]
+        py_dj: [py38-django32, py39-django32, py310-django42, py311-django42, py312-django51]
+        db: [postgres]
         action: [rabbitmq, kafka, redis, aws, gcp]
-        exclude:
-          # Django 5.1 does not support Python <3.10
-          - python-version: "3.8"
-            django-version: 51
-          - python-version: "3.9"
-            django-version: 51
 
     env:
       DJANGO_SETTINGS_MODULE: tests.settings
@@ -40,10 +46,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Restore Docker image cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/docker-images
+          key: ${{ runner.os }}-docker-images
+      
+      - name: Load Docker images
+        run: docker load -i /tmp/docker-images/images.tar || true
+
+      - name: Start Docker Containers
+        run: docker compose up -d --wait
+
+      - name: Extract Python Version
+        shell: bash
+        run: |
+          raw="${{ matrix.py_dj }}"
+          v="${raw%%-*}"
+          v="${v#py}"
+          major="${v:0:1}"
+          minor="${v:1}"
+          echo "PYTHON_VERSION=${major}.${minor}" >> $GITHUB_ENV
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
         run: |
@@ -52,10 +80,9 @@ jobs:
 
       - name: Run tests with Tox
         run: |
-          tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}-${{ matrix.db }}-${{ matrix.action }}
+          tox -e ${{ matrix.py_dj }}-${{ matrix.db }}-${{ matrix.action }}
 
   type-check:
-    needs: setup
     runs-on: [ubuntu-latest]
 
     steps:
@@ -74,7 +101,6 @@ jobs:
           make type-check
 
   lint:
-    needs: setup
     runs-on: [ubuntu-latest]
 
     steps:

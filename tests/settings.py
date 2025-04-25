@@ -65,7 +65,7 @@ KAFKA_CONN_DETAILS = (
     or DEFAULT_KAFKA_CONN_DETAILS
 )
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-REDIS_PORT = os.getenv("REDIS_PORT", 6380)
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 
 AWS_ENDPOINT = os.getenv("AWS_ENDPOINT", "http://localhost:4566")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")

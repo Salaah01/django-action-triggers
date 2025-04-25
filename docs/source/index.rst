@@ -20,6 +20,9 @@ Django Action Triggers Documentation
 .. image:: https://codecov.io/github/Salaah01/django-action-triggers/graph/badge.svg?token=ROHNEE9D4X 
    :target: https://codecov.io/github/Salaah01/django-action-triggers
 
+.. image:: https://img.shields.io/badge/Published%20on-Django%20Packages-0c3c26
+   :target: https://djangopackages.org/packages/p/django-action-triggers/
+
 Welcome to the documentation for
 **Django Action Triggers (django-action-triggers)**, a flexible Django
 application that allows you to asynchronously trigger actions based on changes
