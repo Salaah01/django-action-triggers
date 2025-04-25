@@ -8,15 +8,30 @@ on:
     branches:
       - master
 jobs:
-  setup:
+  prefetch-images:
     runs-on: [ubuntu-latest]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Restore Docker image cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/docker-images
+          key: ${{ runner.os }}-docker-images
+
+      - name: Pull and Save Images
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          docker compose pull
+          imgs=$(docker compose config | awk '/image: /{print $2}')
+          mkdir -p /tmp/docker-images
+          docker save $imgs -o /tmp/docker-images/images.tar
+
+
   test:
-    needs: setup
     runs-on: [ubuntu-latest]
     strategy:
       matrix:
@@ -40,7 +55,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Compose
+      - name: Restore Docker image cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/docker-images
+          key: ${{ runner.os }}-docker-images
+      
+      - name: Load Docker images
+        run: docker load -i /tmp/docker-images/images.tar || true
+
+      - name: Start Docker Containers
         run: docker compose up -d --wait
 
       - name: Setup Python
