@@ -36,17 +36,7 @@ jobs:
     runs-on: [ubuntu-latest]
     strategy:
       matrix:
-        include:
-          - python-version: "3.8"
-            django-version: 32
-          - python-version: "3.9"
-            django-version: 32
-          - python-version: "3.10"
-            django-version: 42
-          - python-version: "3.11"
-            django-version: 42
-          - python-version: "3.12"
-            django-version: 51
+        py_dj: [py38-django32, py39-django32, py310-django42, py311-django42, py312-django51]
         db: [postgres]
         action: [rabbitmq, kafka, redis, aws, gcp]
 
@@ -80,7 +70,7 @@ jobs:
 
       - name: Run tests with Tox
         run: |
-          tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}-${{ matrix.db }}-${{ matrix.action }}
+          tox -e ${{ matrix.py_dj }}-${{ matrix.db }}-${{ matrix.action }}
 
   type-check:
     runs-on: [ubuntu-latest]
