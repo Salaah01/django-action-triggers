@@ -15,9 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Compose
-        run: docker compose up -d --wait
-
   test:
     needs: setup
     runs-on: [ubuntu-latest]
@@ -42,6 +39,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: docker compose up -d --wait
 
       - name: Setup Python
         uses: actions/setup-python@v5
