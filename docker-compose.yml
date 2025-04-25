@@ -79,7 +79,7 @@ services:
     restart: always
 
   redis:
-    image: redis:7.4.0-alpine
+    image: redis:7.4.3
     ports:
       - "6379:6379"
     healthcheck:
