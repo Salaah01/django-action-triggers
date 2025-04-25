@@ -58,10 +58,20 @@ jobs:
       - name: Start Docker Containers
         run: docker compose up -d --wait
 
+      - name: Extract Python Version
+        shell: bash
+        run: |
+          raw="${{ matrix.py_dj }}"
+          v="${raw%%-*}"
+          v="${v#py}"
+          major="${v:0:1}"
+          minor="${v:1}"
+          echo "PYTHON_VERSION=${major}.${minor}" >> $GITHUB_ENV
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version:  $(echo $matrix.py_dj | cut -d '-' -f 1 | cut -d 'y' -f 2)
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
         run: |
