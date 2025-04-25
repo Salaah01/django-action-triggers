@@ -32,6 +32,7 @@ jobs:
 
 
   test:
+    needs: prefetch-images
     runs-on: [ubuntu-latest]
     strategy:
       matrix:
