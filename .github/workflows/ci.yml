@@ -61,7 +61,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version:  $(echo $matrix.py_dj | cut -d '-' -f 1 | cut -d 'y' -f 2)
 
       - name: Install dependencies
         run: |
