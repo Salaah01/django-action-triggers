@@ -82,7 +82,6 @@ jobs:
           tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}-${{ matrix.db }}-${{ matrix.action }}
 
   type-check:
-    needs: setup
     runs-on: [ubuntu-latest]
 
     steps:
@@ -101,7 +100,6 @@ jobs:
           make type-check
 
   lint:
-    needs: setup
     runs-on: [ubuntu-latest]
 
     steps:
